@@ -1,0 +1,91 @@
+name: smart-tire-analyzer
+
+services:
+  # ── FastAPI Backend ──────────────────────────────────────────────────────
+  backend:
+    build:
+      context: .
+      dockerfile: deployment/docker/Dockerfile.backend
+    container_name: smart-tire-backend
+    ports:
+      - "8000:8000"
+    environment:
+      # ── API Keys (loaded from .env file for rotation) ──────────────────
+      - GEMINI_API_KEYS=${GEMINI_API_KEYS:-}
+      - GOOGLE_MAPS_API_KEYS=${GOOGLE_MAPS_API_KEYS:-}
+      - OPENWEATHER_API_KEYS=${OPENWEATHER_API_KEYS:-}
+      - MAPILLARY_API_KEYS=${MAPILLARY_API_KEYS:-}
+      # ── API Daily Quotas ─────────────────────────────────────────────
+      - GEMINI_DAILY_QUOTA=${GEMINI_DAILY_QUOTA:-50}
+      - MAPS_DAILY_QUOTA=${MAPS_DAILY_QUOTA:-50}
+      - OPENWEATHER_DAILY_QUOTA=${OPENWEATHER_DAILY_QUOTA:-50}
+      - MAPILLARY_DAILY_QUOTA=${MAPILLARY_DAILY_QUOTA:-50}
+      # ── Database & Server ───────────────────────────────────────────
+      - DATABASE_URL=sqlite+aiosqlite:///./data/smart_tire.db
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+      - API_WORKERS=${API_WORKERS:-1}
+    volumes:
+      - ./ai_model/saved_models:/app/ai_model/saved_models:ro
+      - tire-data:/app/data
+      - tire-logs:/app/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
+    networks:
+      - tire-net
+
+  # ── Redis cache (optional — for session caching) ─────────────────────────
+  frontend:
+    build:
+      context: .
+      dockerfile: deployment/docker/Dockerfile.frontend
+      args:
+        NEXT_PUBLIC_API_BASE_URL: "http://localhost:8000"
+    container_name: smart-tire-frontend
+    ports:
+      - "3001:3000"
+    environment:
+      - NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - tire-net
+
+  redis:
+    image: redis:7-alpine
+    container_name: smart-tire-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - tire-net
+    restart: unless-stopped
+
+  # ── Nginx reverse proxy ──────────────────────────────────────────────────
+  nginx:
+    image: nginx:alpine
+    container_name: smart-tire-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deployment/docker/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - backend
+    networks:
+      - tire-net
+    restart: unless-stopped
+
+volumes:
+  tire-data:
+  tire-logs:
+
+networks:
+  tire-net:
+    driver: bridge
