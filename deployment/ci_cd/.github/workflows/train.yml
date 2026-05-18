@@ -1,0 +1,113 @@
+name: Smart Tire - Retrain on New Data
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "dataset/labels/**"
+      - "dataset/images/**"
+      - "dataset/multi_view/**"
+  workflow_dispatch:
+    inputs:
+      force_retrain:
+        description: "Force full retraining (ignore cache)"
+        type: boolean
+        default: false
+
+env:
+  PYTHON_VERSION: "3.11"
+  MODEL_OUTPUT_DIR: "ai_model/saved_models"
+
+jobs:
+  prepare-data:
+    name: "Validate & Clean Dataset"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r backend/requirements.txt
+
+      - name: Validate images
+        run: python dataset/preprocessing/validate_images.py
+
+      - name: Clean dataset
+        run: python dataset/preprocessing/clean_dataset.py
+
+      - name: Split dataset
+        run: python dataset/preprocessing/split_dataset.py
+
+      - name: Upload cleaned data artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cleaned-dataset
+          path: dataset/multi_view/
+
+  train:
+    name: "Train Model"
+    runs-on: ubuntu-latest
+    needs: prepare-data
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r backend/requirements.txt
+
+      - name: Download cleaned dataset
+        uses: actions/download-artifact@v4
+        with:
+          name: cleaned-dataset
+          path: dataset/multi_view/
+
+      - name: Train Smart Tire Model
+        run: |
+          python ai_model/training/train.py \
+            --epochs 50 \
+            --batch_size 16
+        env:
+          TF_CPP_MIN_LOG_LEVEL: "2"
+
+      - name: Run evaluation
+        run: python ai_model/evaluation/evaluate.py --split test
+
+      - name: Export TFLite (TurboQuant)
+        run: python ai_model/optimization/quantize.py --model ai_model/saved_models/model_best.h5
+
+      - name: Upload model artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: trained-model
+          path: |
+            ai_model/saved_models/model_best.h5
+            ai_model/saved_models/model_latest.tflite
+            ai_model/saved_models/model_registry.json
+
+  deploy-model:
+    name: "Deploy Model to Backend"
+    runs-on: ubuntu-latest
+    needs: train
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download trained model
+        uses: actions/download-artifact@v4
+        with:
+          name: trained-model
+          path: ai_model/saved_models/
+
+      - name: Deploy model (copy to backend volume)
+        run: echo "Model deployment step - configure for your cloud provider"
+        # Replace with: gcloud storage cp, aws s3 cp, kubectl cp, etc.

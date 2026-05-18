@@ -1,0 +1,80 @@
+name: Smart Tire - Deploy Backend
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "backend/**"
+      - "ai_model/**"
+      - "deployment/**"
+  workflow_dispatch: {}
+
+env:
+  DOCKER_IMAGE: "smart-tire-backend"
+  DOCKER_TAG: "${{ github.sha }}"
+
+jobs:
+  test:
+    name: "Run Backend Tests"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r backend/requirements.txt pytest pytest-asyncio httpx
+
+      - name: Run API tests
+        run: pytest tests/ -v --tb=short
+        env:
+          GEMINI_API_KEY: "test_key"
+          GOOGLE_MAPS_API_KEY: "test_key"
+          OPENWEATHER_API_KEY: "test_key"
+
+  build-and-push:
+    name: "Build & Push Docker Image"
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: deployment/docker/Dockerfile.backend
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE }}:latest
+            ${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_TAG }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    name: "Deploy to Production"
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy via Docker Compose
+        run: |
+          echo "Configure deployment for your cloud provider:"
+          echo "  AWS ECS: aws ecs update-service ..."
+          echo "  GCP Cloud Run: gcloud run deploy ..."
+          echo "  Self-hosted: ssh + docker compose pull && up -d"
