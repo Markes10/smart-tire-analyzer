@@ -1,0 +1,49 @@
+# Smart Tire Analyzer — Backend Python Dependencies
+# Install with: pip install -r requirements.txt
+
+# ── Web Framework ──────────────────────────────────────────────────────────
+fastapi==0.111.0
+uvicorn[standard]==0.29.0
+python-multipart==0.0.9          # File uploads
+aiohttp==3.9.5                   # Async HTTP (Gemini, Maps, Weather)
+aiofiles==23.2.1
+
+# ── Database ───────────────────────────────────────────────────────────────
+sqlalchemy==2.0.30
+aiosqlite==0.20.0                # Async SQLite driver
+alembic==1.13.1                  # DB migrations
+
+# ── AI / ML ────────────────────────────────────────────────────────────────
+tensorflow==2.16.1               # Full TF for training
+tensorflow-hub==0.16.1
+torch==2.11.0                    # Runtime/training for fresh PyTorch hybrid model
+torchvision==0.26.0              # ViT-B/16 backbone and image transforms
+timm>=1.0.12,<2.0               # EfficientNetV2-B0 backbone
+numpy==1.26.4
+opencv-python-headless==4.9.0.80 # Image processing (headless = no GUI deps)
+Pillow==12.2.0
+pillow-heif==1.3.0               # HEIC/HEIF training image support
+albumentations==1.4.6            # Image augmentation
+
+# ── Data ───────────────────────────────────────────────────────────────────
+pandas==2.2.2
+scikit-learn==1.4.2
+
+# ── Validation ─────────────────────────────────────────────────────────────
+pydantic==2.7.1
+pydantic-settings==2.2.1
+
+# ── Utilities ──────────────────────────────────────────────────────────────
+python-dotenv==1.0.1
+structlog==24.1.0
+httpx==0.27.0                    # Sync HTTP for scripts
+tenacity==8.3.0                  # Retry logic
+
+# ── Optimization ───────────────────────────────────────────────────────────
+tensorflow-model-optimization==0.8.0   # Pruning + quantization
+
+# ── Monitoring ─────────────────────────────────────────────────────────────
+prometheus-client==0.20.0
+pytest==8.2.0
+pytest-asyncio==0.23.6
+httpx==0.27.0                    # For TestClient

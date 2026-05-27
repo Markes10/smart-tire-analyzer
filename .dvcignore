@@ -1,0 +1,11 @@
+# DVC ignore patterns — keep large/generated artifacts out of Git while tracking via DVC.
+.venv/
+node_modules/
+frontend/.next/
+logs/
+training_logs/
+*.db
+*.sqlite
+__pycache__/
+.pytest_cache/
+.mypy_cache/

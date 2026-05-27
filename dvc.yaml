@@ -1,0 +1,29 @@
+# Root DVC pipeline — mirrors mlops/dvc.yaml for standard `dvc repro` usage.
+stages:
+  prepare_dataset:
+    cmd: python scripts/prepare_dataset.py
+    deps:
+      - dataset/raw
+      - dataset/preprocessing
+    outs:
+      - dataset/processed
+      - dataset/splits
+
+  train_hybrid_model:
+    cmd: python scripts/prepare_and_train.py --fresh-hybrid --hybrid-stage1-epochs 1 --hybrid-stage2-epochs 0
+    deps:
+      - ai_model/hybrid_torch
+      - dataset/splits
+    outs:
+      - ai_model/saved_models/hybrid_torch
+    metrics:
+      - ai_model/saved_models/hybrid_torch/metrics.json:
+          cache: false
+
+  promote_model:
+    cmd: python scripts/promote_quarantined_hybrid.py
+    deps:
+      - ai_model/saved_models/hybrid_torch/metrics.json
+    outs:
+      - ai_model/saved_models/model_registry.json:
+          cache: false

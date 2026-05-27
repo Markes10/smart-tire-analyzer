@@ -1,44 +1,40 @@
 """
-Centralized Config Loader — Reads YAML configs and merges with .env overrides.
-Provides a single source of truth for all system settings.
+Centralized configuration with Pydantic validation.
+
+YAML configs are merged with environment variables. Environment variables
+always take priority over config file values.
 """
 
-import os
+from __future__ import annotations
+
 import logging
+import os
 from functools import lru_cache
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List
 
-# Load .env into os.environ before anything reads os.getenv()
-try:
-    from dotenv import load_dotenv as _load_dotenv
-    # project root is two levels up from backend/app/config.py
-    _load_dotenv(dotenv_path=Path(__file__).resolve().parents[2] / ".env", override=False)
-except ImportError:
-    pass  # python-dotenv not installed; rely on shell environment
+from pydantic import Field, field_validator
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 logger = logging.getLogger(__name__)
 
 CONFIG_DIR = Path(__file__).parent.parent.parent / "configs"
+ENV_FILE = Path(__file__).resolve().parents[2] / ".env"
 
 
 def _load_yaml(filename: str) -> Dict[str, Any]:
-    """Load a YAML config file from the configs/ directory.
-
-    Returns a dict on success, or an empty dict on error.
-    """
     path = CONFIG_DIR / filename
     if not path.exists():
-        logger.warning(f"Config file not found: {path} — using defaults")
+        logger.warning("Config file not found: %s — using defaults", path)
         return {}
     try:
-        # PyYAML has no bundled stubs in many environments — silence mypy here
         import yaml  # type: ignore
-        with open(path) as f:
-            data = yaml.safe_load(f) or {}
+
+        with open(path, encoding="utf-8") as handle:
+            data = yaml.safe_load(handle) or {}
             return data if isinstance(data, dict) else {}
-    except Exception as e:
-        logger.error(f"Failed to load config {filename}: {e}")
+    except Exception as exc:
+        logger.error("Failed to load config %s: %s", filename, exc)
         return {}
 
 
@@ -64,135 +60,203 @@ def get_app_config() -> Dict[str, Any]:
     return _load_yaml("app_config.yaml")
 
 
-class Settings:
-    """
-    Central settings object — merges YAML config with environment variable overrides.
-    Environment variables always take priority over config file values.
-    """
+def _parse_keys(raw: str) -> List[str]:
+    if not raw:
+        return []
+    parts = [part.strip() for part in raw.replace(";", ",").split(",")]
+    return [part for part in parts if part]
 
-    # ── API Keys ──────────────────────────────────────────────────────────
-    # Support multiple keys via comma-separated env vars for rotation/failover
-    GEMINI_API_KEYS_RAW: str = os.getenv("GEMINI_API_KEYS", os.getenv("GEMINI_API_KEY", ""))
-    GOOGLE_MAPS_API_KEYS_RAW: str = os.getenv("GOOGLE_MAPS_API_KEYS", os.getenv("GOOGLE_MAPS_API_KEY", ""))
-    OPENWEATHER_API_KEYS_RAW: str = os.getenv("OPENWEATHER_API_KEYS", os.getenv("OPENWEATHER_API_KEY", ""))
-    MAPILLARY_API_KEYS_RAW: str = os.getenv("MAPILLARY_API_KEYS", os.getenv("MAPILLARY_API_KEY", ""))
 
-    # ── API Daily Quotas (requests per key per day) ─────────────────────
-    GEMINI_DAILY_QUOTA: int = int(os.getenv("GEMINI_DAILY_QUOTA", "50"))
-    OPENWEATHER_DAILY_QUOTA: int = int(os.getenv("OPENWEATHER_DAILY_QUOTA", "50"))
-    MAPS_DAILY_QUOTA: int = int(os.getenv("MAPS_DAILY_QUOTA", "50"))
-    MAPILLARY_DAILY_QUOTA: int = int(os.getenv("MAPILLARY_DAILY_QUOTA", "50"))
+class AppSettings(BaseSettings):
+    """Validated application settings loaded from environment and .env."""
 
-    @classmethod
-    def _parse_keys(cls, raw: str):
-        if not raw:
-            return []
-        # Allow comma- or semicolon-separated lists
-        parts = [p.strip() for p in raw.replace(";", ",").split(",")]
-        return [p for p in parts if p]
-
-    @classmethod
-    def get_gemini_keys(cls):
-        return cls._parse_keys(cls.GEMINI_API_KEYS_RAW)
-
-    @classmethod
-    def get_maps_keys(cls):
-        return cls._parse_keys(cls.GOOGLE_MAPS_API_KEYS_RAW)
-
-    @classmethod
-    def get_weather_keys(cls):
-        return cls._parse_keys(cls.OPENWEATHER_API_KEYS_RAW)
-
-    @classmethod
-    def get_mapillary_keys(cls):
-        return cls._parse_keys(cls.MAPILLARY_API_KEYS_RAW)
-
-    # ── Database ───────────────────────────────────────────────────────────
-    DATABASE_URL: str = os.getenv(
-        "DATABASE_URL", "sqlite+aiosqlite:///./smart_tire.db"
+    model_config = SettingsConfigDict(
+        env_file=str(ENV_FILE),
+        env_file_encoding="utf-8",
+        extra="ignore",
+        case_sensitive=False,
     )
 
-    # ── API Server ─────────────────────────────────────────────────────────
-    API_HOST: str = os.getenv("API_HOST", "0.0.0.0")
-    API_PORT: int = int(os.getenv("API_PORT", "8000"))
-    API_WORKERS: int = int(os.getenv("API_WORKERS", "1"))
-    DEBUG: bool = os.getenv("DEBUG", "false").lower() == "true"
-    LOG_LEVEL: str = os.getenv("LOG_LEVEL", "info").upper()
+    # API keys (comma-separated for rotation)
+    GEMINI_API_KEYS_RAW: str = Field(default="", validation_alias="GEMINI_API_KEYS")
+    GEMINI_MODEL: str = "gemini-2.5-flash"
+    GOOGLE_MAPS_API_KEYS_RAW: str = Field(default="", validation_alias="GOOGLE_MAPS_API_KEYS")
+    OPENWEATHER_API_KEYS_RAW: str = Field(default="", validation_alias="OPENWEATHER_API_KEYS")
+    MAPILLARY_API_KEYS_RAW: str = Field(default="", validation_alias="MAPILLARY_API_KEYS")
+    OLLAMA_BASE_URL: str = "http://127.0.0.1:11434"
+    OLLAMA_MODEL: str = "llama3:8b"
 
-    # ── Model ──────────────────────────────────────────────────────────────
-    MODEL_PATH: str = os.getenv(
-        "MODEL_PATH", "ai_model/saved_models/model_latest.tflite"
-    )
-    FALLBACK_MODEL_PATH: str = os.getenv(
-        "FALLBACK_MODEL_PATH", "ai_model/saved_models/model_v1.h5"
-    )
-    CONFIDENCE_THRESHOLD: float = float(os.getenv("CONFIDENCE_THRESHOLD", "0.65"))
-    BLUR_THRESHOLD: float = float(os.getenv("BLUR_THRESHOLD", "100.0"))
+    GEMINI_DAILY_QUOTA: int = Field(default=50, ge=1)
+    OPENWEATHER_DAILY_QUOTA: int = Field(default=50, ge=1)
+    MAPS_DAILY_QUOTA: int = Field(default=50, ge=1)
+    MAPILLARY_DAILY_QUOTA: int = Field(default=50, ge=1)
 
-    # ── Continuous Learning ────────────────────────────────────────────────
-    RETRAIN_THRESHOLD: int = int(os.getenv("RETRAIN_THRESHOLD", "50"))
-    MIN_HOURS_BETWEEN_RETRAIN: int = int(os.getenv("MIN_HOURS_BETWEEN_RETRAIN", "24"))
-    AUTO_RETRAIN: bool = os.getenv("AUTO_RETRAIN", "true").lower() == "true"
+    DATABASE_URL: str = "sqlite+aiosqlite:///./smart_tire.db"
+    API_HOST: str = "0.0.0.0"
+    API_PORT: int = Field(default=8000, ge=1, le=65535)
+    API_WORKERS: int = Field(default=1, ge=1)
+    BACKEND_CORS_ORIGINS_RAW: str = Field(default="", validation_alias="BACKEND_CORS_ORIGINS")
+    DEBUG: bool = False
+    LOG_LEVEL: str = "INFO"
 
-    # ── Tire Safety Thresholds ─────────────────────────────────────────────
+    AUTH_ENABLED: bool = False
+    API_KEY: str = ""
+    JWT_SECRET: str = "smart-tire-local-demo-secret"
+    JWT_ISSUER: str = "smart-tire-analyzer"
+
+    MODEL_PATH: str = "ai_model/saved_models/model_latest.tflite"
+    FALLBACK_MODEL_PATH: str = "ai_model/saved_models/model_v1.h5"
+    CONFIDENCE_THRESHOLD: float = Field(default=0.65, ge=0.0, le=1.0)
+    BLUR_THRESHOLD: float = Field(default=60.0, ge=0.0)
+
+    RETRAIN_THRESHOLD: int = Field(default=10, ge=1)
+    MIN_HOURS_BETWEEN_RETRAIN: int = Field(default=24, ge=0)
+    AUTO_RETRAIN: bool = True
+
     LEGAL_MINIMUM_MM: float = 1.6
     WARNING_THRESHOLD_MM: float = 3.0
     TREAD_MAX_MM: float = 12.0
     HEALTH_SCORE_MAX: float = 10.0
     MAX_REMAINING_KM: float = 80000.0
+    MAX_IMAGE_SIZE_MB: int = Field(default=10, ge=1, le=50)
 
-    # ── Image Validation ───────────────────────────────────────────────────
-    MAX_IMAGE_SIZE_MB: int = int(os.getenv("MAX_IMAGE_SIZE_MB", "10"))
+    IMAGE_OPTIMIZER_ENABLED: bool = True
+    IMAGE_OPTIMIZER_MAX_DIMENSION: int = Field(default=2048, ge=256, le=8192)
 
+    NOTIFICATIONS_ENABLED: bool = False
+    SMTP_HOST: str = ""
+    SMTP_PORT: int = Field(default=587, ge=1, le=65535)
+    SMTP_USE_TLS: bool = True
+    SMTP_USERNAME: str = ""
+    SMTP_PASSWORD: str = ""
+    NOTIFICATION_EMAIL_FROM: str = "smart-tire@localhost"
+    NOTIFICATION_EMAIL_TO: str = ""
+    SLACK_WEBHOOK_URL: str = ""
+    NOTIFICATION_WEBHOOK_URL: str = ""
+
+    @field_validator("GEMINI_API_KEYS_RAW", mode="before")
     @classmethod
-    def has_gemini(cls) -> bool:
-        return len(cls.get_gemini_keys()) > 0
+    def _fallback_gemini_key(cls, value: Any) -> str:
+        raw = str(value or "")
+        if raw:
+            return raw
+        return os.getenv("GEMINI_API_KEY", "")
 
+    @field_validator("GOOGLE_MAPS_API_KEYS_RAW", mode="before")
     @classmethod
-    def has_maps(cls) -> bool:
-        return len(cls.get_maps_keys()) > 0
+    def _fallback_maps_key(cls, value: Any) -> str:
+        raw = str(value or "")
+        if raw:
+            return raw
+        return os.getenv("GOOGLE_MAPS_API_KEY", "")
 
+    @field_validator("OPENWEATHER_API_KEYS_RAW", mode="before")
     @classmethod
-    def has_weather(cls) -> bool:
-        return len(cls.get_weather_keys()) > 0
+    def _fallback_weather_key(cls, value: Any) -> str:
+        raw = str(value or "")
+        if raw:
+            return raw
+        return os.getenv("OPENWEATHER_API_KEY", "")
 
+    @field_validator("MAPILLARY_API_KEYS_RAW", mode="before")
     @classmethod
-    def has_mapillary(cls) -> bool:
-        return len(cls.get_mapillary_keys()) > 0
+    def _fallback_mapillary_key(cls, value: Any) -> str:
+        raw = str(value or "")
+        if raw:
+            return raw
+        return os.getenv("MAPILLARY_API_KEY", "")
 
+    @field_validator("OLLAMA_BASE_URL", mode="before")
     @classmethod
-    def get_feature_flags(cls) -> Dict:
-        """Return which optional features are available."""
+    def _fallback_ollama_host(cls, value: Any) -> str:
+        raw = str(value or "")
+        if raw:
+            return raw
+        return os.getenv("OLLAMA_HOST", "http://127.0.0.1:11434")
+
+    @field_validator("DEBUG", "AUTH_ENABLED", "AUTO_RETRAIN", "IMAGE_OPTIMIZER_ENABLED", "NOTIFICATIONS_ENABLED", mode="before")
+    @classmethod
+    def _parse_bool(cls, value: Any) -> bool:
+        if isinstance(value, bool):
+            return value
+        return str(value).lower() in {"1", "true", "yes", "on"}
+
+    def get_gemini_keys(self) -> List[str]:
+        return _parse_keys(self.GEMINI_API_KEYS_RAW)
+
+    def get_maps_keys(self) -> List[str]:
+        return _parse_keys(self.GOOGLE_MAPS_API_KEYS_RAW)
+
+    def get_weather_keys(self) -> List[str]:
+        return _parse_keys(self.OPENWEATHER_API_KEYS_RAW)
+
+    def get_mapillary_keys(self) -> List[str]:
+        return _parse_keys(self.MAPILLARY_API_KEYS_RAW)
+
+    def get_cors_origins(self) -> List[str]:
+        origins = _parse_keys(self.BACKEND_CORS_ORIGINS_RAW)
+        return origins or ["*"]
+
+    def has_gemini(self) -> bool:
+        return len(self.get_gemini_keys()) > 0
+
+    def has_maps(self) -> bool:
+        return len(self.get_maps_keys()) > 0
+
+    def has_weather(self) -> bool:
+        return len(self.get_weather_keys()) > 0
+
+    def has_mapillary(self) -> bool:
+        return len(self.get_mapillary_keys()) > 0
+
+    def get_feature_flags(self) -> Dict[str, bool]:
         return {
-            "gemini_reasoning": cls.has_gemini(),
-            "maps_context":     cls.has_maps(),
-            "weather_context":  cls.has_weather(),
-            "mapillary_context": cls.has_mapillary(),
-            "auto_retrain":     cls.AUTO_RETRAIN,
+            "gemini_reasoning": self.has_gemini(),
+            "maps_context": self.has_maps(),
+            "weather_context": self.has_weather(),
+            "mapillary_context": self.has_mapillary(),
+            "auto_retrain": self.AUTO_RETRAIN,
+            "auth_enabled": self.AUTH_ENABLED,
+            "image_optimizer": self.IMAGE_OPTIMIZER_ENABLED,
+            "notifications": self.NOTIFICATIONS_ENABLED,
         }
 
-    @classmethod
-    def log_startup_config(cls):
-        """Log configuration at startup (without exposing secrets)."""
-        flags = cls.get_feature_flags()
+    def log_startup_config(self) -> None:
+        flags = self.get_feature_flags()
         logger.info("=== Smart Tire Analyzer Configuration ===")
-        logger.info(f"  Database:     {cls.DATABASE_URL.split('://')[0]}")
-        logger.info(f"  Model path:   {cls.MODEL_PATH}")
-        logger.info(f"  Blur thresh:  {cls.BLUR_THRESHOLD}")
-        logger.info(f"  Conf thresh:  {cls.CONFIDENCE_THRESHOLD}")
+        logger.info("  Database:     %s", self.DATABASE_URL.split("://")[0])
+        logger.info("  Model path:   %s", self.MODEL_PATH)
+        logger.info("  Blur thresh:  %s", self.BLUR_THRESHOLD)
+        logger.info("  Conf thresh:  %s", self.CONFIDENCE_THRESHOLD)
         logger.info("")
         logger.info("API Key Configuration (Rotation):")
-        logger.info(f"  Gemini:       {len(cls.get_gemini_keys())} keys ({cls.GEMINI_DAILY_QUOTA} req/day each)")
-        logger.info(f"  Maps:         {len(cls.get_maps_keys())} keys ({cls.MAPS_DAILY_QUOTA} req/day each)")
-        logger.info(f"  Weather:      {len(cls.get_weather_keys())} keys ({cls.OPENWEATHER_DAILY_QUOTA} req/day each)")
-        logger.info(f"  Mapillary:    {len(cls.get_mapillary_keys())} keys ({cls.MAPILLARY_DAILY_QUOTA} req/day each)")
+        logger.info(
+            "  Gemini:       %d keys (%d req/day each)",
+            len(self.get_gemini_keys()),
+            self.GEMINI_DAILY_QUOTA,
+        )
+        logger.info(
+            "  Maps:         %d keys (%d req/day each)",
+            len(self.get_maps_keys()),
+            self.MAPS_DAILY_QUOTA,
+        )
+        logger.info(
+            "  Weather:      %d keys (%d req/day each)",
+            len(self.get_weather_keys()),
+            self.OPENWEATHER_DAILY_QUOTA,
+        )
+        logger.info(
+            "  Mapillary:    %d keys (%d req/day each)",
+            len(self.get_mapillary_keys()),
+            self.MAPILLARY_DAILY_QUOTA,
+        )
         logger.info("")
         for feature, enabled in flags.items():
-            status = "✅" if enabled else "❌"
-            logger.info(f"  {status} {feature}")
+            status = "enabled" if enabled else "disabled"
+            logger.info("  [%s] %s", status, feature)
         logger.info("==========================================")
 
 
-
-# Singleton
-settings = Settings()
+# Backward-compatible alias used across the codebase.
+Settings = AppSettings
+settings = AppSettings()
