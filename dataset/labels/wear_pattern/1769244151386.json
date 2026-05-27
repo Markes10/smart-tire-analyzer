@@ -1,0 +1,9 @@
+{
+  "image_id": "1769244151386.jpg",
+  "wear_pattern": "critical_wear",
+  "class_id": 5,
+  "condition": "replace",
+  "severity": "high",
+  "cause": "Tread below safe threshold",
+  "corrective_action": "Replace or inspect immediately"
+}

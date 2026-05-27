@@ -1,0 +1,10 @@
+{
+  "image_id": "front image 4.jpeg",
+  "health_score": 8.06,
+  "remaining_life_km": 55281.0,
+  "remaining_life_pred": 69.10156249999999,
+  "risk_score": 0,
+  "risk_level": "LOW",
+  "replacement_urgency": "Medium",
+  "replace_recommended": false
+}

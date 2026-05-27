@@ -1,0 +1,13 @@
+# Tire Condition Classes — Main Tire Classes
+classes:
+  - New Tire
+  - Good Condition
+  - Moderate Wear
+  - Heavy Wear
+  - Replace Soon
+  - Critical / Dangerous
+source:
+  used_by:
+    - CNN
+    - Transformer
+    - ANN Output

@@ -1,0 +1,11 @@
+# Weather Condition Classes
+classes:
+  - Dry
+  - Rain
+  - Heavy Rain
+  - Fog
+  - Snow
+  - Hot Weather
+  - Cold Weather
+notes: |
+  'Snow' is optional depending on region and dataset coverage.

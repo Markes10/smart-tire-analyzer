@@ -1,0 +1,39 @@
+{
+  "pythonVersion": "3.11",
+  "pythonPlatform": "Windows",
+  "venvPath": ".",
+  "venv": ".venv",
+  "typeCheckingMode": "basic",
+  "reportMissingImports": false,
+  "reportMissingModuleSource": false,
+  "reportUnknownMemberType": false,
+  "reportUnknownVariableType": false,
+  "reportUnknownArgumentType": false,
+  "reportUnknownParameterType": false,
+  "reportAny": false,
+  "reportPrivateUsage": false,
+  "reportAttributeAccessIssue": false,
+  "reportReturnType": false,
+  "reportOperatorIssue": false,
+  "reportIndexIssue": false,
+  "reportArgumentType": false,
+  "reportCallIssue": false,
+  "reportAssignmentType": false,
+  "reportAbstractUsage": false,
+  "include": [
+    "ai_model",
+    "backend",
+    "api_integrations",
+    "continuous_learning",
+    "dataset",
+    "scripts"
+  ],
+  "exclude": [
+    "**/.*",
+    ".venv",
+    "__pycache__",
+    "node_modules",
+    "frontend/node_modules",
+    "*.pyc"
+  ]
+}

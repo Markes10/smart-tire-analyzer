@@ -205,7 +205,7 @@ class APIKeyRotator:
             "api_type": self.api_type,
             "total_keys": len(self.usage_map),
             "active_keys": len(self.active_keys),
-            "current_key": self.get_current_key(),
+            "current_key": self.get_current_key() if self.active_keys else None,
             "keys": {
                 key: usage.get_status()
                 for key, usage in self.usage_map.items()

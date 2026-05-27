@@ -1,0 +1,90 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+
+# Virtual environments
+*.egg-info/
+dist/
+build/
+
+# Environment secrets
+.env
+*.env.local
+
+# Model files (too large for Git — use DVC or cloud storage)
+ai_model/saved_models/*.h5
+ai_model/saved_models/*.tflite
+ai_model/saved_models/*.pb
+ai_model/saved_models/**/*.h5
+ai_model/saved_models/**/*.tflite
+ai_model/saved_models/**/*.pb
+ai_model/saved_models/**/*.pt
+ai_model/saved_models/**/*.joblib
+continuous_learning/model_versions/*/model.h5
+smart_tire_models*.zip
+smart_tire_saved_models*.zip
+
+# Dataset images (too large for Git)
+dataset/images/*.jpg
+dataset/images/*.png
+dataset/images/*.jpeg
+dataset/images/**
+dataset/multi_view/
+dataset/continuous_learning/front_view/
+dataset/continuous_learning/predictions/
+dataset/continuous_learning/corrections/
+dataset/continuous_learning/labels.csv
+
+# Logs
+logs/
+*.log
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# IDE
+.idea/
+.vscode/settings.json
+*.swp
+*.swo
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+
+# Node.js (frontend)
+frontend/node_modules/
+frontend/.expo/
+frontend/.next/
+frontend/dist/
+frontend/.env
+
+# Coverage
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Wrong prediction log (can contain sensitive session data)
+continuous_learning/wrong_predictions/wrong_log.json
+continuous_learning/retraining/status.json
+continuous_learning/retraining/runs/
+
+# TensorFlow
+tensorflow_datasets/
+node_modules

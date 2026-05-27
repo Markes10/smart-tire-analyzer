@@ -1,0 +1,9 @@
+{
+  "image_id": "front image 5.jpeg",
+  "wear_pattern": "center_wear",
+  "class_id": 0,
+  "condition": "safe",
+  "severity": "low",
+  "cause": "Possible overinflation",
+  "corrective_action": "Continue monitoring"
+}

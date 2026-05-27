@@ -1,0 +1,16 @@
+# Road Condition Classes (from Street View model)
+classes:
+  - Smooth Road
+  - Slightly Rough
+  - Rough Road
+  - Potholes
+  - Gravel Road
+  - Mud Road
+  - Wet Road
+  - Snow Road
+  - Construction Road
+source:
+  used_by:
+    - Street View Model
+notes: |
+  'Snow Road' is optional depending on geographic coverage.

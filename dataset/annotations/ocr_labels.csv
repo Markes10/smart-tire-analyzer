@@ -1,0 +1,1098 @@
+image_id,sidewall_image_path,brand_raw,brand_cleaned,tire_size_raw,tire_size_cleaned,manufacture_week,manufacture_year,ocr_confidence
+IMG_1902261 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_19022648 - Viren Viren.jpg,Goodyear,Goodyear,215/60 R16,215/60 R16,25.0,2024.0,0.95
+IMG_1902262 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_19022649 - Viren Viren.jpg,Goodyear,Goodyear,215/60 R16,215/60 R16,27.0,2024.0,0.95
+IMG_1902263 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_19022650 - Viren Viren.jpg,Goodyear,Goodyear,215/60 R16,215/60 R16,25.0,2024.0,0.95
+IMG_1902264 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_19022651 - Viren Viren.jpg,Goodyear,Goodyear,215/60 R16,215/60 R16,25.0,2024.0,0.95
+IMG_1902265 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_19022652 - Viren Viren.jpg,Apollo,Apollo,185/65 R15,185/65 R15,45.0,2022.0,0.95
+IMG_1902266 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_19022653 - Viren Viren.jpg,Apollo,Apollo,185/65 R15,185/65 R15,44.0,2022.0,0.95
+IMG_1902267 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_19022654 - Viren Viren.jpg,Apollo,Apollo,185/65 R15,185/65 R15,44.0,2022.0,0.95
+IMG_1902268 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_19022655 - Viren Viren.jpg,Apollo,Apollo,185/65 R15,185/65 R15,44.0,2022.0,0.95
+IMG_1902269 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Yokohama\IMG_19022656 - Viren Viren.jpg,Yokohama,Yokohama,175/60 R15,175/60 R15,47.0,2022.0,0.95
+IMG_19022610 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Yokohama\IMG_19022657 - Viren Viren.jpg,Yokohama,Yokohama,175/60 R15,175/60 R15,47.0,2022.0,0.95
+IMG_19022611 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Yokohama\IMG_19022658 - Viren Viren.jpg,Yokohama,Yokohama,175/60 R15,175/60 R15,47.0,2022.0,0.95
+IMG_19022612 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Yokohama\IMG_19022659 - Viren Viren.jpg,Yokohama,Yokohama,175/60 R15,175/60 R15,47.0,2022.0,0.95
+IMG_19022613 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_19022660 - Viren Viren.jpg,Apollo,Apollo,215/60 R17,215/60 R17,,,0.95
+IMG_19022614 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_19022661 - Viren Viren.jpg,Apollo,Apollo,215/60 R17,215/60 R17,42.0,2024.0,0.95
+IMG_19022615 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_19022662 - Viren Viren.jpg,Apollo,Apollo,215/60 R17,215/60 R17,13.0,2025.0,0.95
+IMG_19022616 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_19022663 - Viren Viren.jpg,Apollo,Apollo,215/60 R17,215/60 R17,,,0.95
+IMG_19022617 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_19022664 - Viren Viren.jpg,Apollo,Apollo,165/70 R14,165/70 R14,45.0,2019.0,0.95
+IMG_19022618 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_19022665 - Viren Viren.jpg,Apollo,Apollo,165/70 R14,165/70 R14,45.0,2019.0,0.95
+IMG_19022619 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_19022666 - Viren Viren.jpg,Apollo,Apollo,165/70 R14,165/70 R14,45.0,2019.0,0.95
+IMG_19022620 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_19022667 - Viren Viren.jpg,Apollo,Apollo,165/70 R14,165/70 R14,45.0,2019.0,0.95
+IMG_19022621 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_19022668 - Viren Viren.jpg,Apollo,Apollo,255/60 R16,255/60 R16,14.0,2024.0,0.95
+IMG_19022622 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_19022669 - Viren Viren.jpg,Apollo,Apollo,255/60 R18,255/60 R18,14.0,2024.0,0.95
+IMG_19022623 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_19022670 - Viren Viren.jpg,Apollo,Apollo,255/60 R18,255/60 R18,14.0,2024.0,0.95
+IMG_19022624 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_19022671 - Viren Viren.jpg,Apollo,Apollo,255/60 R18,255/60 R18,14.0,2024.0,0.95
+IMG_19022625 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_19022672 - Viren Viren.jpg,Bridgestone,Bridgestone,165/80 R14,165/80 R14,11.0,2029.0,0.95
+IMG_19022626 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_19022673 - Viren Viren.jpg,Bridgestone,Bridgestone,165/80 R14,165/80 R14,11.0,2029.0,0.95
+IMG_19022627 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_19022674 - Viren Viren.jpg,Bridgestone,Bridgestone,165/80 R14,165/80 R14,11.0,2029.0,0.95
+IMG_19022628 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_19022675 - Viren Viren.jpg,Bridgestone,Bridgestone,165/80 R14,165/80 R14,11.0,2029.0,0.95
+IMG_19022629 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_19022676 - Viren Viren.jpg,MRF,MRF,165/70 R14,165/70 R14,2.0,2023.0,0.95
+IMG_19022630 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_19022677 - Viren Viren.jpg,MRF,MRF,165/70 R14,165/70 R14,2.0,2023.0,0.95
+IMG_19022631 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_19022678 - Viren Viren.jpg,MRF,MRF,165/70 R14,165/70 R14,2.0,2023.0,0.95
+IMG_19022632 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_19022679 - Viren Viren.jpg,MRF,MRF,165/70 R14,165/70 R14,2.0,2023.0,0.95
+IMG_19022633 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Yokohama\IMG_19022680 - Viren Viren.jpg,Yokohama,Yokohama,175/60 R15,175/60 R15,47.0,2022.0,0.95
+IMG_19022634 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Yokohama\IMG_19022681 - Viren Viren.jpg,Yokohama,Yokohama,175/60 R15,175/60 R15,47.0,2022.0,0.95
+IMG_19022635 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Yokohama\IMG_19022682 - Viren Viren.jpg,Yokohama,Yokohama,175/60 R15,175/60 R15,47.0,2022.0,0.95
+IMG_19022636 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Yokohama\IMG_19022683 - Viren Viren.jpg,Yokohama,Yokohama,175/60 R15,175/60 R15,47.0,2022.0,0.95
+IMG_19022637 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_19022684 - Viren Viren.jpg,CEAT,CEAT,145/80 R12,145/80 R12,2.0,2025.0,0.95
+IMG_19022638 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_19022685 - Viren Viren.jpg,CEAT,CEAT,145/80 R12,145/80 R12,2.0,2025.0,0.95
+IMG_19022639 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_19022686 - Viren Viren.jpg,CEAT,CEAT,145/80 R12,145/80 R12,2.0,2025.0,0.95
+IMG_19022640 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_19022687 - Viren Viren.jpg,CEAT,CEAT,145/80 R12,145/80 R12,2.0,2025.0,0.95
+IMG_19022641 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Michelin\IMG_19022688 - Viren Viren.jpg,Michelin,Michelin,205/55 ZR16,205/55 ZR16,23.0,2024.0,0.95
+IMG_19022642 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Michelin\IMG_19022689 - Viren Viren.jpg,Michelin,Michelin,205/55 ZR16,205/55 ZR16,23.0,2024.0,0.95
+IMG_19022643 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Michelin\IMG_19022691 - Viren Viren.jpg,Michelin,Michelin,205/55 ZR16,205/55 ZR16,23.0,2024.0,0.95
+IMG_19022644 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_19022692 - Viren Viren.jpg,CEAT,CEAT,205/55 R16,205/55 R16,37.0,2022.0,0.95
+IMG_19022645 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_19022693 - Viren Viren.jpg,CEAT,CEAT,205/55 R16,205/55 R16,37.0,2022.0,0.95
+IMG_19022646 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_19022694 - Viren Viren.jpg,CEAT,CEAT,205/55 R16,205/55 R16,37.0,2022.0,0.95
+IMG_19022647 - Viren Viren.jpg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_19022695 - Viren Viren.jpg,CEAT,CEAT,205/55 R16,205/55 R16,37.0,2022.0,0.95
+IMG_7342[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_7343 - Ubaid Elahi Baba.jpeg,Goodyear,Goodyear,195/60 R16,195/60 R16,49.0,2024.0,0.95
+IMG_7345 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_7346 - Ubaid Elahi Baba.jpeg,Goodyear,Goodyear,195/60 R16,195/60 R16,49.0,2024.0,0.95
+IMG_7348 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_7349 - Ubaid Elahi Baba.jpeg,Goodyear,Goodyear,195/60 R16,195/60 R16,49.0,2024.0,0.95
+IMG_7351 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_7352 - Ubaid Elahi Baba.jpeg,Goodyear,Goodyear,195/60 R16,195/60 R16,49.0,2024.0,0.95
+IMG_7354 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_7355 - Ubaid Elahi Baba.jpeg,JK Tyre,JK Tyre,205/60 R17,205/60 R17,30.0,2025.0,0.95
+IMG_7357 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_7359 - Ubaid Elahi Baba.jpeg,JK Tyre,JK Tyre,205/60 R17,205/60 R17,30.0,2025.0,0.95
+IMG_7361 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_7362 - Ubaid Elahi Baba.jpeg,JK Tyre,JK Tyre,205/60 R17,205/60 R17,30.0,2025.0,0.95
+IMG_7364 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_7365 - Ubaid Elahi Baba.jpeg,JK Tyre,JK Tyre,205/60 R17,205/60 R17,30.0,2025.0,0.95
+IMG_7367 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_7368 - Ubaid Elahi Baba.jpeg,Bridgestone,Bridgestone,165/70 R15,165/70 R15,13.0,2022.0,0.95
+IMG_7370 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_7371 - Ubaid Elahi Baba.jpeg,MRF,MRF,165/70 R14,165/70 R14,2.0,2015.0,0.95
+IMG_7373 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_7374 - Ubaid Elahi Baba.jpeg,Bridgestone,Bridgestone,165/70 R14,165/70 R14,13.0,2022.0,0.95
+IMG_7376 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_7377 - Ubaid Elahi Baba.jpeg,Bridgestone,Bridgestone,165/70 R14,165/70 R14,13.0,2022.0,0.95
+IMG_7380 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_7382 - Ubaid Elahi Baba.jpeg,Apollo,Apollo,165/70 R14,165/70 R14,11.0,2024.0,0.95
+IMG_7384 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_7385 - Ubaid Elahi Baba.jpeg,Apollo,Apollo,165/70 R14,165/70 R14,11.0,2024.0,0.95
+IMG_7387 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_7388 - Ubaid Elahi Baba.jpeg,Apollo,Apollo,165/70 R14,165/70 R14,11.0,2024.0,0.95
+IMG_7390 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_7391 - Ubaid Elahi Baba.jpeg,Apollo,Apollo,165/70 R14,165/70 R14,11.0,2024.0,0.95
+IMG_7394 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_7395 - Ubaid Elahi Baba.jpeg,Bridgestone,Bridgestone,185/65 R15,185/65 R15,4.0,2025.0,0.95
+IMG_7398 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_7399 - Ubaid Elahi Baba.jpeg,Bridgestone,Bridgestone,185/65 R15,185/65 R15,4.0,2025.0,0.95
+IMG_7401 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_7403 - Ubaid Elahi Baba.jpeg,Bridgestone,Bridgestone,185/65 R15,185/65 R15,4.0,2025.0,0.95
+IMG_7405 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_7406 - Ubaid Elahi Baba.jpeg,Bridgestone,Bridgestone,185/65 R15,185/65 R15,4.0,2025.0,0.95
+IMG_7408 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_7409 - Ubaid Elahi Baba.jpeg,JK Tyre,JK Tyre,165/80 R14,165/80 R14,46.0,2022.0,0.95
+IMG_7411 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_7413 - Ubaid Elahi Baba.jpeg,JK Tyre,JK Tyre,165/80 R14,165/80 R14,46.0,2022.0,0.95
+IMG_7415 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_7416 - Ubaid Elahi Baba.jpeg,Bridgestone,Bridgestone,165/80 R14,165/80 R14,40.0,2019.0,0.95
+IMG_7418 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_7419 - Ubaid Elahi Baba.jpeg,Bridgestone,Bridgestone,165/80 R14,165/80 R14,,,0.95
+IMG_7421 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_7422 - Ubaid Elahi Baba.jpeg,Bridgestone,Bridgestone,185/65 R15,185/65 R15,16.0,2024.0,0.95
+IMG_7424 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_7425 - Ubaid Elahi Baba.jpeg,Bridgestone,Bridgestone,185/65 R15,185/65 R15,16.0,2024.0,0.95
+IMG_7427 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_7428 - Ubaid Elahi Baba.jpeg,Bridgestone,Bridgestone,185/65 R15,185/65 R15,16.0,2024.0,0.95
+IMG_7430 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_7431 - Ubaid Elahi Baba.jpeg,Bridgestone,Bridgestone,185/65 R15,185/65 R15,16.0,2024.0,0.95
+IMG_7433 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_7434 - Ubaid Elahi Baba.jpeg,Apollo,Apollo,145/80 R12,145/80 R12,8.0,2015.0,0.95
+IMG_7436 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_7437 - Ubaid Elahi Baba.jpeg,Apollo,Apollo,145/80 R12,145/80 R12,8.0,2015.0,0.95
+IMG_7439 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_7440 - Ubaid Elahi Baba.jpeg,Apollo,Apollo,145/80 R12,145/80 R12,8.0,2015.0,0.95
+IMG_7442 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_7443 - Ubaid Elahi Baba.jpeg,Apollo,Apollo,145/80 R12,145/80 R12,8.0,2015.0,0.95
+IMG_7445 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Firestone\IMG_7446 - Ubaid Elahi Baba.jpeg,Firestone,Firestone,145/80 R12,145/80 R12,16.0,2022.0,0.95
+IMG_7448 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Firestone\IMG_7449 - Ubaid Elahi Baba.jpeg,Firestone,Firestone,145/80 R12,145/80 R12,40.0,2024.0,0.95
+IMG_7451 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_7452 - Ubaid Elahi Baba.jpeg,Apollo,Apollo,145/80 R12,145/80 R12,40.0,2024.0,0.95
+IMG_7454 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_7455 - Ubaid Elahi Baba.jpeg,Goodyear,Goodyear,145/80 R12,145/80 R12,52.0,2024.0,0.95
+IMG_7457 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_7458 - Ubaid Elahi Baba.jpeg,Bridgestone,Bridgestone,155/65 R14,155/65 R14,34.0,2023.0,0.95
+IMG_7460 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_7461 - Ubaid Elahi Baba.jpeg,Bridgestone,Bridgestone,155/65 R14,155/65 R14,34.0,2023.0,0.95
+IMG_7463 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_7464 - Ubaid Elahi Baba.jpeg,MRF,MRF,155/65 R14,155/65 R14,19.0,2025.0,0.95
+IMG_7463[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_7464[1] - Viren Viren.JPG,MRF,MRF,155/65 R14,155/65 R14,19.0,2025.0,0.95
+IMG_7469[2] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Yokohama\IMG_7470[1] - Viren Viren.JPG,Yokohama,Yokohama,215/60 R17,215/60 R17,24.0,2025.0,0.95
+IMG_7472[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Yokohama\IMG_7473[1] - Viren Viren.JPG,Yokohama,Yokohama,215/60 R17,215/60 R17,6.0,2025.0,0.95
+IMG_7475[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Yokohama\IMG_7476[1] - Viren Viren.JPG,Yokohama,Yokohama,215/60 R17,215/60 R17,6.0,2025.0,0.95
+IMG_7478[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Yokohama\IMG_7479[1] - Viren Viren.JPG,Yokohama,Yokohama,215/60 R17,215/60 R17,4.0,2025.0,0.95
+IMG_7481[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_7482[1] - Viren Viren.JPG,Apollo,Apollo,165/80 R14,165/80 R14,31.0,2022.0,0.95
+IMG_7484[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_7485[1] - Viren Viren.JPG,Apollo,Apollo,165/80 R14,165/80 R14,41.0,2019.0,0.95
+IMG_7487[2] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_7488[1] - Viren Viren.JPG,Apollo,Apollo,165/80 R14,165/80 R14,30.0,2022.0,0.95
+IMG_7490[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_7491[1] - Viren Viren.JPG,Apollo,Apollo,165/80 R14,165/80 R14,30.0,2022.0,0.95
+IMG_7493[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_7494[1] - Viren Viren.JPG,Bridgestone,Bridgestone,165/65 R14,165/65 R14,45.0,2022.0,0.95
+IMG_7496[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_7497[1] - Viren Viren.JPG,Bridgestone,Bridgestone,175/65 R14,175/65 R14,2.0,2020.0,0.95
+IMG_7499[2] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_7500[1] - Viren Viren.JPG,Bridgestone,Bridgestone,175/65 R14,175/65 R14,19.0,2028.0,0.95
+IMG_7502[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_7503[2] - Viren Viren.JPG,Bridgestone,Bridgestone,175/65 R14,175/65 R14,19.0,2023.0,0.95
+IMG_7509[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_7510[1] - Viren Viren.JPG,Bridgestone,Bridgestone,175/65 R14,175/65 R14,19.0,2023.0,0.95
+IMG_7512[1] - 25cp08 tyre.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_7513[1] - 25cp08 tyre.JPG,MRF,MRF,165/80 R14,165/80 R14,29.0,2024.0,0.95
+IMG_7515[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_7516[1] - Viren Viren.JPG,MRF,MRF,165/80 R14,165/80 R14,29.0,2024.0,0.95
+IMG_7518[1] - 25cp08 tyre.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_7519[1] - 25cp08 tyre.JPG,Apollo,Apollo,165/80 R14,165/80 R14,50.0,2017.0,0.95
+IMG_7524 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_7525 - Ubaid Elahi Baba.jpeg,JK Tyre,JK Tyre,145/80 R13,145/80 R13,45.0,2023.0,0.95
+IMG_7527 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_7528 - Ubaid Elahi Baba.jpeg,JK Tyre,JK Tyre,145/80 R13,145/80 R13,45.0,2023.0,0.95
+IMG_7530 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_7531 - Ubaid Elahi Baba.jpeg,JK Tyre,JK Tyre,145/80 R13,145/80 R13,45.0,2023.0,0.95
+IMG_7533 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_7534 - Ubaid Elahi Baba.jpeg,JK Tyre,JK Tyre,155/80 R13,155/80 R13,18.0,2022.0,0.95
+IMG_7536 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_7537 - Ubaid Elahi Baba.jpeg,JK Tyre,JK Tyre,155/80 R13,155/80 R13,2.0,2022.0,0.95
+IMG_7539 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_7540 - Ubaid Elahi Baba.jpeg,JK Tyre,JK Tyre,155/80 R13,155/80 R13,18.0,2022.0,0.95
+IMG_7542 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_7543 - Ubaid Elahi Baba.jpeg,JK Tyre,JK Tyre,155/80 R13,155/80 R13,18.0,2022.0,0.95
+IMG_7546 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_7547 - Ubaid Elahi Baba.jpeg,MRF,MRF,165/80 R14,165/80 R14,2.0,2019.0,0.95
+IMG_7549 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_7550 - Ubaid Elahi Baba.jpeg,MRF,MRF,165/80 R14,165/80 R14,24.0,2019.0,0.95
+IMG_7552 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_7553 - Ubaid Elahi Baba.jpeg,MRF,MRF,165/80 R14,165/80 R14,2.0,2019.0,0.95
+IMG_7555 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_7556 - Ubaid Elahi Baba.jpeg,MRF,MRF,165/80 R14,165/80 R14,2.0,2019.0,0.95
+IMG_7558 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_7559 - Ubaid Elahi Baba.jpeg,Goodyear,Goodyear,195/55 R16,195/55 R16,47.0,2021.0,0.95
+IMG_7561 - Ubaid Elahi Baba.jpeg,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_7562 - Ubaid Elahi Baba.jpeg,Goodyear,Goodyear,195/55 R16,195/55 R16,47.0,2021.0,0.95
+IMG_7561[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_7562[1] - Viren Viren.JPG,Goodyear,Goodyear,195/55 R16,195/55 R16,47.0,2021.0,0.95
+IMG_7564[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_7565[1] - Viren Viren.JPG,Goodyear,Goodyear,195/55 R16,195/55 R16,47.0,2021.0,0.95
+IMG_7567[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_7568[1] - Viren Viren.JPG,Goodyear,Goodyear,195/55 R16,195/55 R16,47.0,2021.0,0.95
+IMG_7570[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_7571[1] - Viren Viren.JPG,Apollo,Apollo,165/70 R14,165/70 R14,46.0,2025.0,0.95
+IMG_7573[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_7574[1] - Viren Viren.JPG,Apollo,Apollo,165/70 R14,165/70 R14,46.0,2025.0,0.95
+IMG_7576[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_7577[1] - Viren Viren.JPG,Apollo,Apollo,165/70 R14,165/70 R14,46.0,2025.0,0.95
+IMG_7579[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_7580[1] - Viren Viren.JPG,Apollo,Apollo,165/70 R14,165/70 R14,46.0,2025.0,0.95
+IMG_7582[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_7583[1] - Viren Viren.JPG,Apollo,Apollo,195/55 R16,195/55 R16,8.0,2022.0,0.95
+IMG_7585[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_7586[1] - Viren Viren.JPG,Apollo,Apollo,195/55 R16,195/55 R16,8.0,2022.0,0.95
+IMG_7588[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_7589[1] - Viren Viren.JPG,Apollo,Apollo,195/55 R16,195/55 R16,8.0,2022.0,0.95
+IMG_7591[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_7592[1] - Viren Viren.JPG,Apollo,Apollo,195/55 R16,195/55 R16,8.0,2022.0,0.95
+IMG_7594[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_7595[1] - Viren Viren.JPG,JK Tyre,JK Tyre,215/55 R18,215/55 R18,46.0,2025.0,0.95
+IMG_7597[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_7598[1] - Viren Viren.JPG,JK Tyre,JK Tyre,215/55 R18,215/55 R18,46.0,2025.0,0.95
+IMG_7600[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_7601[1] - Viren Viren.JPG,JK Tyre,JK Tyre,215/55 R18,215/55 R18,46.0,2025.0,0.95
+IMG_7603[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_7604[1] - Viren Viren.JPG,JK Tyre,JK Tyre,215/55 R18,215/55 R18,46.0,2025.0,0.95
+IMG_7879[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_7880[1] - Viren Viren.JPG,Apollo,Apollo,165/65 R14,165/65 R14,22.0,2018.0,0.95
+IMG_7882[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_7883[1] - Viren Viren.JPG,Apollo,Apollo,165/65 R14,165/65 R14,22.0,2018.0,0.95
+IMG_7885[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_7886[1] - Viren Viren.JPG,Apollo,Apollo,165/65 R14,165/65 R14,22.0,2018.0,0.95
+IMG_7888[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_7889[1] - Viren Viren.JPG,Apollo,Apollo,165/65 R14,165/65 R14,22.0,2018.0,0.95
+IMG_7891[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_7892[1] - Viren Viren.JPG,Goodyear,Goodyear,215/60 R16,215/60 R16,17.0,2023.0,0.95
+IMG_7897[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_7898[1] - Viren Viren.JPG,Goodyear,Goodyear,215/60 R16,215/60 R16,17.0,2023.0,0.95
+IMG_7900[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_7901[1] - Viren Viren.JPG,Goodyear,Goodyear,215/60 R16,215/60 R16,17.0,2023.0,0.95
+IMG_7903[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_7904[1] - Viren Viren.JPG,MRF,MRF,185/65 R14,185/65 R14,35.0,2017.0,0.95
+IMG_7906[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_7907[1] - Viren Viren.JPG,MRF,MRF,185/65 R14,185/65 R14,42.0,2017.0,0.95
+IMG_7909[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_7910[1] - Viren Viren.JPG,MRF,MRF,185/65 R14,185/65 R14,42.0,2017.0,0.95
+IMG_7912[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_7913[1] - Viren Viren.JPG,MRF,MRF,185/65 R14,185/65 R14,42.0,2017.0,0.95
+IMG_7915[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_7916[1] - Viren Viren.JPG,Bridgestone,Bridgestone,155/65 R14,155/65 R14,14.0,2017.0,0.95
+IMG_7918[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_7919[1] - Viren Viren.JPG,Apollo,Apollo,155/65 R14,155/65 R14,45.0,2013.0,0.95
+IMG_7921[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_7922[1] - Viren Viren.JPG,Bridgestone,Bridgestone,155/65 R14,155/65 R14,,,0.95
+IMG_7924[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_7925[1] - Viren Viren.JPG,Bridgestone,Bridgestone,155/65 R14,155/65 R14,,,0.95
+IMG_7927[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_7928[1] - Viren Viren.JPG,Bridgestone,Bridgestone,175/65 R15,175/65 R15,17.0,2024.0,0.95
+IMG_7930[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_7931[1] - Viren Viren.JPG,Bridgestone,Bridgestone,175/65 R15,175/65 R15,17.0,2024.0,0.95
+IMG_7933[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_7934[1] - Viren Viren.JPG,Bridgestone,Bridgestone,175/65 R15,175/65 R15,17.0,2024.0,0.95
+IMG_7936[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_7937[1] - Viren Viren.JPG,Bridgestone,Bridgestone,175/65 R15,175/65 R15,49.0,2022.0,0.95
+IMG_7939[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_7940[1] - Viren Viren.JPG,Bridgestone,Bridgestone,165/80 R14,165/80 R14,11.0,2023.0,0.95
+IMG_7942[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_7943[1] - Viren Viren.JPG,Bridgestone,Bridgestone,165/80 R14,165/80 R14,11.0,2023.0,0.95
+IMG_7945[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_7946[1] - Viren Viren.JPG,Bridgestone,Bridgestone,165/80 R14,165/80 R14,11.0,2023.0,0.95
+IMG_7948[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_7949[1] - Viren Viren.JPG,Bridgestone,Bridgestone,165/80 R14,165/80 R14,11.0,2023.0,0.95
+IMG_7951[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_7952[1] - Viren Viren.JPG,Apollo,Apollo,155/70 R13,155/70 R13,2.0,2018.0,0.95
+IMG_7954[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_7955[1] - Viren Viren.JPG,Apollo,Apollo,155/70 R13,155/70 R13,6.0,2018.0,0.95
+IMG_7957[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_7958[1] - Viren Viren.JPG,Apollo,Apollo,155/70 R13,155/70 R13,23.0,2023.0,0.95
+IMG_7960[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_7961[1] - Viren Viren.JPG,Apollo,Apollo,155/70 R13,155/70 R13,12.0,2023.0,0.95
+IMG_8169[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_8168[1] - Viren Viren.JPG,MRF,MRF,215/60 R16,215/60 R16,50.0,2024.0,0.95
+IMG_8172[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_8171[1] - Viren Viren.JPG,MRF,MRF,215/60 R16,215/60 R16,50.0,2024.0,0.95
+IMG_8175[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_8174[1] - Viren Viren.JPG,MRF,MRF,215/60 R16,215/60 R16,50.0,2024.0,0.95
+IMG_8178[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_8177[1] - Viren Viren.JPG,Apollo,Apollo,215/60 R17,215/60 R17,25.0,2023.0,0.95
+IMG_8181[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_8180[1] - Viren Viren.JPG,Apollo,Apollo,215/60 R17,215/60 R17,24.0,2023.0,0.95
+IMG_8187[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_8186[1] - Viren Viren.JPG,Apollo,Apollo,215/60 R17,215/60 R17,25.0,2023.0,0.95
+IMG_8197[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_8196[1] - Viren Viren.JPG,Goodyear,Goodyear,155/80 R13,155/80 R13,,,0.95
+IMG_8200[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Toyo\IMG_8199[1] - Viren Viren.JPG,Toyo,Toyo,155/80 R13,155/80 R13,,,0.95
+IMG_8203[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Kelly\IMG_8202[1] - Viren Viren.JPG,Kelly,Kelly,155/80 R13,155/80 R13,24.0,2025.0,0.95
+IMG_8207[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_8206[1] - Viren Viren.JPG,Apollo,Apollo,145/80 R12,145/80 R12,,,0.95
+IMG_8210[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Dunlop\IMG_8209[1] - Viren Viren.JPG,Dunlop,Dunlop,145/80 R12,145/80 R12,51.0,2011.0,0.95
+IMG_8214[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_8213[1] - Viren Viren.JPG,Apollo,Apollo,145/80 R12,145/80 R12,51.0,2011.0,0.95
+IMG_8217[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Dunlop\IMG_8216[1] - Viren Viren.JPG,Dunlop,Dunlop,145/80 R12,145/80 R12,51.0,2011.0,0.95
+IMG_8221[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_8220[1] - Viren Viren.JPG,Apollo,Apollo,185/65 R15,185/65 R15,37.0,2024.0,0.95
+IMG_8224[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_8223[1] - Viren Viren.JPG,Apollo,Apollo,185/65 R15,185/65 R15,37.0,2024.0,0.95
+IMG_8227[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_8226[1] - Viren Viren.JPG,Apollo,Apollo,185/65 R15,185/65 R15,37.0,2024.0,0.95
+IMG_8231[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_8229[1] - Viren Viren.JPG,Apollo,Apollo,185/65 R15,185/65 R15,37.0,2024.0,0.95
+IMG_8234[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_8233[1] - Viren Viren.JPG,Goodyear,Goodyear,215/60 R16,215/60 R16,41.0,2073.0,0.95
+IMG_8237[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_8236[1] - Viren Viren.JPG,Goodyear,Goodyear,215/60 R16,215/60 R16,29.0,2023.0,0.95
+IMG_8240[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_8239[1] - Viren Viren.JPG,Goodyear,Goodyear,215/60 R16,215/60 R16,29.0,2023.0,0.95
+IMG_8243[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_8242[1] - Viren Viren.JPG,Goodyear,Goodyear,215/60 R16,215/60 R16,41.0,2073.0,0.95
+IMG_8246[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_8245[1] - Viren Viren.JPG,MRF,MRF,185/70 R14,185/70 R14,35.0,2024.0,0.95
+IMG_8250[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_8249[1] - Viren Viren.JPG,MRF,MRF,185/70 R14,185/70 R14,35.0,2024.0,0.95
+IMG_8253[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_8252[1] - Viren Viren.JPG,MRF,MRF,185/70 R14,185/70 R14,35.0,2024.0,0.95
+IMG_8277[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_8276[1] - Viren Viren.JPG,MRF,MRF,185/65 R15,185/65 R15,,,0.95
+IMG_8280[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_8279[1] - Viren Viren.JPG,CEAT,CEAT,185/65 R15,185/65 R15,41.0,2023.0,0.95
+IMG_8283[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_8282[1] - Viren Viren.JPG,CEAT,CEAT,185/65 R15,185/65 R15,41.0,2023.0,0.95
+IMG_8286[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_8285[1] - Viren Viren.JPG,JK Tyre,JK Tyre,145/80 R12,145/80 R12,1.0,2038.0,0.95
+IMG_8289[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_8288[1] - Viren Viren.JPG,CEAT,CEAT,145/80 R12,145/80 R12,39.0,2016.0,0.95
+IMG_8292[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_8291[1] - Viren Viren.JPG,Apollo,Apollo,145/80 R12,145/80 R12,32.0,2015.0,0.95
+IMG_8295[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_8294[1] - Viren Viren.JPG,MRF,MRF,145/80 R12,145/80 R12,48.0,2015.0,0.95
+IMG_8298[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_8297[1] - Viren Viren.JPG,Apollo,Apollo,145/80 R13,145/80 R13,27.0,2025.0,0.95
+IMG_8301[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_8300[1] - Viren Viren.JPG,Apollo,Apollo,145/80 R13,145/80 R13,27.0,2025.0,0.95
+IMG_8304[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_8303[1] - Viren Viren.JPG,Apollo,Apollo,145/80 R13,145/80 R13,14.0,2025.0,0.95
+IMG_8307[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_8306[1] - Viren Viren.JPG,Apollo,Apollo,145/80 R13,145/80 R13,53.0,2004.0,0.95
+IMG_8310[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_8309[1] - Viren Viren.JPG,CEAT,CEAT,145/80 R12,145/80 R12,32.0,2024.0,0.95
+IMG_8313[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_8312[1] - Viren Viren.JPG,Apollo,Apollo,145/80 R12,145/80 R12,32.0,2015.0,0.95
+IMG_8316[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_8315[1] - Viren Viren.JPG,MRF,MRF,145/80 R12,145/80 R12,40.0,2018.0,0.95
+IMG_8319[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_8318[1] - Viren Viren.JPG,CEAT,CEAT,145/80 R12,145/80 R12,32.0,2024.0,0.95
+IMG_8322[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_8321[1] - Viren Viren.JPG,CEAT,CEAT,145/80 R12,145/80 R12,52.0,2024.0,0.95
+IMG_8325[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_8324[1] - Viren Viren.JPG,MRF,MRF,145/80 R12,145/80 R12,44.0,2019.0,0.95
+IMG_8328[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_8327[1] - Viren Viren.JPG,MRF,MRF,145/80 R12,145/80 R12,43.0,2019.0,0.95
+IMG_8372[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_8373[1] - Viren Viren.JPG,CEAT,CEAT,185/65 R16,185/65 R16,37.0,2022.0,0.95
+IMG_8375[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_8376[1] - Viren Viren.JPG,CEAT,CEAT,205/55/R 16,205/55/R 16,37.0,2022.0,0.95
+IMG_8381[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_8382[1] - Viren Viren.JPG,Apollo,Apollo,215/60/R 16,215/60/R 16,52.0,2021.0,0.95
+IMG_8384[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_8385[1] - Viren Viren.JPG,Apollo,Apollo,215/60/R 16,215/60/R 16,51.0,2021.0,0.95
+IMG_8387[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_8389[1] - Viren Viren.JPG,Apollo,Apollo,215/60/R 16,215/60/R 16,51.0,2021.0,0.95
+IMG_8394[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_8395[1] - Viren Viren.JPG,Bridgestone,Bridgestone,195/55 R16,195/55 R16,30.0,2022.0,0.95
+IMG_8397[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_8398[1] - Viren Viren.JPG,Bridgestone,Bridgestone,195/55 R16,195/55 R16,30.0,2022.0,0.95
+IMG_8400[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_8401[1] - Viren Viren.JPG,Bridgestone,Bridgestone,195/55 R16,195/55 R16,28.0,2022.0,0.95
+IMG_8403[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_8404[1] - Viren Viren.JPG,Apollo,Apollo,185/65 R15,185/65 R15,12.0,2025.0,0.95
+IMG_8406[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_8407[1] - Viren Viren.JPG,Apollo,Apollo,185/65 R15,185/65 R15,12.0,2025.0,0.95
+IMG_8409[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_8410[1] - Viren Viren.JPG,Apollo,Apollo,185/65 R15,185/65 R15,12.0,2025.0,0.95
+IMG_8412[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_8413[1] - Viren Viren.JPG,Apollo,Apollo,185/65 R15,185/65 R15,12.0,2025.0,0.95
+IMG_8415[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_8416[1] - Viren Viren.JPG,CEAT,CEAT,145/80 R12,145/80 R12,2.0,2025.0,0.95
+IMG_8418[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_8419[1] - Viren Viren.JPG,CEAT,CEAT,145/80 R12,145/80 R12,2.0,2025.0,0.95
+IMG_8421[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_8422[1] - Viren Viren.JPG,CEAT,CEAT,145/80 R12,145/80 R12,2.0,2025.0,0.95
+IMG_8424[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_8425[1] - Viren Viren.JPG,CEAT,CEAT,145/80 R12,145/80 R12,2.0,2025.0,0.95
+IMG_8427[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Continental\IMG_8428[1] - Viren Viren.JPG,Continental,Continental,205/55 R16,205/55 R16,48.0,2022.0,0.95
+IMG_8430[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Continental\IMG_8431[1] - Viren Viren.JPG,Continental,Continental,205/55 R16,205/55 R16,9.0,2022.0,0.95
+IMG_8433[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Continental\IMG_8434[1] - Viren Viren.JPG,Continental,Continental,205/55 R16,205/55 R16,48.0,2022.0,0.95
+IMG_8436[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_8437[1] - Viren Viren.JPG,Apollo,Apollo,155/65 R14,155/65 R14,49.0,2022.0,0.95
+IMG_8439[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_8440[1] - Viren Viren.JPG,Apollo,Apollo,155/65 R14,155/65 R14,11.0,2023.0,0.95
+IMG_8442[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_8443[1] - Viren Viren.JPG,Apollo,Apollo,155/65 R14,155/65 R14,11.0,2023.0,0.95
+IMG_8445[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_8446[1] - Viren Viren.JPG,Apollo,Apollo,155/65 R14,155/65 R14,11.0,2023.0,0.95
+IMG_8448[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_8449[1] - Viren Viren.JPG,CEAT,CEAT,175/65 R15,175/65 R15,38.0,2025.0,0.95
+IMG_8451[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_8452[1] - Viren Viren.JPG,CEAT,CEAT,175/65 R15,175/65 R15,38.0,2025.0,0.95
+IMG_8454[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_8455[1] - Viren Viren.JPG,CEAT,CEAT,175/65 R15,175/65 R15,38.0,2025.0,0.95
+IMG_8458[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_8457[1] - Viren Viren.JPG,CEAT,CEAT,175/65 R15,175/65 R15,38.0,2023.0,0.95
+IMG_8461[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Pirelli\IMG_8460[1] - Viren Viren.JPG,Pirelli,Pirelli,225/55 R17,225/55 R17,14.0,2023.0,0.95
+IMG_8464[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Pirelli\IMG_8463[1] - Viren Viren.JPG,Pirelli,Pirelli,225/55 R17,225/55 R17,26.0,2023.0,0.95
+IMG_8467[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Pirelli\IMG_8466[1] - Viren Viren.JPG,Pirelli,Pirelli,225/55 R17,225/55 R17,26.0,2023.0,0.95
+IMG_8469[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_8470[1] - Viren Viren.JPG,JK Tyre,JK Tyre,215/55 R18,215/55 R18,20.0,2025.0,0.95
+IMG_8472[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_8473[1] - Viren Viren.JPG,JK Tyre,JK Tyre,215/55 R18,215/55 R18,13.0,2025.0,0.95
+IMG_8476[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_8477[1] - Viren Viren.JPG,JK Tyre,JK Tyre,215/55 R18,215/55 R18,16.0,2025.0,0.95
+IMG_8479[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_8480[1] - Viren Viren.JPG,JK Tyre,JK Tyre,215/55 R18,215/55 R18,18.0,2025.0,0.95
+IMG_8482[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_8483[1] - Viren Viren.JPG,Apollo,Apollo,185/65 R15,185/65 R15,44.0,2022.0,0.95
+IMG_8485[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_8486[1] - Viren Viren.JPG,Apollo,Apollo,185/65 R15,185/65 R15,45.0,2022.0,0.95
+IMG_8489[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_8488[1] - Viren Viren.JPG,Apollo,Apollo,185/65 R15,185/65 R15,44.0,2022.0,0.95
+IMG_8491[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_8492[1] - Viren Viren.JPG,JK Tyre,JK Tyre,215/55 R18,215/55 R18,18.0,2024.0,0.95
+IMG_8494[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_8495[1] - Viren Viren.JPG,JK Tyre,JK Tyre,215/55 R18,215/55 R18,17.0,2024.0,0.95
+IMG_8497[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_8498[1] - Viren Viren.JPG,JK Tyre,JK Tyre,215/55 R18,215/55 R18,21.0,2024.0,0.95
+IMG_8500[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_8501[1] - Viren Viren.JPG,JK Tyre,JK Tyre,215/55 R18,215/55 R18,19.0,2024.0,0.95
+IMG_8826 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_8827 - Viren Viren.JPG,Apollo,Apollo,185/65 R15,185/65 R15,1.0,2018.0,0.95
+IMG_8829 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_8830[1] - Viren Viren.JPG,Bridgestone,Bridgestone,185/65 R15,185/65 R15,44.0,2023.0,0.95
+IMG_8832 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_8833 - Viren Viren.JPG,Bridgestone,Bridgestone,185/65 R15,185/65 R15,44.0,2023.0,0.95
+IMG_8835[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_8836[1] - Viren Viren.JPG,Apollo,Apollo,185/65 R15,185/65 R15,2.0,2018.0,0.95
+IMG_8838 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_8839 - Viren Viren.JPG,MRF,MRF,165/70 R14,165/70 R14,,,0.3
+IMG_8841 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_8842 - Viren Viren.JPG,MRF,MRF,165/70 R14,165/70 R14,,,0.3
+IMG_8844[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Yokohama\IMG_8845 - Viren Viren.JPG,Yokohama,Yokohama,175/65 R14,175/65 R14,40.0,2022.0,0.95
+IMG_8847 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_8848 - Viren Viren.JPG,MRF,MRF,175/65 R14,175/65 R14,,,0.3
+IMG_8850 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Yokohama\IMG_8851 - Viren Viren.JPG,Yokohama,Yokohama,175/65 R14,175/65 R14,40.0,2022.0,0.95
+IMG_8853 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_8854 - Viren Viren.JPG,MRF,MRF,175/65 R14,175/65 R14,27.0,2018.0,0.95
+IMG_8856 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_8857 - Viren Viren.JPG,JK Tyre,JK Tyre,155/80/R13,155/80/R13,2.0,2022.0,0.95
+IMG_8859[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_8860 - Viren Viren.JPG,JK Tyre,JK Tyre,155/80/R13,155/80/R13,18.0,2022.0,0.95
+IMG_8862 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_8863 - Viren Viren.JPG,JK Tyre,JK Tyre,155/80/R13,155/80/R13,9.0,2022.0,0.95
+IMG_8865 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_8866 - Viren Viren.JPG,JK Tyre,JK Tyre,155/80/R13,155/80/R13,18.0,2022.0,0.95
+IMG_8868 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_8869 - Viren Viren.JPG,MRF,MRF,185/60/R16,185/60/R16,17.0,2023.0,0.95
+IMG_8871 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_8872 - Viren Viren.JPG,CEAT,CEAT,165/80 R14,165/80 R14,12.0,2025.0,0.95
+IMG_8874 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_8875 - Viren Viren.JPG,CEAT,CEAT,165/80 R14,165/80 R14,12.0,2025.0,0.95
+IMG_8877 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_8878 - Viren Viren.JPG,CEAT,CEAT,165/80 R14,165/80 R14,12.0,2025.0,0.95
+IMG_8880 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_8882 - Viren Viren.JPG,CEAT,CEAT,215/55 R18,215/55 R18,18.0,2025.0,0.95
+IMG_8884 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_8885 - Viren Viren.JPG,CEAT,CEAT,215/55 R18,215/55 R18,18.0,2025.0,0.95
+IMG_8887 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Yokohama\IMG_8888 - Viren Viren.JPG,Yokohama,Yokohama,195/55 R16,195/55 R16,37.0,2025.0,0.95
+IMG_8890 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Yokohama\IMG_8891 - Viren Viren.JPG,Yokohama,Yokohama,195/55 R16,195/55 R16,37.0,2025.0,0.95
+IMG_8893 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Yokohama\IMG_8894 - Viren Viren.JPG,Yokohama,Yokohama,195/55 R16,195/55 R16,37.0,2025.0,0.95
+IMG_8896 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Yokohama\IMG_8897 - Viren Viren.JPG,Yokohama,Yokohama,195/55 R16,195/55 R16,33.0,2025.0,0.95
+IMG_8899 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_8901 - Viren Viren.JPG,JK Tyre,JK Tyre,215/55 R18,215/55 R18,46.0,2025.0,0.95
+IMG_8903 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_8904 - Viren Viren.JPG,JK Tyre,JK Tyre,215/55 R18,215/55 R18,46.0,2025.0,0.95
+IMG_8906 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_8907 - Viren Viren.JPG,JK Tyre,JK Tyre,215/55 R18,215/55 R18,46.0,2025.0,0.95
+IMG_8909 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_8910 - Viren Viren.JPG,Goodyear,Goodyear,215/55 R18,215/55 R18,34.0,2025.0,0.95
+IMG_8912 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_8913 - Viren Viren.JPG,Goodyear,Goodyear,215/55 R18,215/55 R18,34.0,2025.0,0.95
+IMG_8916 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_8917 - Viren Viren.JPG,Goodyear,Goodyear,215/55 R18,215/55 R18,34.0,2025.0,0.95
+IMG_8919 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_8920 - Viren Viren.JPG,Goodyear,Goodyear,215/55 R18,215/55 R18,37.0,2025.0,0.95
+IMG_8781 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_8782 - Viren Viren.JPG,CEAT,CEAT,185/65 R15,185/65 R15,38.0,2024.0,0.95
+IMG_8784 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_8785 - Viren Viren.JPG,CEAT,CEAT,165/80 R15,165/80 R15,2.0,2026.0,0.95
+IMG_8787 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_8788 - Viren Viren.JPG,CEAT,CEAT,165/80 R15,165/80 R15,38.0,2024.0,0.95
+IMG_8790 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_8791 - Viren Viren.JPG,Bridgestone,Bridgestone,195/65 R16,195/65 R16,32.0,2022.0,0.95
+IMG_8793 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_8794 - Viren Viren.JPG,Bridgestone,Bridgestone,195/65 R16,195/65 R16,32.0,2022.0,0.95
+IMG_8796 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_8797 - Viren Viren.JPG,Goodyear,Goodyear,165/70 R14,165/70 R14,50.0,2021.0,0.95
+IMG_8799 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_8800 - Viren Viren.JPG,Bridgestone,Bridgestone,195/65 R16,195/65 R16,44.0,2022.0,0.95
+IMG_8802 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_8803 - Viren Viren.JPG,Bridgestone,Bridgestone,195/65 R16,195/65 R16,32.0,2022.0,0.95
+IMG_8805 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_8806 - Viren Viren.JPG,Goodyear,Goodyear,165/70 R14,165/70 R14,50.0,2021.0,0.95
+IMG_8808 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_8809 - Viren Viren.JPG,Goodyear,Goodyear,165/70 R14,165/70 R14,50.0,2021.0,0.95
+IMG_8811 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_8812 - Viren Viren.JPG,Goodyear,Goodyear,165/70 R14,165/70 R14,50.0,2021.0,0.95
+IMG_8814 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_8815 - Viren Viren.JPG,Bridgestone,Bridgestone,145/80 R12,145/80 R12,52.0,2024.0,0.95
+IMG_8817 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_8818 - Viren Viren.JPG,Bridgestone,Bridgestone,145/80 R12,145/80 R12,4.0,2018.0,0.95
+IMG_8820 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_8821 - Viren Viren.JPG,Apollo,Apollo,145/80 R12,145/80 R12,18.0,2024.0,0.95
+IMG_8939 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_8940 - Viren Viren.JPG,MRF,MRF,215/60 R16,215/60 R16,,,0.3
+IMG_8942 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_8943 - Viren Viren.JPG,MRF,MRF,215/60 R16,215/60 R16,25.0,2024.0,0.95
+IMG_8945 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_8946 - Viren Viren.JPG,MRF,MRF,215/60 R16,215/60 R16,,,0.3
+IMG_8948 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_8949 - Viren Viren.JPG,MRF,MRF,215/60 R16,215/60 R16,25.0,2024.0,0.95
+IMG_8951 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_8952 - Viren Viren.JPG,MRF,MRF,155/65 R14,155/65 R14,44.0,2025.0,0.95
+IMG_8954 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_8955 - Viren Viren.JPG,MRF,MRF,155/65 R14,155/65 R14,44.0,2025.0,0.95
+IMG_8957 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_8958 - Viren Viren.JPG,MRF,MRF,155/65 R14,155/65 R14,,,0.3
+IMG_8960 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_8961 - Viren Viren.JPG,MRF,MRF,155/65 R14,155/65 R14,44.0,2025.0,0.95
+IMG_8963 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_8964 - Viren Viren.JPG,Apollo,Apollo,215/60 R17,215/60 R17,19.0,2023.0,0.95
+IMG_8966 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_8967 - Viren Viren.JPG,Apollo,Apollo,215/60 R17,215/60 R17,19.0,2023.0,0.95
+IMG_8969 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_8970 - Viren Viren.JPG,Apollo,Apollo,215/60 R17,215/60 R17,19.0,2023.0,0.95
+IMG_8972 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_8973 - Viren Viren.JPG,Apollo,Apollo,215/60 R17,215/60 R17,19.0,2023.0,0.95
+IMG_8975 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_8976 - Viren Viren.JPG,JK Tyre,JK Tyre,155/R13 C,155/R13 C,45.0,2023.0,0.95
+IMG_8978 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_8979 - Viren Viren.JPG,JK Tyre,JK Tyre,155/R13 C,155/R13 C,45.0,2023.0,0.95
+IMG_8981 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_8982 - Viren Viren.JPG,JK Tyre,JK Tyre,155/R13 C,155/R13 C,45.0,2022.0,0.95
+IMG_8984 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_8985 - Viren Viren.JPG,JK Tyre,JK Tyre,155/R13 C,155/R13 C,45.0,2023.0,0.95
+IMG_8987 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_8988 - Viren Viren.JPG,MRF,MRF,185/70 R14,185/70 R14,52.0,2024.0,0.95
+IMG_8990 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_8991 - Viren Viren.JPG,Goodyear,Goodyear,185/70 R14,185/70 R14,26.0,2019.0,0.95
+IMG_8993 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_8994 - Viren Viren.JPG,Goodyear,Goodyear,185/70 R14,185/70 R14,38.0,2015.0,0.95
+IMG_8996 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_8997 - Viren Viren.JPG,MRF,MRF,185/70 R14,185/70 R14,52.0,2024.0,0.95
+IMG_8999 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Michelin\IMG_9001 - Viren Viren.JPG,Michelin,Michelin,215/55 R14,215/55 R14,24.0,2024.0,0.95
+IMG_9003 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Michelin\IMG_9004 - Viren Viren.JPG,Michelin,Michelin,215/55 R14,215/55 R14,28.0,2024.0,0.95
+IMG_9006 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Michelin\IMG_9007 - Viren Viren.JPG,Michelin,Michelin,215/55 R14,215/55 R14,24.0,2024.0,0.95
+IMG_9009 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Michelin\IMG_9010 - Viren Viren.JPG,Michelin,Michelin,215/55 R14,215/55 R14,24.0,2024.0,0.95
+IMG_9012 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_9013 - Viren Viren.JPG,Apollo,Apollo,195/55 R16,195/55 R16,50.0,2022.0,0.95
+IMG_9015 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_9016 - Viren Viren.JPG,Apollo,Apollo,195/55 R16,195/55 R16,,,0.3
+IMG_9018 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_9019 - Viren Viren.JPG,Apollo,Apollo,195/55 R16,195/55 R16,50.0,2022.0,0.95
+IMG_9021 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_9022 - Viren Viren.JPG,CEAT,CEAT,165/70 R14,165/70 R14,,,0.95
+IMG_9024 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_9025 - Viren Viren.JPG,CEAT,CEAT,165/70 R14,165/70 R14,,,0.95
+IMG_9027 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_9028 - Viren Viren.JPG,CEAT,CEAT,165/70 R14,165/70 R14,,,0.95
+IMG_9030 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_9031 - Viren Viren.JPG,Bridgestone,Bridgestone,195/65 R15,195/65 R15,,,0.3
+IMG_9033 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_9034 - Viren Viren.JPG,Bridgestone,Bridgestone,195/65 R15,195/65 R15,,,0.3
+IMG_9036 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_9037 - Viren Viren.JPG,Bridgestone,Bridgestone,195/65 R15,195/65 R15,49.0,2023.0,0.95
+IMG_9039 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_9040 - Viren Viren.JPG,Bridgestone,Bridgestone,195/65 R15,195/65 R15,,,0.3
+IMG_9042 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_9043 - Viren Viren.JPG,Apollo,Apollo,215/60 R17,215/60 R17,31.0,2025.0,0.95
+IMG_9045 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_9046 - Viren Viren.JPG,Apollo,Apollo,215/60 R17,215/60 R17,30.0,2025.0,0.95
+IMG_9048 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_9049 - Viren Viren.JPG,Apollo,Apollo,215/60 R17,215/60 R17,30.0,2025.0,0.95
+IMG_9051 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_9052 - Viren Viren.JPG,Apollo,Apollo,215/60 R17,215/60 R17,30.0,2025.0,0.95
+IMG_9054 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_9055 - Viren Viren.JPG,CEAT,CEAT,215/60 R16,215/60 R16,46.0,2021.0,0.95
+IMG_9057 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_9058 - Viren Viren.JPG,CEAT,CEAT,215/60 R16,215/60 R16,42.0,2021.0,0.95
+IMG_9060 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_9061 - Viren Viren.JPG,CEAT,CEAT,215/60 R16,215/60 R16,46.0,2021.0,0.95
+IMG_9063 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_9064 - Viren Viren.JPG,CEAT,CEAT,215/60 R16,215/60 R16,42.0,2021.0,0.95
+IMG_9066 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_9067 - Viren Viren.JPG,Apollo,Apollo,215/60 R17,215/60 R17,36.0,2025.0,0.95
+IMG_9069 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_9070 - Viren Viren.JPG,Apollo,Apollo,215/60 R17,215/60 R17,36.0,2025.0,0.95
+IMG_9072 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_9073 - Viren Viren.JPG,Apollo,Apollo,215/60 R17,215/60 R17,27.0,2025.0,0.95
+IMG_9075 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_9077 - Viren Viren.JPG,Apollo,Apollo,215/60 R17,215/60 R17,27.0,2025.0,0.95
+IMG_9079 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_9082 - Viren Viren.JPG,Goodyear,Goodyear,155/80 R13,155/80 R13,41.0,2024.0,0.95
+IMG_9084 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_9085 - Viren Viren.JPG,Goodyear,Goodyear,155/80 R13,155/80 R13,39.0,2026.0,0.95
+IMG_9087 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Michelin\IMG_9088 - Viren Viren.JPG,Michelin,Michelin,195/65 R15,195/65 R15,20.0,2018.0,0.95
+IMG_9090 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_9091 - Viren Viren.JPG,Bridgestone,Bridgestone,185/65 R15,185/65 R15,34.0,2023.0,0.95
+IMG_9094 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Kelly\IMG_9095 - Viren Viren.JPG,Kelly,Kelly,165/80 R14,165/80 R14,9.0,2022.0,0.95
+IMG_9097 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Kelly\IMG_9098 - Viren Viren.JPG,Kelly,Kelly,165/80 R14,165/80 R14,28.0,2024.0,0.95
+IMG_9101 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_9102 - Viren Viren.JPG,Bridgestone,Bridgestone,165/70 R14,165/70 R14,23.0,2025.0,0.95
+IMG_9104 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_9105 - Viren Viren.JPG,Bridgestone,Bridgestone,165/70 R14,165/70 R14,23.0,2025.0,0.95
+IMG_9107 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_9108 - Viren Viren.JPG,Bridgestone,Bridgestone,165/70 R14,165/70 R14,23.0,2025.0,0.95
+IMG_9110 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9111 - Viren Viren.JPG,MRF,MRF,215/60 R16,215/60 R16,30.0,2018.0,0.95
+IMG_9113 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9114 - Viren Viren.JPG,MRF,MRF,215/60 R16,215/60 R16,30.0,2019.0,0.95
+IMG_9116 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9117 - Viren Viren.JPG,MRF,MRF,185/65 R15,185/65 R15,9.0,2019.0,0.95
+IMG_9119 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9120 - Viren Viren.JPG,MRF,MRF,185/65 R15,185/65 R15,44.0,2024.0,0.95
+IMG_9123 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9124 - Viren Viren.JPG,MRF,MRF,185/65 R15,185/65 R15,,,0.3
+IMG_9126 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9127 - Viren Viren.JPG,MRF,MRF,185/65 R15,185/65 R15,37.0,2024.0,0.95
+IMG_9129 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_9130 - Viren Viren.JPG,Apollo,Apollo,155/65 R14,155/65 R14,20.0,2023.0,0.95
+IMG_9132 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_9133 - Viren Viren.JPG,Apollo,Apollo,155/65 R14,155/65 R14,,,0.3
+IMG_9135 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_9136 - Viren Viren.JPG,Apollo,Apollo,155/65 R14,155/65 R14,,,0.3
+IMG_9138 - Viren Viren.JPG,,Apollo,Apollo,155/65 R14,155/65 R14,,,0.3
+IMG_9200 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_9201 - Viren Viren.JPG,Apollo,Apollo,215/60 R17,215/60 R17,42.0,2022.0,0.95
+IMG_9301 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_9302 - Viren Viren.JPG,Apollo,Apollo,195/55 R16,195/55 R16,28.0,2022.0,0.95
+IMG_9304 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Yokohama\IMG_9305 - Viren Viren.JPG,Yokohama,Yokohama,165/80 R14,165/80 R14,21.0,2019.0,0.95
+IMG_9307 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Yokohama\IMG_9308 - Viren Viren.JPG,Yokohama,Yokohama,165/80 R14,165/80 R14,21.0,2019.0,0.95
+IMG_9310 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_9312 - Viren Viren.JPG,Apollo,Apollo,185/70 R15,185/70 R15,46.0,2024.0,0.95
+IMG_9314 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_9315 - Viren Viren.JPG,Apollo,Apollo,185/70 R15,185/70 R15,46.0,2024.0,0.95
+IMG_9317 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_9318 - Viren Viren.JPG,Apollo,Apollo,185/70 R15,185/70 R15,46.0,2024.0,0.95
+IMG_9320 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_9321 - Viren Viren.JPG,Apollo,Apollo,185/70 R15,185/70 R15,46.0,2024.0,0.95
+IMG_9323 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_9324 - Viren Viren.JPG,Bridgestone,Bridgestone,255/55 R18,255/55 R18,37.0,2025.0,0.95
+IMG_9326[1] - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_9327 - Viren Viren.JPG,Bridgestone,Bridgestone,255/55 R18,255/55 R18,37.0,2026.0,0.95
+IMG_9329 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_9330 - Viren Viren.JPG,Bridgestone,Bridgestone,255/55 R18,255/55 R18,36.0,2025.0,0.95
+IMG_9332 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_9333 - Viren Viren.JPG,Goodyear,Goodyear,205/65 R16,205/65 R16,,,0.3
+IMG_9335 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_9336 - Viren Viren.JPG,Bridgestone,Bridgestone,255/55 R18,255/55 R18,37.0,2025.0,0.95
+IMG_9344 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9345 - Viren Viren.JPG,MRF,MRF,215/60 R16,215/60 R16,29.0,2022.0,0.95
+IMG_9347 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_9348 - Viren Viren.JPG,Goodyear,Goodyear,205/65 R16,205/65 R16,,,0.3
+IMG_9350 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9351 - Viren Viren.JPG,MRF,MRF,215/60 R16,215/60 R16,29.0,2022.0,0.95
+IMG_9353 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9354 - Viren Viren.JPG,MRF,MRF,215/60 R16,215/60 R16,29.0,2022.0,0.95
+IMG_9356 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9357 - Viren Viren.JPG,MRF,MRF,215/60 R16,215/60 R16,25.0,2023.0,0.95
+IMG_9359 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_9360 - Viren Viren.JPG,Goodyear,Goodyear,185/65 R15,185/65 R15,9.0,2024.0,0.95
+IMG_9362 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_9363 - Viren Viren.JPG,Goodyear,Goodyear,185/65 R15,185/65 R15,9.0,2024.0,0.95
+IMG_9365 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_9366 - Viren Viren.JPG,Goodyear,Goodyear,185/65 R15,185/65 R15,9.0,2024.0,0.95
+IMG_9368 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_9369 - Viren Viren.JPG,Goodyear,Goodyear,185/65 R15,185/65 R15,9.0,2024.0,0.95
+IMG_9371 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_9372 - Viren Viren.JPG,CEAT,CEAT,215/60 R16,215/60 R16,27.0,2024.0,0.95
+IMG_9374 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_9375 - Viren Viren.JPG,CEAT,CEAT,215/60 R16,215/60 R16,27.0,2024.0,0.95
+IMG_9377 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_9378 - Viren Viren.JPG,CEAT,CEAT,215/60 R16,215/60 R16,27.0,2024.0,0.95
+IMG_9380 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_9381 - Viren Viren.JPG,CEAT,CEAT,215/60 R16,215/60 R16,27.0,2024.0,0.95
+IMG_9383 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_9384 - Viren Viren.JPG,CEAT,CEAT,185/70 R15,185/70 R15,48.0,2024.0,0.95
+IMG_9386 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_9387 - Viren Viren.JPG,CEAT,CEAT,185/70 R15,185/70 R15,48.0,2024.0,0.95
+IMG_9389 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_9390 - Viren Viren.JPG,CEAT,CEAT,185/70 R15,185/70 R15,48.0,2024.0,0.95
+IMG_9392 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_9393 - Viren Viren.JPG,CEAT,CEAT,205/55 R16,205/55 R16,,,0.3
+IMG_9395 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_9396 - Viren Viren.JPG,Apollo,Apollo,165/70 R14,165/70 R14,,,0.3
+IMG_9398 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_9399 - Viren Viren.JPG,JK Tyre,JK Tyre,155/R13 C,155/R13 C,,,0.3
+IMG_9404 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_9405 - Viren Viren.JPG,JK Tyre,JK Tyre,155/R13 C,155/R13 C,,,0.3
+IMG_9407 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_9408 - Viren Viren.JPG,Bridgestone,Bridgestone,175/65 R15,175/65 R15,40.0,2022.0,0.95
+IMG_9410 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_9411 - Viren Viren.JPG,Bridgestone,Bridgestone,175/65 R15,175/65 R15,40.0,2022.0,0.95
+IMG_9413 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_9414 - Viren Viren.JPG,Bridgestone,Bridgestone,205/55 R16,205/55 R16,23.0,2024.0,0.95
+IMG_9416 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_9417 - Viren Viren.JPG,Bridgestone,Bridgestone,205/55 R16,205/55 R16,23.0,2024.0,0.95
+IMG_9419 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_9420 - Viren Viren.JPG,Bridgestone,Bridgestone,145/80 R12,145/80 R12,53.0,2017.0,0.95
+IMG_9423 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_9424 - Viren Viren.JPG,Bridgestone,Bridgestone,145/80 R12,145/80 R12,53.0,2017.0,0.95
+IMG_9426 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_9427 - Viren Viren.JPG,Goodyear,Goodyear,165/70 R14,165/70 R14,35.0,2024.0,0.95
+IMG_9429 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_9431 - Viren Viren.JPG,Apollo,Apollo,165/65 R14,165/65 R14,35.0,2025.0,0.95
+IMG_9433 - Shubham Chodankar.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9434 - Shubham Chodankar.JPG,MRF,MRF,185/65 R15,185/65 R15,,,0.3
+IMG_9498 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9541 - Ubaid Elahi Baba.JPG,MRF,MRF,145/80 R12,145/80 R12,45.0,2024.0,0.95
+IMG_9628 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9629 - Ubaid Elahi Baba.JPG,MRF,MRF,215/60 R17,215/60 R17,,,0.3
+IMG_9631 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_9632 - Ubaid Elahi Baba.JPG,CEAT,CEAT,205/55 R16,205/55 R16,22.0,2023.0,0.95
+IMG_9634 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_9635 - Ubaid Elahi Baba.JPG,CEAT,CEAT,205/55 R16,205/55 R16,21.0,2023.0,0.95
+IMG_9637 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Yokohama\IMG_9638 - Ubaid Elahi Baba.JPG,Yokohama,Yokohama,205/65 R16,205/65 R16,43.0,2021.0,0.95
+IMG_9640 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_9641 - Ubaid Elahi Baba.JPG,Bridgestone,Bridgestone,155/65 R14,155/65 R14,23.0,2023.0,0.95
+IMG_9643 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_9644 - Ubaid Elahi Baba.JPG,Bridgestone,Bridgestone,155/65 R14,155/65 R14,23.0,2023.0,0.95
+IMG_9646 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Yokohama\IMG_9647 - Ubaid Elahi Baba.JPG,Yokohama,Yokohama,185/65 R15,185/65 R15,1.0,2025.0,0.95
+IMG_9649 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Yokohama\IMG_9650 - Ubaid Elahi Baba.JPG,Yokohama,Yokohama,185/65 R15,185/65 R15,34.0,2025.0,0.95
+IMG_9652 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Yokohama\IMG_9653 - Ubaid Elahi Baba.JPG,Yokohama,Yokohama,185/65 R15,185/65 R15,40.0,2022.0,0.95
+IMG_9655 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_9656 - Ubaid Elahi Baba.JPG,Bridgestone,Bridgestone,175/65 R14,175/65 R14,11.0,2022.0,0.95
+IMG_9658 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_9659 - Ubaid Elahi Baba.JPG,Goodyear,Goodyear,175/60 R15,175/60 R15,,,0.3
+IMG_9662 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_9663 - Ubaid Elahi Baba.JPG,CEAT,CEAT,185/70 R15,185/70 R15,27.0,2023.0,0.95
+IMG_9665 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_9666 - Ubaid Elahi Baba.JPG,Goodyear,Goodyear,175/60 R15,175/60 R15,28.0,2025.0,0.95
+IMG_9668 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_9669 - Ubaid Elahi Baba.JPG,CEAT,CEAT,185/70 R15,185/70 R15,27.0,2023.0,0.95
+IMG_9671 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_9672 - Ubaid Elahi Baba.JPG,CEAT,CEAT,185/70 R15,185/70 R15,27.0,2023.0,0.95
+IMG_9674 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_9675 - Ubaid Elahi Baba.JPG,CEAT,CEAT,185/70 R15,185/70 R15,36.0,2023.0,0.95
+IMG_9677 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9678 - Ubaid Elahi Baba.JPG,MRF,MRF,155/80 R13,155/80 R13,,,0.3
+IMG_9680 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9681 - Ubaid Elahi Baba.JPG,MRF,MRF,155/80 R13,155/80 R13,,,0.3
+IMG_9683 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9684 - Ubaid Elahi Baba.JPG,MRF,MRF,155/80 R13,155/80 R13,,,0.3
+IMG_9686 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9687 - Ubaid Elahi Baba.JPG,MRF,MRF,155/80 R13,155/80 R13,,,0.3
+IMG_9689 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_9690 - Ubaid Elahi Baba.JPG,JK Tyre,JK Tyre,215/60 R17,215/60 R17,3.0,2026.0,0.95
+IMG_9692 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_9693 - Ubaid Elahi Baba.JPG,JK Tyre,JK Tyre,215/60 R17,215/60 R17,3.0,2024.0,0.95
+IMG_9695 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_9696 - Ubaid Elahi Baba.JPG,JK Tyre,JK Tyre,215/60 R17,215/60 R17,3.0,2026.0,0.95
+IMG_9698 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_9699 - Ubaid Elahi Baba.JPG,JK Tyre,JK Tyre,215/60 R17,215/60 R17,3.0,2024.0,0.95
+IMG_9701 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_9702 - Ubaid Elahi Baba.JPG,Apollo,Apollo,195/60 R16,195/60 R16,42.0,2022.0,0.95
+IMG_9704 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_9705 - Ubaid Elahi Baba.JPG,Apollo,Apollo,195/60 R16,195/60 R16,42.0,2022.0,0.95
+IMG_9707 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_9708 - Ubaid Elahi Baba.JPG,Apollo,Apollo,195/60 R16,195/60 R16,42.0,2022.0,0.95
+IMG_9710 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_9711 - Ubaid Elahi Baba.JPG,Apollo,Apollo,195/60 R16,195/60 R16,39.0,2022.0,0.95
+IMG_9713 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_9714 - Ubaid Elahi Baba.JPG,Bridgestone,Bridgestone,215/60 R16,215/60 R16,,,0.3
+IMG_9716 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_9717 - Ubaid Elahi Baba.JPG,Bridgestone,Bridgestone,215/60 R16,215/60 R16,,,0.3
+IMG_9719 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_9720 - Ubaid Elahi Baba.JPG,Bridgestone,Bridgestone,215/60 R16,215/60 R16,,,0.3
+IMG_9722 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_9723 - Ubaid Elahi Baba.JPG,Bridgestone,Bridgestone,215/60 R16,215/60 R16,,,0.3
+IMG_9725 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_9726 - Ubaid Elahi Baba.JPG,Bridgestone,Bridgestone,185/65 R15,185/65 R15,28.0,2021.0,0.95
+IMG_9729 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9730 - Ubaid Elahi Baba.JPG,MRF,MRF,185/65 R15,185/65 R15,8.0,2024.0,0.95
+IMG_9733 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9734 - Ubaid Elahi Baba.JPG,MRF,MRF,185/65 R15,185/65 R15,8.0,2024.0,0.95
+IMG_9736 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_9737 - Ubaid Elahi Baba.JPG,CEAT,CEAT,155/65 R13,155/65 R13,31.0,2022.0,0.95
+IMG_9740 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_9741 - Ubaid Elahi Baba.JPG,CEAT,CEAT,155/65 R13,155/65 R13,51.0,2022.0,0.95
+IMG_9744 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9745 - Ubaid Elahi Baba.JPG,MRF,MRF,155/65 R13,155/65 R13,,,0.3
+IMG_9747 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9748 - Ubaid Elahi Baba.JPG,MRF,MRF,155/70 R14,155/70 R14,,,0.3
+IMG_9750 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9751 - Ubaid Elahi Baba.JPG,MRF,MRF,155/70 R14,155/70 R14,,,0.3
+IMG_9753 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9754 - Ubaid Elahi Baba.JPG,MRF,MRF,155/70 R14,155/70 R14,,,0.3
+IMG_9492 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Continental\IMG_9493 - Ubaid Elahi Baba.JPG,Continental,Continental,165/70 R14,165/70 R14,50.0,2022.0,0.95
+IMG_9501 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9502 - Ubaid Elahi Baba.JPG,MRF,MRF,165/65 R14,165/65 R14,,,0.3
+IMG_9504 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_9505 - Ubaid Elahi Baba.JPG,CEAT,CEAT,185/70 R15,185/70 R15,42.0,2028.0,0.95
+IMG_9507 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_9508 - Ubaid Elahi Baba.JPG,CEAT,CEAT,185/70 R15,185/70 R15,48.0,2023.0,0.95
+IMG_9510 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_9511 - Ubaid Elahi Baba.JPG,JK Tyre,JK Tyre,155/65 R14,155/65 R14,2.0,2025.0,0.95
+IMG_9513 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_9514 - Ubaid Elahi Baba.JPG,CEAT,CEAT,185/70 R15,185/70 R15,48.0,2023.0,0.95
+IMG_9516 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_9517 - Ubaid Elahi Baba.JPG,CEAT,CEAT,185/70 R15,185/70 R15,48.0,2023.0,0.95
+IMG_9519 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_9520 - Ubaid Elahi Baba.JPG,JK Tyre,JK Tyre,205/60 R16,205/60 R16,43.0,2021.0,0.95
+IMG_9522 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Maxtrek\IMG_9523 - Ubaid Elahi Baba.JPG,Maxtrek,Maxtrek,205/60 R16,205/60 R16,,,0.3
+IMG_9525 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Maxtrek\IMG_9526 - Ubaid Elahi Baba.JPG,Maxtrek,Maxtrek,205/60 R16,205/60 R16,,,0.3
+IMG_9528 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Dunlop\IMG_9529 - Ubaid Elahi Baba.JPG,Dunlop,Dunlop,205/60 R16,205/60 R16,,,0.3
+IMG_9531 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9532 - Ubaid Elahi Baba.JPG,MRF,MRF,205/60 R16,205/60 R16,,,0.3
+IMG_9534 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9535 - Ubaid Elahi Baba.JPG,MRF,MRF,145/80 R12,145/80 R12,46.0,2024.0,0.95
+IMG_9537 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9538 - Ubaid Elahi Baba.JPG,MRF,MRF,145/80 R12,145/80 R12,51.0,2024.0,0.95
+IMG_9544 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9545 - Ubaid Elahi Baba.JPG,MRF,MRF,145/80 R12,145/80 R12,16.0,2025.0,0.95
+IMG_9547 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9548 - Ubaid Elahi Baba.JPG,MRF,MRF,165/65 R14,165/65 R14,23.0,2024.0,0.95
+IMG_9550 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9551 - Ubaid Elahi Baba.JPG,MRF,MRF,165/65 R14,165/65 R14,23.0,2024.0,0.95
+IMG_9553 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9554 - Ubaid Elahi Baba.JPG,MRF,MRF,165/65 R14,165/65 R14,7.0,2025.0,0.95
+IMG_9556 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_9557 - Ubaid Elahi Baba.JPG,JK Tyre,JK Tyre,165/80 R14,165/80 R14,50.0,2014.0,0.95
+IMG_9559 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_9560 - Ubaid Elahi Baba.JPG,Bridgestone,Bridgestone,165/80 R14,165/80 R14,40.0,2021.0,0.95
+IMG_9562 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_9563 - Ubaid Elahi Baba.JPG,Bridgestone,Bridgestone,165/80 R14,165/80 R14,3.0,2022.0,0.95
+IMG_9565 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Yokohama\IMG_9566 - Ubaid Elahi Baba.JPG,Yokohama,Yokohama,165/80 R14,165/80 R14,11.0,2023.0,0.95
+IMG_9568 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_9569 - Ubaid Elahi Baba.JPG,Goodyear,Goodyear,205/65 R16,205/65 R16,30.0,2020.0,0.95
+IMG_9571 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_9572 - Ubaid Elahi Baba.JPG,Goodyear,Goodyear,205/65 R16,205/65 R16,3.0,2021.0,0.95
+IMG_9574 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_9575 - Ubaid Elahi Baba.JPG,Goodyear,Goodyear,205/65 R16,205/65 R16,30.0,2020.0,0.95
+IMG_9577 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_9578 - Ubaid Elahi Baba.JPG,CEAT,CEAT,155/80 R13,155/80 R13,24.0,2016.0,0.95
+IMG_9580 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_9581 - Ubaid Elahi Baba.JPG,Goodyear,Goodyear,155/80 R13,155/80 R13,21.0,2022.0,0.95
+IMG_9583 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_9584 - Ubaid Elahi Baba.JPG,Goodyear,Goodyear,155/80 R13,155/80 R13,21.0,2022.0,0.95
+IMG_9586 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_9587 - Ubaid Elahi Baba.JPG,Goodyear,Goodyear,155/80 R13,155/80 R13,21.0,2022.0,0.95
+IMG_9589 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9590 - Ubaid Elahi Baba.JPG,MRF,MRF,155/65 R15,155/65 R15,5.0,2025.0,0.95
+IMG_9592 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9593 - Ubaid Elahi Baba.JPG,MRF,MRF,155/65 R15,155/65 R15,25.0,2025.0,0.95
+IMG_9595 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_9596 - Ubaid Elahi Baba.JPG,Apollo,Apollo,205/65 R16,205/65 R16,22.0,2023.0,0.95
+IMG_9598 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_9599 - Ubaid Elahi Baba.JPG,Apollo,Apollo,205/65 R16,205/65 R16,22.0,2023.0,0.95
+IMG_9601 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_9602 - Ubaid Elahi Baba.JPG,Apollo,Apollo,205/65 R16,205/65 R16,22.0,2023.0,0.95
+IMG_9604 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9605 - Ubaid Elahi Baba.JPG,MRF,MRF,155/65 R15,155/65 R15,,,0.3
+IMG_9607 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9608 - Ubaid Elahi Baba.JPG,MRF,MRF,155/65 R15,155/65 R15,,,0.3
+IMG_9610 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9611 - Ubaid Elahi Baba.JPG,MRF,MRF,155/65 R15,155/65 R15,,,0.3
+IMG_9613 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_9614 - Ubaid Elahi Baba.JPG,Bridgestone,Bridgestone,165/70 R14,165/70 R14,,,0.3
+IMG_9616 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_9617 - Ubaid Elahi Baba.JPG,Bridgestone,Bridgestone,165/70 R14,165/70 R14,43.0,2025.0,0.95
+IMG_9619 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_9620 - Ubaid Elahi Baba.JPG,Bridgestone,Bridgestone,165/70 R14,165/70 R14,47.0,2025.0,0.95
+IMG_9622 - Ubaid Elahi Baba.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_9623 - Ubaid Elahi Baba.JPG,Bridgestone,Bridgestone,165/70 R14,165/70 R14,44.0,2025.0,0.95
+IMG_9847 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_9848 - Viren Viren.JPG,Goodyear,Goodyear,195/60 R16,195/60 R16,5.0,2025.0,0.95
+IMG_9850 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_9851 - Viren Viren.JPG,Goodyear,Goodyear,195/60 R16,195/60 R16,5.0,2025.0,0.95
+IMG_9853 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_9854 - Viren Viren.JPG,Goodyear,Goodyear,195/60 R16,195/60 R16,5.0,2025.0,0.95
+IMG_9856 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9857 - Viren Viren.JPG,MRF,MRF,145/70 R13,145/70 R13,,,0.3
+IMG_9859 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9860 - Viren Viren.JPG,MRF,MRF,145/70 R13,145/70 R13,,,0.3
+IMG_9862 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9864 - Viren Viren.JPG,MRF,MRF,145/70 R13,145/70 R13,,,0.3
+IMG_9866 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9867 - Viren Viren.JPG,MRF,MRF,185/65 R15,185/65 R15,,,0.3
+IMG_9869 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9870 - Viren Viren.JPG,MRF,MRF,185/65 R15,185/65 R15,,,0.3
+IMG_9872 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9873 - Viren Viren.JPG,MRF,MRF,185/65 R15,185/65 R15,35.0,2025.0,0.95
+IMG_9875 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_9876 - Viren Viren.JPG,Bridgestone,Bridgestone,145/80 R13,145/80 R13,,,0.3
+IMG_9878 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Yokohama\IMG_9880 - Viren Viren.JPG,Yokohama,Yokohama,185/65 R15,185/65 R15,41.0,2017.0,0.95
+IMG_9882 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Yokohama\IMG_9883 - Viren Viren.JPG,Yokohama,Yokohama,185/65 R15,185/65 R15,41.0,2017.0,0.95
+IMG_9885 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Yokohama\IMG_9886 - Viren Viren.JPG,Yokohama,Yokohama,185/65 R15,185/65 R15,26.0,2016.0,0.95
+IMG_9888 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_9889 - Viren Viren.JPG,Apollo,Apollo,215/60 R16,215/60 R16,45.0,2025.0,0.95
+IMG_9891 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_9892 - Viren Viren.JPG,Apollo,Apollo,215/60 R16,215/60 R16,46.0,2025.0,0.95
+IMG_9894 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_9895 - Viren Viren.JPG,Apollo,Apollo,215/60 R16,215/60 R16,46.0,2025.0,0.95
+IMG_9897 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_9898 - Viren Viren.JPG,Apollo,Apollo,215/60 R16,215/60 R16,46.0,2025.0,0.95
+IMG_9900 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9901 - Viren Viren.JPG,MRF,MRF,185/60 R15,185/60 R15,,,0.3
+IMG_9903 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9904 - Viren Viren.JPG,MRF,MRF,185/60 R15,185/60 R15,,,0.3
+IMG_9906 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9907 - Viren Viren.JPG,MRF,MRF,185/60 R15,185/60 R15,,,0.3
+IMG_9910 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Yokohama\IMG_9911 - Viren Viren.JPG,Yokohama,Yokohama,205/65 R16,205/65 R16,43.0,2021.0,0.95
+IMG_9913 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Yokohama\IMG_9914 - Viren Viren.JPG,Yokohama,Yokohama,205/65 R16,205/65 R16,43.0,2021.0,0.95
+IMG_9916 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Yokohama\IMG_9917 - Viren Viren.JPG,Yokohama,Yokohama,205/65 R16,205/65 R16,39.0,2021.0,0.95
+IMG_9919 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Yokohama\IMG_9920 - Viren Viren.JPG,Yokohama,Yokohama,205/65 R16,205/65 R16,39.0,2021.0,0.95
+IMG_9923 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_9924 - Viren Viren.JPG,Goodyear,Goodyear,215/60 R16,215/60 R16,16.0,2023.0,0.95
+IMG_9926 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_9927 - Viren Viren.JPG,Goodyear,Goodyear,215/60 R16,215/60 R16,16.0,2023.0,0.95
+IMG_9930 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_9932 - Viren Viren.JPG,Goodyear,Goodyear,215/60 R16,215/60 R16,16.0,2023.0,0.95
+IMG_9934 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_9936 - Viren Viren.JPG,Goodyear,Goodyear,215/60 R16,215/60 R16,15.0,2023.0,0.95
+IMG_9938 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9939 - Viren Viren.JPG,MRF,MRF,215/60 R17,215/60 R17,,,0.3
+IMG_9942 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9943 - Viren Viren.JPG,MRF,MRF,215/60 R17,215/60 R17,30.0,2025.0,0.95
+IMG_9946 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9947 - Viren Viren.JPG,MRF,MRF,215/60 R17,215/60 R17,30.0,2025.0,0.95
+IMG_9950 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9951 - Viren Viren.JPG,MRF,MRF,215/60 R17,215/60 R17,34.0,2025.0,0.95
+IMG_9954 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_9955 - Viren Viren.JPG,Bridgestone,Bridgestone,215/60 R16,215/60 R16,,,0.3
+IMG_9957 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_9958 - Viren Viren.JPG,Bridgestone,Bridgestone,215/60 R16,215/60 R16,,,0.3
+IMG_9960 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_9961 - Viren Viren.JPG,Bridgestone,Bridgestone,215/60 R16,215/60 R16,,,0.3
+IMG_9963 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_9964 - Viren Viren.JPG,Bridgestone,Bridgestone,215/60 R16,215/60 R16,,,0.3
+IMG_9966 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_9967 - Viren Viren.JPG,CEAT,CEAT,215/60 R16,215/60 R16,32.0,2023.0,0.95
+IMG_9970 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9971 - Viren Viren.JPG,MRF,MRF,215/65 R16,215/65 R16,27.0,2017.0,0.95
+IMG_9974 - Viren Viren.JPG,,Apollo,Apollo,195/55 R16,195/55 R16,35.0,2022.0,0.95
+IMG_9977 - Viren Viren.JPG,,Apollo,Apollo,195/55 R16,195/55 R16,35.0,2024.0,0.95
+IMG_9980 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Kelly\IMG_9981 - Viren Viren.JPG,Kelly,Kelly,155/65 R14,155/65 R14,40.0,2025.0,0.95
+IMG_9983 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_9984 - Viren Viren.JPG,JK Tyre,JK Tyre,155/65 R14,155/65 R14,32.0,2019.0,0.95
+IMG_9986 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_9987 - Viren Viren.JPG,JK Tyre,JK Tyre,155/65 R14,155/65 R14,39.0,2025.0,0.95
+IMG_9989 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_9990 - Viren Viren.JPG,Bridgestone,Bridgestone,185/70 R14,185/70 R14,45.0,2024.0,0.95
+IMG_9992 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_9993 - Viren Viren.JPG,Bridgestone,Bridgestone,185/70 R14,185/70 R14,6.0,2025.0,0.95
+IMG_9995 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9996 - Viren Viren.JPG,MRF,MRF,175/65 R14,175/65 R14,36.0,2024.0,0.95
+IMG_9998 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_9999 - Viren Viren.JPG,MRF,MRF,175/65 R14,175/65 R14,36.0,2024.0,0.95
+IMG_0002 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_0003 - Viren Viren.JPG,MRF,MRF,175/65 R14,175/65 R14,8.0,2025.0,0.95
+IMG_0005 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_0006 - Viren Viren.JPG,MRF,MRF,175/65 R14,175/65 R14,8.0,2025.0,0.95
+IMG_0008 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_0009 - Viren Viren.JPG,MRF,MRF,175/65 R14,175/65 R14,42.0,2022.0,0.95
+IMG_0011 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Firestone\IMG_0012 - Viren Viren.JPG,Firestone,Firestone,155/70 R13,155/70 R13,44.0,2023.0,0.95
+IMG_0014 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Firestone\IMG_0015 - Viren Viren.JPG,Firestone,Firestone,155/70 R13,155/70 R13,43.0,2023.0,0.95
+IMG_0017 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_0018 - Viren Viren.JPG,MRF,MRF,155/70 R13,155/70 R13,42.0,1999.0,0.95
+IMG_0020 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_0021 - Viren Viren.JPG,CEAT,CEAT,185/70 R14,185/70 R14,45.0,2021.0,0.95
+IMG_0023 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_0024 - Viren Viren.JPG,CEAT,CEAT,185/70 R14,185/70 R14,32.0,2021.0,0.95
+IMG_0026 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_0027 - Viren Viren.JPG,Bridgestone,Bridgestone,185/70 R14,185/70 R14,,,0.3
+IMG_0029 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_0030 - Viren Viren.JPG,Bridgestone,Bridgestone,185/70 R14,185/70 R14,8.0,2018.0,0.95
+IMG_0032 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Firestone\IMG_0033 - Viren Viren.JPG,Firestone,Firestone,185/70 R14,185/70 R14,,,0.3
+IMG_0035 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_0036 - Viren Viren.JPG,Bridgestone,Bridgestone,185/65/ R15,185/65/ R15,3.0,2023.0,0.95
+IMG_0038 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_0039 - Viren Viren.JPG,Bridgestone,Bridgestone,185/65/ R15,185/65/ R15,4.0,2023.0,0.95
+IMG_0041 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_0042 - Viren Viren.JPG,Bridgestone,Bridgestone,185/65/ R15,185/65/ R15,8.0,2021.0,0.95
+IMG_0044 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_0045 - Viren Viren.JPG,CEAT,CEAT,185/70 R15,185/70 R15,48.0,2023.0,0.95
+IMG_0047 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_0048 - Viren Viren.JPG,CEAT,CEAT,185/70 R15,185/70 R15,48.0,2023.0,0.95
+IMG_0050 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_0051 - Viren Viren.JPG,CEAT,CEAT,185/70 R15,185/70 R15,48.0,2023.0,0.95
+IMG_0053 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\CEAT\IMG_0054 - Viren Viren.JPG,CEAT,CEAT,185/70 R15,185/70 R15,48.0,2023.0,0.95
+IMG_0056 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_0057 - Viren Viren.JPG,MRF,MRF,165/80 R14,165/80 R14,,,0.3
+IMG_0059 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_0060 - Viren Viren.JPG,MRF,MRF,165/80 R14,165/80 R14,,,0.3
+IMG_0144 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_0145 - Viren Viren.JPG,Bridgestone,Bridgestone,175/65 R15,175/65 R15,8.0,2023.0,0.95
+IMG_0147 - Viren Viren.JPG,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG_0150 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_0151 - Viren Viren.JPG,Bridgestone,Bridgestone,175/65 R15,175/65 R15,8.0,2023.0,0.95
+IMG_0153 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_0154 - Viren Viren.JPG,Bridgestone,Bridgestone,175/65 R15,175/65 R15,8.0,2023.0,0.95
+IMG_0156 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Kelly\IMG_0157 - Viren Viren.JPG,Kelly,Kelly,155/80 R13,155/80 R13,12.0,2023.0,0.95
+IMG_0159 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Kelly\IMG_0160 - Viren Viren.JPG,Kelly,Kelly,155/80 R13,155/80 R13,19.0,2024.0,0.95
+IMG_0162 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Kelly\IMG_0163 - Viren Viren.JPG,Kelly,Kelly,155/80 R13,155/80 R13,19.0,2024.0,0.95
+IMG_0165 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Kelly\IMG_0166 - Viren Viren.JPG,Kelly,Kelly,155/80 R13,155/80 R13,19.0,2024.0,0.95
+IMG_0168 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_0169 - Viren Viren.JPG,Apollo,Apollo,195/60 R16,195/60 R16,23.0,2024.0,0.95
+IMG_0171 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_0172 - Viren Viren.JPG,Apollo,Apollo,195/60 R16,195/60 R16,23.0,2024.0,0.95
+IMG_0175 - Viren Viren.JPG,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG_0177 - Viren Viren.JPG,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG_0179 - Viren Viren.JPG,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG_0181 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_0182 - Viren Viren.JPG,MRF,MRF,205/60 R16,205/60 R16,18.0,2025.0,0.95
+IMG_0184 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_0185 - Viren Viren.JPG,MRF,MRF,205/60 R16,205/60 R16,18.0,2025.0,0.95
+IMG_0187 - Viren Viren.JPG,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG_0189 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_0190 - Viren Viren.JPG,MRF,MRF,205/60 R16,205/60 R16,14.0,2025.0,0.95
+IMG_0192 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_0193 - Viren Viren.JPG,MRF,MRF,205/60 R16,205/60 R16,,,0.3
+IMG_0195 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_0197 - Viren Viren.JPG,MRF,MRF,205/60 R16,205/60 R16,14.0,2025.0,0.95
+IMG_0200 - Viren Viren.JPG,,MRF,MRF,205/60 R16,205/60 R16,,,0.3
+IMG_0203 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_0204 - Viren Viren.JPG,MRF,MRF,165/70 R14,165/70 R14,,,0.3
+IMG_0206 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_0207 - Viren Viren.JPG,Bridgestone,Bridgestone,165/65 R14,165/65 R14,,,0.95
+IMG_0209 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_0210 - Viren Viren.JPG,Bridgestone,Bridgestone,165/65 R14,165/65 R14,,,0.95
+IMG_0212 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Bridgestone\IMG_0213 - Viren Viren.JPG,Bridgestone,Bridgestone,165/65 R14,165/65 R14,,,0.95
+IMG_0217 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_0219 - Viren Viren.JPG,Apollo,Apollo,195/55 R16,195/55 R16,8.0,2022.0,0.95
+IMG_0222 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_0221 - Viren Viren.JPG,Apollo,Apollo,195/55 R16,195/55 R16,8.0,2022.0,0.95
+IMG_0224 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_0225 - Viren Viren.JPG,Apollo,Apollo,195/55 R16,195/55 R16,8.0,2022.0,0.95
+IMG_0227 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_0228 - Viren Viren.JPG,Apollo,Apollo,195/55 R16,195/55 R16,8.0,2022.0,0.95
+IMG_0230 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_0231 - Viren Viren.JPG,Apollo,Apollo,165/80 R14,165/80 R14,50.0,2017.0,0.95
+IMG_0233 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_0234 - Viren Viren.JPG,MRF,MRF,165/80 R14,165/80 R14,,,0.3
+IMG_0236 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_0237 - Viren Viren.JPG,MRF,MRF,165/80 R14,165/80 R14,,,0.3
+IMG_0239 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_0240 - Viren Viren.JPG,MRF,MRF,165/80 R14,165/80 R14,29.0,2024.0,0.95
+IMG_0243 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_0244 - Viren Viren.JPG,Apollo,Apollo,215/60 R17,215/60 R17,37.0,2023.0,0.95
+IMG_0247 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_0246 - Viren Viren.JPG,Apollo,Apollo,215/60 R17,215/60 R17,37.0,2023.0,0.95
+IMG_0249 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_0250 - Viren Viren.JPG,Apollo,Apollo,215/60 R17,215/60 R17,37.0,2023.0,0.95
+IMG_0252 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Apollo\IMG_0253 - Viren Viren.JPG,Apollo,Apollo,215/60 R17,215/60 R17,37.0,2023.0,0.95
+IMG_0256 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_0257 - Viren Viren.JPG,MRF,MRF,215/60 R17,215/60 R17,43.0,2022.0,0.95
+IMG_0260 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_0259 - Viren Viren.JPG,MRF,MRF,215/60 R17,215/60 R17,43.0,2022.0,0.95
+IMG_0262 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_0263 - Viren Viren.JPG,MRF,MRF,215/60 R17,215/60 R17,,,0.3
+IMG_0265 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_0266 - Viren Viren.JPG,MRF,MRF,215/60 R17,215/60 R17,,,0.3
+IMG_0268 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_0269 - Viren Viren.JPG,JK Tyre,JK Tyre,145/80 R13,145/80 R13,45.0,2023.0,0.95
+IMG_0271 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_0272 - Viren Viren.JPG,JK Tyre,JK Tyre,145/80 R13,145/80 R13,45.0,2023.0,0.95
+IMG_0274 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_0275 - Viren Viren.JPG,JK Tyre,JK Tyre,145/80 R13,145/80 R13,45.0,2023.0,0.95
+IMG_0277 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_0278 - Viren Viren.JPG,JK Tyre,JK Tyre,145/80 R13,145/80 R13,45.0,2023.0,0.95
+IMG_0281 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_0280 - Viren Viren.JPG,Goodyear,Goodyear,215/60 R16,215/60 R16,17.0,2023.0,0.95
+IMG_0284 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_0283 - Viren Viren.JPG,Goodyear,Goodyear,215/60 R16,215/60 R16,17.0,2023.0,0.95
+IMG_0286 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_0287 - Viren Viren.JPG,Goodyear,Goodyear,215/60 R16,215/60 R16,17.0,2023.0,0.95
+IMG_0289 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_0290 - Viren Viren.JPG,Goodyear,Goodyear,215/60 R16,215/60 R16,17.0,2023.0,0.95
+IMG_0293 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_0292 - Viren Viren.JPG,JK Tyre,JK Tyre,215/55 R18,215/55 R18,18.0,2025.0,0.95
+IMG_0296 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_0295 - Viren Viren.JPG,JK Tyre,JK Tyre,215/55 R18,215/55 R18,20.0,2025.0,0.95
+IMG_0298 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_0299 - Viren Viren.JPG,JK Tyre,JK Tyre,215/55 R18,215/55 R18,16.0,2025.0,0.95
+IMG_0301 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\JK Tyre\IMG_0302 - Viren Viren.JPG,JK Tyre,JK Tyre,215/55 R18,215/55 R18,39.0,2025.0,0.95
+IMG_0304 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_0305 - Viren Viren.JPG,MRF,MRF,195/60 R16,195/60 R16,4.0,2026.0,0.95
+IMG_0308 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_0307 - Viren Viren.JPG,MRF,MRF,195/60 R16,195/60 R16,,,0.3
+IMG_0310 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_0311 - Viren Viren.JPG,MRF,MRF,195/60 R16,195/60 R16,,,0.3
+IMG_0313 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_0314 - Viren Viren.JPG,MRF,MRF,195/60 R16,195/60 R16,4.0,2026.0,0.95
+IMG_0317 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_0316 - Viren Viren.JPG,MRF,MRF,165/80 R14,165/80 R14,,,0.3
+IMG_0320 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_0319 - Viren Viren.JPG,MRF,MRF,165/80 R14,165/80 R14,11.0,2025.0,0.95
+IMG_0322 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_0323 - Viren Viren.JPG,MRF,MRF,165/80 R14,165/80 R14,,,0.3
+IMG_0325 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\MRF\IMG_0326 - Viren Viren.JPG,MRF,MRF,165/80 R14,165/80 R14,,,0.3
+IMG_0329 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_0328 - Viren Viren.JPG,Goodyear,Goodyear,185/60/ R15,185/60/ R15,31.0,2024.0,0.95
+IMG_0332 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_0331 - Viren Viren.JPG,Goodyear,Goodyear,185/60/ R15,185/60/ R15,52.0,2020.0,0.95
+IMG_0335 - Viren Viren.JPG,C:\Users\user\OneDrive\Desktop\New folder (2)\New folder\smart-tire-analyzer\dataset\raw\sidewall_images\Goodyear\IMG_0336 - Viren Viren.JPG,Goodyear,Goodyear,185/60/ R15,185/60/ R15,52.0,2020.0,0.95
+IMG20260325155830 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260325155758 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260325155725 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260325155646 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260325155613 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260325155539 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260325155505 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260325155439 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260325155356 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260325155332 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260325155257[1] - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260325155222[1] - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260325155146[1] - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260325155103[1] - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260325155025[1] - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260325154958[1] - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260325154919[1] - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260325154814[1] - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260325154706[1] - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260325154629[1] - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260325154559[1] - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260325154528[1] - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260325154502 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260325154442[1] - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260325154416 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260325154346[1] - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260325154313[1] - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260325154240[1] - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260325154151[1] - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260325154109 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260325154018 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260325153941 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260325153836 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260325153756 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260325153652 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260325153624 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260325153543 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260325153512 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260325153420 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260325153335 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330120034 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330120203 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330120232 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330120339 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330120413 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330120440 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330120518 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330120547 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330120615 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330120641 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330120720 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330120746 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330120816 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330120916 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330121012 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330121053 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330121118 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330121143 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330121219 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330121313 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330121512 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330121539 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330121605 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330121637 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330121702 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330121731 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330121759 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330121827 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330121935 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330122002 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330122037 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330122110 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330123443 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330123511 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330123554 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330123652 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330123753 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330123816 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330123854 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330123921 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330123943 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330124012 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330124054 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330124123 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330124145 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330124212 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330124240 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330124317 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330124343 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330124435 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330124500 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330124528 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330124552 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330124623 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330124648 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330124751 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330124820 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330124855 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330124919 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330125033 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330125055 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330125113 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330125139 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330125214 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330125302 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330125329 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330125535 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330125538 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330125542 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330125546 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330125556 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330125600 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330125611 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330125615 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330125619 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330125621 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330125635 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330125638 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330125643 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330125647 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330125806 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330125900 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330125938 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260330130000 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402103749 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402103834 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402103903 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402103930 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402103954 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402104019 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402104055 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402104122 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402104209 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402104251 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402104320 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402104401 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402104429 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402104452 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402105926 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402110056 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402110125 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402110152 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402110219 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402110241 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402110317 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402110351 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402110418 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402110445 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402110513 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402110540 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402110605 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402110708 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402110743 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402110807 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402110833 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402110930 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402111001 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402111023 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402111050 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402111110 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402111137 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402111159 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402111223 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402111251 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402111315 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402111346 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402111443 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402111501 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402111546 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402111613 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402111638 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402111701 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402111822 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402111848 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402111938 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402112016 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402112044 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402112147 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402112205 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402112223 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402112249 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402112317 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402112351 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402112422 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402112447 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402112521 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402112552 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402112617 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402112648 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402112716 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260402112748 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406113429 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406113440 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406113448 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406113454 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406113459 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406113505 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406113516 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406113521 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406113529 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406113534 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406113554 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406113559 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406113604 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406113610 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406113614 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406113618 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406113622 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406113629 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406113637 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406113648 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406113652 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406113656 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406113705 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406113712 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406113716 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406113726 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406113736 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406113740 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406113752 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406113756 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406113813 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406113829 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406113833 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406113844 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406113920 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406113925 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406113959 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406114008 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406114013 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406114020 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406114024 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406114028 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406114032 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406114035 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406114038 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406114111 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406114117 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406114127 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406114142 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406114152 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406114158 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406114223 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406114230 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406114244 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406114352 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406114358 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406114411 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406114415 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406114420 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406114431 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406114441 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406114506 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406114537 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406114544 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406114557 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406114603 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406114749 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406114806 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406114821 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406114838 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406114900 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406114925 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406115004 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406115046 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406115102 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406115117 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406115136 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406115158 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406115217 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406115241 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406115307 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406115325 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406115422 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406115455 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406115515 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406115544 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406115610 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406115708 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260406115732 - Viren Viren.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+https://drive.google.com/open?id=1J0eZBJ_gUGH5bTvAHe1PjCz9e3Een7Tz,,Unknown,Unknown,Unknown,Unknown,,,0.3
+https://drive.google.com/open?id=1EB44Pv2aBtgBw6VueO9wvFf_-MriItsa,,Unknown,Unknown,Unknown,Unknown,,,0.3
+https://drive.google.com/open?id=1ssG0d2O_QF3_wFqDqvQNRLj46kBfhPd2,,Unknown,Unknown,Unknown,Unknown,,,0.3
+https://drive.google.com/open?id=1mLBv5vtGMBhJMR04mn31-QTTR4-qe_mK,,Unknown,Unknown,Unknown,Unknown,,,0.3
+https://drive.google.com/open?id=197MhN36peHjH1Am22NifvM5kMZl9-4_-,,Unknown,Unknown,Unknown,Unknown,,,0.3
+https://drive.google.com/open?id=1AhUEqS8iqEEwBLnv6lidpQFtaqcyg50O,,Unknown,Unknown,Unknown,Unknown,,,0.3
+https://drive.google.com/open?id=19RQm5T74YlWmoVVqf1znuW7ZkKSI9T5W,,Unknown,Unknown,Unknown,Unknown,,,0.3
+https://drive.google.com/open?id=1GHbSIxW7k1xgTrew-rlQYyzs7qT9c5J3,,Unknown,Unknown,Unknown,Unknown,,,0.3
+https://drive.google.com/open?id=1-VVR5WKlGWZLVswxFDYD6JrxeISXSGyy,,Unknown,Unknown,Unknown,Unknown,,,0.3
+https://drive.google.com/open?id=1MJ1Cg3EsjAgFXn12ynEv90fDv5otgl3E,,Unknown,Unknown,Unknown,Unknown,,,0.3
+https://drive.google.com/open?id=1Y1h5iFUw4hL1ILOLBTybuAjcidLmfIn2,,Unknown,Unknown,Unknown,Unknown,,,0.3
+https://drive.google.com/open?id=1x4toVmCgbShof_t-F-71LTwCMZQlYCrp,,Unknown,Unknown,Unknown,Unknown,,,0.3
+https://drive.google.com/open?id=1T1UdV72QI74yu62j7GHFu_P13PmIqtca,,Unknown,Unknown,Unknown,Unknown,,,0.3
+https://drive.google.com/open?id=1ed1oZkjAih_amMoYMtX7joah8G_aRnwi,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260115085908.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121113753.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121113853.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121114013.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+1769244151437.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260115090719.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260128121045 (1).jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG_7050.JPG,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121160116.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG_6972.JPG,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121114107.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG_6994.JPG,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG_7016.JPG,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121113216.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20251218154402.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+1769244151386.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG_6943.JPG,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260128122355.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121115233.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260128122450.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121115817.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG_6991.JPG,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121114853.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121160330.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260128123037.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121114946.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121115440.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG_6966.JPG,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121115535.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121160257.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260128122316.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG_6988.JPG,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260128121235.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260128121148.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121115327.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260128123126.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121114805.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260128122910.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121114224.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121114341.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG_6934.JPG,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121114436.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20251218155033.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260128121712.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20251103164609.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG_6940.JPG,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG_6947.JPG,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121115654.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260128122957.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121114537_01.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG_6925.JPG,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121114711.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260128122819.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG_6918.JPG,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260128122154.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260128122230.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121113359.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121161400.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG_7022.JPG,,Unknown,Unknown,Unknown,Unknown,,,0.3
+Copy of IMG20251218151751.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20251218154623.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121113305.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121161458.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260128121444.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121160223.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG_7019.JPG,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG_6931.JPG,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260128122711.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG_6997.JPG,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260128121628.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260115090353.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121112523.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260128122610.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121115143.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121115033.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+Copy of IMG20251218151653.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260128122525.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121112252.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121161110.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121112649.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121120740.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260128121756.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121112135.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20251218160210.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG_7010.JPG,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG_7007.JPG,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260128121354.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20251218155818.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121160906.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG_7004.JPG,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG_7001.JPG,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121160804.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG_6982.JPG,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260128121953.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG_6975.JPG,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG_7038.JPG,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121161303.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260128122123.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG_6985.JPG,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG_7041.JPG,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG_6979.JPG,,Unknown,Unknown,Unknown,Unknown,,,0.3
+Copy of IMG20251218151832.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20251218160057.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121161220.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20251218160358.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260128122046.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG_6957.JPG,,Unknown,Unknown,Unknown,Unknown,,,0.3
+1769244151482.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20251218160307.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260128121859.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20251103164832.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG_6951.JPG,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20251218155934.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121121508.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121113443.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG_7025.JPG,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG_7028.JPG,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG_7013.JPG,,Unknown,Unknown,Unknown,Unknown,,,0.3
+1769244151336.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20251218160520.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260115085618.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20251218154457.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+Copy of IMG20251218152144.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121113103.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20251218155739.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121112821.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+Copy of IMG20251218153808.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121113011.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+Copy of IMG20251218154022.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20260121112912.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+Copy of IMG20251218151035.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+Copy of IMG20251218152036.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+Copy of IMG20251218152401.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+Copy of 9.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20251218154542.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+Copy of IMG20251218145539.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+Copy of IMG20251218145654.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+Copy of IMG20251218145831.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+Copy of IMG20251218150730.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+Copy of IMG20251218153610.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+Copy of 5.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+Copy of IMG20251218153928.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+Copy of IMG20251218150254.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+Copy of IMG20251218154203.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+front image.jpeg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+Copy of IMG20251218153445.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+Copy of IMG20251218153357.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+Copy of IMG20251218153029.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+Copy of IMG20251218145812.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+Copy of IMG20251218152902.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+Copy of IMG20251218152236.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+Copy of IMG20251218150847.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+Copy of IMG20251218150621.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+Copy of IMG20251218152538.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20251218154739.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+Copy of IMG20251218153307.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+Copy of IMG20251218150508.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+Copy of IMG20251218151921.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+Copy of IMG20251218152440.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+Copy of 1.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20251103170048.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20251218155614.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+Copy of IMG20251218150412.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20251218154833.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20251218154944.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+front image 5.jpeg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+front image 4.jpeg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+Copy of IMG20251218145404.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20251218160602.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20251218160636.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20251103165459.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20251103164237.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+Copy of IMG20251218152941.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20251103164020.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+Copy of IMG20251218153134.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20251218160726.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+Copy of IMG20251218151359.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+Copy of IMG20251218151620.jpg,,Unknown,Unknown,Unknown,Unknown,,,0.3
+IMG20251103165827.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+002_IMG20260209154457 (1).heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+007_IMG20260209154607.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+013_IMG20260209154732.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+019_IMG20260209154849.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+025_IMG20260209154957.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+041_IMG20260209155508.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+047_IMG20260209155620.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+053_IMG20260209155700.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+059_IMG20260209155852.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+065_IMG20260209155957.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+071_IMG20260209160826.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+077_IMG20260209161000.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+083_IMG20260209161051.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+093_IMG20260209161255.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+117_IMG20260209161617.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+123_IMG20260209161701.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+129_IMG20260209161808.heic,,Unknown,Unknown,Unknown,Unknown,,,0.3
+dataset\continuous_learning\front_view\fd9cc42d-35eb-471a-a1d6-afda22c7b14b.jpg,dataset\continuous_learning\front_view\fd9cc42d-35eb-471a-a1d6-afda22c7b14b.jpg,Unknown,Unknown,Unknown,Unknown,,,0.3

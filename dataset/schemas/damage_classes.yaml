@@ -1,0 +1,9 @@
+# Tire Damage Classes
+classes:
+  - No Damage
+  - Crack
+  - Cut
+  - Bulge
+  - Puncture
+  - Sidewall Damage
+  - Uneven Surface

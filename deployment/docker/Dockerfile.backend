@@ -1,0 +1,50 @@
+FROM python:3.11-slim
+
+# ── System dependencies ───────────────────────────────────────────────────
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
+    libgomp1 \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# ── Working directory ─────────────────────────────────────────────────────
+WORKDIR /app
+ENV PYTHONPATH="/app:/app/backend"
+
+# ── Python dependencies ───────────────────────────────────────────────────
+COPY backend/requirements.txt requirements.txt
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
+
+# ── Copy application code ─────────────────────────────────────────────────
+COPY backend/ ./backend/
+COPY ai_model/ ./ai_model/
+COPY api_integrations/ ./api_integrations/
+COPY continuous_learning/ ./continuous_learning/
+COPY configs/ ./configs/
+
+# ── Create required directories ───────────────────────────────────────────
+RUN mkdir -p logs/training logs/inference logs/retraining logs/errors \
+             ai_model/saved_models \
+             data
+
+# ── Security: run as non-root ─────────────────────────────────────────────
+RUN useradd -m -u 1000 tireuser && chown -R tireuser:tireuser /app
+USER tireuser
+
+# ── Expose API port ───────────────────────────────────────────────────────
+EXPOSE 8000
+
+# ── Health check ──────────────────────────────────────────────────────────
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# ── Start command ─────────────────────────────────────────────────────────
+CMD ["uvicorn", "backend.app.main:app", \
+     "--host", "0.0.0.0", \
+     "--port", "8000", \
+     "--workers", "1", \
+     "--timeout-keep-alive", "30"]

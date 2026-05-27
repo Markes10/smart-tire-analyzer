@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@types/axios": "^0.9.36",
+    "axios": "^1.16.1",
+    "react-native-reanimated": "^4.3.1",
+    "react-native-svg": "^15.15.5"
+  }
+}

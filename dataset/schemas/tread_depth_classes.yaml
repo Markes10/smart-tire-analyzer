@@ -1,0 +1,26 @@
+# Tread Depth Classes — Numeric (0-10 mm) and classification bins
+regression:
+  min_mm: 0
+  max_mm: 10
+classification_bins:
+  - label: New
+    min_mm: 8
+    max_mm: 10
+  - label: Good
+    min_mm: 6
+    max_mm: 8
+  - label: Moderate
+    min_mm: 4
+    max_mm: 6
+  - label: Replace Soon
+    min_mm: 2
+    max_mm: 4
+  - label: Dangerous
+    min_mm: 0
+    max_mm: 2
+outputs:
+  - Regression
+  - Classification
+notes: |
+  Regression predicts continuous tread depth in millimeters.
+  Classification maps ranges to descriptive labels.

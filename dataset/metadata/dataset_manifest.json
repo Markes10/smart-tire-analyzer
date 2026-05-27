@@ -1,0 +1,55 @@
+{
+  "generated_at": "2026-05-26T08:09:06.893150+00:00",
+  "source_labels": "C:\\Users\\user\\OneDrive\\Desktop\\New folder (2)\\New folder\\smart-tire-analyzer\\dataset\\raw\\spreadsheet\\11-02-26 se hai ismein dataset - Form Responses 1 (2).csv",
+  "spreadsheet": "",
+  "raw_labels": "C:\\Users\\user\\OneDrive\\Desktop\\New folder (2)\\New folder\\smart-tire-analyzer\\dataset\\raw\\spreadsheet\\11-02-26 se hai ismein dataset - Form Responses 1 (2).csv",
+  "learning_labels": [
+    "C:\\Users\\user\\OneDrive\\Desktop\\New folder (2)\\New folder\\smart-tire-analyzer\\dataset\\continuous_learning\\labels.csv"
+  ],
+  "row_counts": {
+    "raw_rows_after_normalization": 1097,
+    "processed_rows": 1097,
+    "train_rows": 767,
+    "val_rows": 165,
+    "validation_rows": 165,
+    "test_rows": 165
+  },
+  "image_matching": {
+    "front_matched": 1082,
+    "front_unmatched": 15,
+    "sidewall_matched": 598,
+    "sidewall_unmatched": 499
+  },
+  "distributions": {
+    "condition": {
+      "safe": 502,
+      "moderate": 489,
+      "replace": 106
+    },
+    "wear_pattern": {
+      "even": 525,
+      "uneven_wear": 269,
+      "center_wear": 165,
+      "critical_wear": 106,
+      "edge_wear": 22,
+      "one_sided_wear": 10
+    },
+    "risk_level": {
+      "LOW": 718,
+      "MODERATE": 263,
+      "CRITICAL": 106,
+      "HIGH": 10
+    }
+  },
+  "outputs": {
+    "processed_labels": "C:\\Users\\user\\OneDrive\\Desktop\\New folder (2)\\New folder\\smart-tire-analyzer\\dataset\\processed\\labels.csv",
+    "cleaned_dataset": "C:\\Users\\user\\OneDrive\\Desktop\\New folder (2)\\New folder\\smart-tire-analyzer\\dataset\\processed\\cleaned_dataset.csv",
+    "features": "C:\\Users\\user\\OneDrive\\Desktop\\New folder (2)\\New folder\\smart-tire-analyzer\\dataset\\processed\\features.csv",
+    "labels_dir": "C:\\Users\\user\\OneDrive\\Desktop\\New folder (2)\\New folder\\smart-tire-analyzer\\dataset\\labels",
+    "annotations_dir": "C:\\Users\\user\\OneDrive\\Desktop\\New folder (2)\\New folder\\smart-tire-analyzer\\dataset\\annotations",
+    "images_dir": "C:\\Users\\user\\OneDrive\\Desktop\\New folder (2)\\New folder\\smart-tire-analyzer\\dataset\\images",
+    "multi_view_dir": "C:\\Users\\user\\OneDrive\\Desktop\\New folder (2)\\New folder\\smart-tire-analyzer\\dataset\\multi_view",
+    "splits_dir": "C:\\Users\\user\\OneDrive\\Desktop\\New folder (2)\\New folder\\smart-tire-analyzer\\dataset\\splits",
+    "manifest": "C:\\Users\\user\\OneDrive\\Desktop\\New folder (2)\\New folder\\smart-tire-analyzer\\dataset\\metadata\\dataset_manifest.json"
+  }
+}

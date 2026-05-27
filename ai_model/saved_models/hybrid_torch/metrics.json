@@ -1,0 +1,37 @@
+{
+  "validation": {
+    "loss": 5.359706,
+    "condition_accuracy": 0.6994,
+    "wear_accuracy": 0.5031,
+    "tread_mae_mm": 0.6802,
+    "avg_tread_mae_mm": 0.6521,
+    "tread_within_1mm": 0.7377,
+    "health_mae": 1.1274,
+    "remaining_life_mae_km": 9722.6,
+    "samples": 163
+  },
+  "test": {
+    "loss": 7.879227,
+    "condition_accuracy": 0.7469,
+    "wear_accuracy": 0.5432,
+    "tread_mae_mm": 0.8876,
+    "avg_tread_mae_mm": 0.8642,
+    "tread_within_1mm": 0.6127,
+    "health_mae": 1.1026,
+    "remaining_life_mae_km": 11298.23,
+    "samples": 162
+  },
+  "acceptance": {
+    "passed": false,
+    "checks": {
+      "tread_mae_mm": true,
+      "avg_tread_mae_mm": true,
+      "tread_within_1mm": false
+    },
+    "thresholds": {
+      "max_tread_mae_mm": 1.0,
+      "max_avg_tread_mae_mm": 1.0,
+      "min_tread_within_1mm": 0.85
+    }
+  }
+}

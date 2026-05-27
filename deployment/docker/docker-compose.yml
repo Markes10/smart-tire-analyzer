@@ -12,6 +12,7 @@ services:
     environment:
       # ── API Keys (loaded from .env file for rotation) ──────────────────
       - GEMINI_API_KEYS=${GEMINI_API_KEYS:-}
+      - GEMINI_MODEL=${GEMINI_MODEL:-gemini-2.5-flash}
       - GOOGLE_MAPS_API_KEYS=${GOOGLE_MAPS_API_KEYS:-}
       - OPENWEATHER_API_KEYS=${OPENWEATHER_API_KEYS:-}
       - MAPILLARY_API_KEYS=${MAPILLARY_API_KEYS:-}
@@ -25,6 +26,7 @@ services:
       - API_HOST=0.0.0.0
       - API_PORT=8000
       - API_WORKERS=${API_WORKERS:-1}
+      - BACKEND_CORS_ORIGINS=${BACKEND_CORS_ORIGINS:-http://localhost:8081,http://localhost:3000}
     volumes:
       - ./ai_model/saved_models:/app/ai_model/saved_models:ro
       - tire-data:/app/data
@@ -45,12 +47,25 @@ services:
       context: .
       dockerfile: deployment/docker/Dockerfile.frontend
       args:
-        NEXT_PUBLIC_API_BASE_URL: "http://localhost:8000"
+        NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-http://localhost:8000}
     container_name: smart-tire-frontend
     ports:
-      - "3001:3000"
+      - "8081:3000"
     environment:
-      - NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
+      - NEXT_PUBLIC_API_BASE_URL=${NEXT_PUBLIC_API_BASE_URL:-http://localhost:8000}
+      - LIVE_CHAT_PROVIDER=${LIVE_CHAT_PROVIDER:-gemini}
+      - LIVE_CHAT_MODEL=${LIVE_CHAT_MODEL:-gemini-2.5-flash}
+      - LIVE_CHAT_REQUEST_TIMEOUT_MS=${LIVE_CHAT_REQUEST_TIMEOUT_MS:-45000}
+      - LIVE_CHAT_API_BASE_URL=${LIVE_CHAT_API_BASE_URL:-}
+      - LIVE_CHAT_API_KEY=${LIVE_CHAT_API_KEY:-}
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - GEMINI_API_KEYS=${GEMINI_API_KEYS:-}
+      - GEMINI_MODEL=${GEMINI_MODEL:-gemini-2.5-flash}
+      - GROQ_API_KEY=${GROQ_API_KEY:-}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - OPENAI_BASE_URL=${OPENAI_BASE_URL:-}
+      - OPENAI_API_BASE_URL=${OPENAI_API_BASE_URL:-}
     depends_on:
       backend:
         condition: service_healthy

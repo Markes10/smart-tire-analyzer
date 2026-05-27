@@ -1,0 +1,61 @@
+{
+  "expo": {
+    "name": "Smart Tire Analyzer",
+    "slug": "smart-tire-analyzer",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0D1117"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.smarttire.analyzer",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Smart Tire Analyzer needs camera access to photograph your tires",
+        "NSPhotoLibraryUsageDescription": "Smart Tire Analyzer needs photo library access to analyze existing tire photos",
+        "NSLocationWhenInUseUsageDescription": "Smart Tire Analyzer uses location to fetch road conditions and weather data"
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0D1117"
+      },
+      "package": "com.smarttire.analyzer",
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "INTERNET"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-camera",
+      "expo-location",
+      "expo-image-picker",
+      [
+        "expo-build-properties",
+        {
+          "android": { "enableProguardInReleaseBuilds": true },
+          "ios": { "useFrameworks": "static" }
+        }
+      ]
+    ],
+    "extra": {
+      "API_BASE_URL": "http://localhost:8000",
+      "eas": {
+        "projectId": "your-eas-project-id"
+      }
+    }
+  }
+}

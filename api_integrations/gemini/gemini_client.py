@@ -18,8 +18,101 @@ from typing import Dict, Optional, Any, cast
 logger = logging.getLogger(__name__)
 
 GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models"
-DEFAULT_MODEL = "gemini-2.0-flash"
-VISION_MODEL = "gemini-2.0-flash"   # same model supports vision
+DEFAULT_MODEL = "gemini-2.5-flash"
+
+
+def _split_api_keys(raw: str) -> list[str]:
+    """Parse one or more Gemini keys from env-style comma/semicolon text."""
+    if not raw:
+        return []
+    return [part.strip() for part in raw.replace(";", ",").split(",") if part.strip()]
+
+
+def _get_settings() -> Any | None:
+    try:
+        from app.config import settings
+
+        return settings
+    except Exception as exc:
+        logger.debug("Could not load backend settings for Gemini client: %s", exc)
+        return None
+
+
+def _get_configured_model() -> str:
+    settings = _get_settings()
+    return (
+        os.getenv("GEMINI_MODEL")
+        or getattr(settings, "GEMINI_MODEL", None)
+        or DEFAULT_MODEL
+    )
+
+
+def _get_configured_vision_model(default_model: str) -> str:
+    return os.getenv("GEMINI_VISION_MODEL") or os.getenv("GEMINI_MODEL") or default_model
+
+
+def _get_configured_keys() -> list[str]:
+    settings = _get_settings()
+    if settings is not None:
+        try:
+            keys = settings.get_gemini_keys()
+            if keys:
+                return keys
+        except Exception as exc:
+            logger.debug("Could not read Gemini keys from settings: %s", exc)
+
+    return _split_api_keys(os.getenv("GEMINI_API_KEYS", os.getenv("GEMINI_API_KEY", "")))
+
+
+def _get_configured_rotator():
+    try:
+        from app.services.api_key_rotator import APIKeyRotator, get_gemini_rotator
+
+        global_rotator = get_gemini_rotator()
+        if global_rotator and global_rotator.available_keys:
+            return global_rotator
+
+        keys = _get_configured_keys()
+        if not keys:
+            return None
+
+        settings = _get_settings()
+        quota = int(getattr(settings, "GEMINI_DAILY_QUOTA", os.getenv("GEMINI_DAILY_QUOTA", "50")))
+        return APIKeyRotator("gemini", keys, daily_quota=quota)
+    except Exception as exc:
+        logger.debug("Could not configure Gemini key rotator: %s", exc)
+        return None
+
+
+def _parse_json_object(text: str) -> Optional[Dict[str, Any]]:
+    """Parse a Gemini JSON object response, including fenced or prefaced JSON."""
+    text = text.strip()
+    if text.startswith("```"):
+        lines = text.splitlines()
+        if lines and lines[0].strip().startswith("```"):
+            lines = lines[1:]
+        if lines and lines[-1].strip().startswith("```"):
+            lines = lines[:-1]
+        text = "\n".join(lines).strip()
+
+    try:
+        parsed = json.loads(text)
+        if isinstance(parsed, dict):
+            return parsed
+    except json.JSONDecodeError:
+        pass
+
+    decoder = json.JSONDecoder()
+    for index, char in enumerate(text):
+        if char != "{":
+            continue
+        try:
+            parsed, _ = decoder.raw_decode(text[index:])
+        except json.JSONDecodeError:
+            continue
+        if isinstance(parsed, dict):
+            return parsed
+    return None
 
 
 class GeminiClient:
@@ -28,7 +121,7 @@ class GeminiClient:
     Handles authentication, request formatting, response parsing, and key rotation.
     """
 
-    def __init__(self, api_key: Optional[str] = None, model: str = DEFAULT_MODEL, rotator=None):
+    def __init__(self, api_key: Optional[str] = None, model: Optional[str] = None, rotator=None):
         """
         Initialize Gemini client.
         
@@ -37,11 +130,13 @@ class GeminiClient:
             model: Model name to use
             rotator: APIKeyRotator instance for multi-key rotation
         """
-        self.api_key = api_key or os.getenv("GEMINI_API_KEY", "")
-        self.model = model
-        self.url = f"{GEMINI_BASE_URL}/{model}:generateContent"
-        self.rotator = rotator
-        self.enabled = bool(self.api_key or (rotator and rotator.available_keys))
+        configured_keys = _get_configured_keys()
+        self.api_key = api_key or os.getenv("GEMINI_API_KEY", "") or (configured_keys[0] if configured_keys else "")
+        self.model = model or _get_configured_model()
+        self.url = f"{GEMINI_BASE_URL}/{self.model}:generateContent"
+        self.vision_model = _get_configured_vision_model(self.model)
+        self.rotator = rotator or _get_configured_rotator()
+        self.enabled = bool(self.api_key or (self.rotator and self.rotator.available_keys))
 
     async def generate(
         self,
@@ -187,24 +282,10 @@ class GeminiClient:
         )
         if text is None:
             return None
-        try:
-            parsed = json.loads(text)
-            if isinstance(parsed, dict):
-                return parsed
-        except json.JSONDecodeError:
-            pass
 
-        # Try to extract JSON block from response text
-        import re
-        match = re.search(r"\{.*?\}", text, re.DOTALL)
-        if match:
-            try:
-                parsed = json.loads(match.group())
-                if isinstance(parsed, dict):
-                    return parsed
-            except json.JSONDecodeError:
-                pass
-
+        parsed = _parse_json_object(text)
+        if parsed is not None:
+            return parsed
         logger.error(f"Failed to parse Gemini JSON response: {text[:200]}")
         return None
 
@@ -214,7 +295,7 @@ class GeminiClient:
         image_bytes: bytes,
         mime_type: str = "image/jpeg",
         temperature: float = 0.1,
-        max_tokens: int = 1024,
+        max_tokens: int = 4096,
         timeout: int = 20,
     ) -> Optional[Dict]:
         """
@@ -320,53 +401,39 @@ class GeminiClient:
         }
         headers = {"Content-Type": "application/json"}
         # Use vision model endpoint
-        vision_url = f"{GEMINI_BASE_URL}/{VISION_MODEL}:generateContent?key={api_key}"
+        vision_url = f"{GEMINI_BASE_URL}/{self.vision_model}:generateContent?key={api_key}"
 
         try:
             async with aiohttp.ClientSession(
                 timeout=aiohttp.ClientTimeout(total=timeout)
             ) as session:
-                    async with session.post(vision_url, json=payload, headers=headers) as resp:
-                        resp.raise_for_status()
-                        data = cast(Dict[str, Any], await resp.json())
-                        # resp.json() is untyped (Any); cast to a dict for static checks
-                        candidates: list[Any] = data.get("candidates", []) or []
+                async with session.post(vision_url, json=payload, headers=headers) as resp:
+                    resp.raise_for_status()
+                    data = cast(Dict[str, Any], await resp.json())
+                    # resp.json() is untyped (Any); cast to a dict for static checks
+                    candidates: list[Any] = data.get("candidates", []) or []
 
-                        if not candidates:
-                            logger.warning("Gemini returned no candidates for image request")
-                            return None
-                        try:
-                            text = candidates[0]["content"]["parts"][0]["text"]
-                        except Exception:
-                            text = None
-
-                        if not text:
-                            logger.error("Gemini vision returned empty text candidate")
-                            return None
-
-                        # Parse JSON from the returned text and ensure it's a dict
-                        try:
-                            parsed = json.loads(text)
-                            if isinstance(parsed, dict):
-                                return parsed
-                        except json.JSONDecodeError:
-                            pass
-
-                        import re
-                        match = re.search(r"\{.*?\}", text, re.DOTALL)
-                        if match:
-                            try:
-                                parsed = json.loads(match.group())
-                                if isinstance(parsed, dict):
-                                    return parsed
-                            except json.JSONDecodeError:
-                                pass
-
-                        logger.error(
-                            "Could not parse Gemini vision response as JSON: %s",
-                            (text or "")[:300],
-                        )
+                    if not candidates:
+                        logger.warning("Gemini returned no candidates for image request")
                         return None
+                    try:
+                        text = candidates[0]["content"]["parts"][0]["text"]
+                    except Exception:
+                        text = None
+
+                    if not text:
+                        logger.error("Gemini vision returned empty text candidate")
+                        return None
+
+                    parsed = _parse_json_object(text)
+                    if parsed is not None:
+                        return parsed
+
+                    logger.error(
+                        "Could not parse Gemini vision response as JSON: %s",
+                        (text or "")[:300],
+                    )
+                    return None
         except aiohttp.ClientResponseError as e:
             if e.status == 429:
                 logger.warning(f"Gemini quota exceeded (429): {e.message}")
@@ -381,6 +448,12 @@ class GeminiClient:
             return None
 
     def is_available(self) -> bool:
+        if not self.api_key:
+            configured_keys = _get_configured_keys()
+            self.api_key = configured_keys[0] if configured_keys else ""
+        if not self.rotator:
+            self.rotator = _get_configured_rotator()
+        self.enabled = bool(self.api_key or (self.rotator and self.rotator.available_keys))
         return self.enabled
 
 
@@ -398,11 +471,17 @@ def get_gemini_client(rotator=None) -> GeminiClient:
         Global GeminiClient instance
     """
     global _client
+    resolved_rotator = rotator or _get_configured_rotator()
     if _client is None:
-        _client = GeminiClient(rotator=rotator)
-    elif rotator and not _client.rotator:
-        # Update client with rotator if provided later
-        _client.rotator = rotator
-        _client.enabled = bool(_client.api_key or (rotator and rotator.available_keys))
+        _client = GeminiClient(rotator=resolved_rotator)
+    else:
+        if resolved_rotator and (rotator is not None or not _client.rotator):
+            _client.rotator = resolved_rotator
+        if not _client.api_key:
+            configured_keys = _get_configured_keys()
+            _client.api_key = configured_keys[0] if configured_keys else ""
+        _client.model = _client.model or _get_configured_model()
+        _client.url = f"{GEMINI_BASE_URL}/{_client.model}:generateContent"
+        _client.vision_model = _get_configured_vision_model(_client.model)
+        _client.enabled = bool(_client.api_key or (_client.rotator and _client.rotator.available_keys))
     return _client
-

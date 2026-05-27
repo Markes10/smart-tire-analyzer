@@ -1,0 +1,83 @@
+# ── Smart Tire Analyzer — API Configuration ────────────────────────────────
+
+# Google Maps APIs
+google_maps:
+  roads_api_url: "https://roads.googleapis.com/v1/nearestRoads"
+  elevation_api_url: "https://maps.googleapis.com/maps/api/elevation/json"
+  geocode_api_url: "https://maps.googleapis.com/maps/api/geocode/json"
+  timeout_seconds: 5
+  max_retries: 2
+  wear_multipliers:
+    flat: 1.0
+    hilly: 1.15
+    mountainous: 1.30
+    high_altitude: 1.25
+  road_multipliers:
+    paved: 1.0
+    cobblestone: 1.25
+    unpaved: 1.50
+    gravel: 1.40
+  traffic_multipliers:
+    low: 1.0
+    moderate: 1.05
+    heavy: 1.20
+    congested: 1.35
+
+# OpenWeatherMap API
+weather:
+  api_url: "https://api.openweathermap.org/data/2.5/weather"
+  timeout_seconds: 5
+  max_retries: 2
+  units: "metric"
+  risk_multipliers:
+    rain_light: 1.10
+    rain_moderate: 1.30
+    rain_heavy: 1.50
+    low_visibility_km: 1.20 # <5 km visibility
+    extreme_heat_c: 1.15 # >40°C
+    extreme_cold_c: 1.10 # <-5°C
+
+# Gemini AI
+gemini:
+  api_url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
+  model: "gemini-1.5-flash"
+  timeout_seconds: 10
+  max_retries: 2
+  temperature: 0.2
+  max_output_tokens: 512
+  fallback_on_failure: true # Use rule-based system if API unavailable
+
+# Backend API
+api:
+  host: "0.0.0.0"
+  port: 8000
+  max_image_size_mb: 10
+  allowed_image_types: ["image/jpeg", "image/png", "image/webp"]
+  cors_origins: ["*"] # Restrict in production
+  rate_limit_rpm: 60 # Requests per minute per IP
+  request_timeout_seconds: 30
+
+# -----------------------------------------------------------------------------
+# API Key Wiring
+#
+# You can provide API keys either via environment variables (recommended)
+# or by extending this configuration file. Environment variables override
+# values in this file and are read from a top-level `.env` file located at
+# the repository root (see `backend/app/config.py`).
+#
+# Environment variable names the app reads (examples):
+#   GEMINI_API_KEYS         # Comma-separated list for rotation
+#   GOOGLE_MAPS_API_KEYS    # Comma-separated list for rotation
+#   OPENWEATHER_API_KEYS    # Comma-separated list for rotation
+#   MAPILLARY_API_KEYS      # Comma-separated list for rotation
+#
+# To wire keys quickly:
+# 1. Copy `.env.example` to `.env` at the project root.
+# 2. Fill the variables with your real API keys (comma-separated where supported).
+# 3. Restart the backend (uvicorn) so `app.config` reads the new values.
+#
+# Example `.env` entries:
+#   GEMINI_API_KEYS=key1,key2
+#   GOOGLE_MAPS_API_KEYS=maps_key_here
+#   OPENWEATHER_API_KEYS=owm_key_here
+#

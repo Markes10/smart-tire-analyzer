@@ -69,11 +69,12 @@ class WeatherService:
                     }
                 except aiohttp.ClientResponseError as e:
                     status = getattr(e, "status", None)
-                    logger.warning(f"Weather API HTTP error (status={status}): {e}")
+                    message = getattr(e, "message", "request failed")
+                    logger.warning("Weather API HTTP error (status=%s): %s", status, message)
                     if status in (429, 403, 401):
                         logger.info("Rotating Weather API key due to HTTP status %s", status)
                         try:
-                            self.rotator.record_error(key, str(e))
+                            self.rotator.record_error(key, f"HTTP {status}: {message}")
                             self.rotator.rotate_to_next_key()
                         except Exception:
                             pass

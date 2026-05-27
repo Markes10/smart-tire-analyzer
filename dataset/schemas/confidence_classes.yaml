@@ -1,0 +1,13 @@
+# Model Confidence Classes
+classes:
+  - label: High Confidence
+    min_pct: 90
+    max_pct: 100
+  - label: Medium Confidence
+    min_pct: 70
+    max_pct: 90
+  - label: Low Confidence
+    min_pct: 0
+    max_pct: 70
+triggers:
+  low_confidence: [Self learning, Retraining]

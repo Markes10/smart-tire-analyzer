@@ -1,0 +1,10 @@
+{
+  "image_id": "https://drive.google.com/open?id=1ssG0d2O_QF3_wFqDqvQNRLj46kBfhPd2",
+  "health_score": 7.92,
+  "remaining_life_km": 60375.0,
+  "remaining_life_pred": 75.46875,
+  "risk_score": 20,
+  "risk_level": "LOW",
+  "replacement_urgency": "Low",
+  "replace_recommended": false
+}

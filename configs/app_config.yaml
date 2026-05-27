@@ -1,0 +1,60 @@
+# ── Smart Tire Analyzer — Application Feature Flags & Thresholds ───────────
+
+app:
+  name: "Smart Tire Analyzer"
+  version: "1.0.0"
+  environment: "development"    # "development", "staging", "production"
+
+# Tire safety thresholds (mm)
+thresholds:
+  legal_minimum_mm: 1.6         # Below this = illegal in most regions
+  warning_mm: 3.0               # Recommend replacement
+  good_mm: 5.0                  # Acceptable condition
+  new_tire_mm: 8.0              # Typical new tire tread depth
+  max_mm: 12.0                  # Maximum measurable depth
+
+# Health score thresholds (0-10 scale)
+health_thresholds:
+  critical: 3.0
+  poor: 5.0
+  moderate: 7.0
+  good: 9.0
+
+# Confidence thresholds
+confidence:
+  minimum_accept: 0.40          # Below this = reject prediction
+  low_confidence: 0.65          # Log as wrong prediction candidate
+  high_confidence: 0.85         # Skip human review
+
+# Continuous learning
+continuous_learning:
+  enabled: true
+  wrong_prediction_threshold: 10   # Trigger retraining after N corrected image samples
+  min_retrain_interval_hours: 24
+  auto_deploy_on_improve: true
+  min_improvement_pct: 1.0         # New model must be ≥1% better to deploy
+
+# Feature flags
+features:
+  gemini_reasoning: true
+  maps_context: true
+  weather_context: true
+  blur_detection: true
+  edge_channel: true              # 4th channel (edge map) for CNN input
+  mc_dropout_uncertainty: true    # Monte Carlo dropout confidence estimation
+  perspective_correction: true
+
+# Preprocessing
+preprocessing:
+  blur_threshold: 100.0           # Laplacian variance — reject below this
+  use_imagenet_normalization: true
+  clahe_clip_limit: 2.0
+  clahe_tile_size: 8
+
+# Logging
+logging:
+  level: "INFO"
+  format: "%(asctime)s | %(levelname)-8s | %(name)s | %(message)s"
+  json_logs: false
+  log_requests: true
+  log_predictions: true

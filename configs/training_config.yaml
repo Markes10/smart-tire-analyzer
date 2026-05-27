@@ -1,0 +1,76 @@
+# ── Smart Tire Analyzer — Training Configuration ───────────────────────────
+
+training:
+  # Core hyperparameters
+  epochs: 50
+  batch_size: 16
+  val_split: 0.1
+  test_split: 0.1
+  seed: 42
+
+  # Learning rate schedule (warmup + cosine decay)
+  optimizer:
+    type: "AdamW"
+    peak_lr: 1.0e-4
+    min_lr: 1.0e-7
+    weight_decay: 1.0e-5
+    gradient_clip: 1.0
+    warmup_epochs: 5
+    beta_1: 0.9
+    beta_2: 0.999
+
+  # Mixed precision training
+  mixed_precision: true               # float16 compute, float32 weights
+
+  # Loss weights (multi-task)
+  loss_weights:
+    tread_depth: 1.5                  # Highest priority — safety critical
+    health_score: 1.0
+    remaining_life: 1.0
+    wear_pattern: 0.8
+  focal_gamma: 2.0                    # Focal loss γ for class imbalance
+  huber_delta: 1.0                    # Huber loss δ
+
+  # Early stopping
+  early_stopping:
+    patience: 10
+    min_delta: 0.0001
+    restore_best_weights: true
+
+  # Augmentation
+  augmentation:
+    enabled: true
+    severity: "standard"              # "light", "standard", "heavy"
+    horizontal_flip: true
+    rotation_limit: 15
+    brightness_limit: 0.25
+    contrast_limit: 0.25
+    gaussian_noise: true
+    elastic_transform: true
+    grid_distortion: true
+
+  # Fine-tuning (continuous learning)
+  finetune:
+    epochs: 5
+    learning_rate: 1.0e-5
+    batch_size: 8
+    cyclic_lr: true
+
+  # Checkpointing
+  checkpoint:
+    save_best_only: true
+    monitor: "val_loss"
+    output_dir: "ai_model/saved_models"
+
+  # Dataset paths — new layout
+  dataset:
+    raw_images_dir: "dataset/raw/tread_images"          # tread condition sub-folders
+    sidewall_images_dir: "dataset/raw/sidewall_images"   # brand sub-folders
+    spreadsheet: "dataset/raw/spreadsheet/dataset.xlsx"
+    processed_dir: "dataset/processed"
+    labels_file: "dataset/processed/labels.csv"
+    cleaned_labels_file: "dataset/processed/cleaned_dataset.csv"
+    features_file: "dataset/processed/features.csv"
+    annotations_dir: "dataset/annotations"
+    splits_dir: "dataset/splits"
+    continuous_learning_dir: "dataset/continuous_learning"

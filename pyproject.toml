@@ -1,0 +1,49 @@
+# Smart Tire Analyzer — Project Metadata & Dev Tools
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "smart-tire-analyzer"
+version = "1.0.0"
+description = "AI-powered tire intelligence system: CNN + ViT + RNN + ANN with continuous learning"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "Smart Tire Analyzer Team" }]
+license = { text = "MIT" }
+keywords = ["tire", "AI", "deep learning", "computer vision", "safety"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
+markers = [
+    "slow: marks tests that exercise heavier model paths",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+select = ["E", "F", "W", "I", "N", "UP", "B"]
+ignore = ["E501", "B008"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+
+[tool.black]
+line-length = 100
+target-version = ["py310", "py311"]
+
+[tool.pyrefly]
+source_paths = ["backend"]

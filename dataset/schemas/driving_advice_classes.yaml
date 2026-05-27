@@ -1,0 +1,10 @@
+# Driving Advice Classes (Gemini AI output)
+classes:
+  - Safe to Drive
+  - Drive Carefully
+  - Reduce Speed
+  - Avoid Highway
+  - Replace Tire Soon
+  - Do Not Drive
+source:
+  generated_by: Gemini AI

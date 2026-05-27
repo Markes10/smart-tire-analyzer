@@ -1,0 +1,11 @@
+# Driving Risk Classes
+classes:
+  - Low Risk
+  - Moderate Risk
+  - High Risk
+  - Critical Risk
+derived_from:
+  - Tire Condition
+  - Road Condition
+  - Weather
+notes: Combine inputs via your risk-scoring model.

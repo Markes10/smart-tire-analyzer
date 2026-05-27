@@ -1,0 +1,13 @@
+# Wear Pattern Classes
+classes:
+  - Even Wear
+  - Center Wear
+  - Edge Wear
+  - One Side Wear
+  - Cupping Wear
+  - Feathering Wear
+  - Patch Wear
+source:
+  used_by:
+    - CNN
+    - Transformer

@@ -17,8 +17,10 @@ from app.services.api_key_rotator import get_gemini_rotator, APIKeyRotator
 
 logger = logging.getLogger(__name__)
 
-GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
-GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
+GEMINI_API_URL = (
+    "https://generativelanguage.googleapis.com/v1beta/models/"
+    f"{settings.GEMINI_MODEL}:generateContent"
+)
 GEMINI_TIMEOUT = 10  # seconds
 
 
@@ -125,12 +127,13 @@ class GeminiService:
                 return result
             except aiohttp.ClientResponseError as e:
                 status = getattr(e, "status", None)
-                logger.warning(f"Gemini HTTP error (status={status}): {e}")
+                message = getattr(e, "message", "request failed")
+                logger.warning("Gemini HTTP error (status=%s): %s", status, message)
                 # Rotate keys on quota/forbidden/unauthorized
                 if status in (429, 403, 401):
                     logger.info("Rotating Gemini API key due to HTTP status %s", status)
                     try:
-                        self.rotator.record_error(key, str(e))
+                        self.rotator.record_error(key, f"HTTP {status}: {message}")
                         self.rotator.rotate_to_next_key()
                     except Exception:
                         pass
@@ -187,8 +190,31 @@ class GeminiService:
             "contents": [{"parts": [{"text": prompt}]}],
             "generationConfig": {
                 "temperature": 0.2,
-                "maxOutputTokens": 512,
+                "maxOutputTokens": 1024,
                 "responseMimeType": "application/json",
+                "responseSchema": {
+                    "type": "object",
+                    "properties": {
+                        "risk_level": {"type": "string", "enum": ["CRITICAL", "HIGH", "MODERATE", "LOW"]},
+                        "driving_advice": {"type": "string"},
+                        "replacement_recommended": {"type": "boolean"},
+                        "replacement_urgency": {
+                            "type": "string",
+                            "enum": ["immediate", "within_1000km", "within_5000km", "monitor"],
+                        },
+                        "primary_cause": {"type": "string"},
+                        "additional_notes": {"type": "string"},
+                        "safety_score": {"type": "integer"},
+                    },
+                    "required": [
+                        "risk_level",
+                        "driving_advice",
+                        "replacement_recommended",
+                        "replacement_urgency",
+                        "primary_cause",
+                        "safety_score",
+                    ],
+                },
             },
         }
         if not api_key:
@@ -202,7 +228,9 @@ class GeminiService:
                 data = await resp.json()
 
         # Extract text from Gemini response
-        text = data["candidates"][0]["content"]["parts"][0]["text"]
+        text = data["candidates"][0]["content"]["parts"][0]["text"].strip()
+        if text.startswith("```"):
+            text = text.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
 
         # Parse JSON response and ensure we return a dict (avoid Any return)
         try:

@@ -1,0 +1,107 @@
+# Smart Tire Analyzer - Model Architecture Configuration
+# Controls CNN + ViT + RNN + ANN hyperparameters
+
+model:
+  name: "smart_tire_pytorch_hybrid"
+  version: "pytorch_hybrid:densenet121_vit_b16_bilstm_fusion"
+  architecture:
+    cnn: "DenseNet121"
+    transformer: "ViT-B16"
+    rnn: "BiLSTM"
+    ann: "Deep Dense Fusion Network"
+
+  # CNN (DenseNet121) settings
+  cnn:
+    input_shape: [224, 224, 3]        # H x W x C, ImageNet-normalized RGB
+    backbone: "DenseNet121"
+    role: "Local tread feature extraction"
+    fine_tune_blocks: ["denseblock4", "norm5"]
+    dropout_rate: 0.2
+    feature_dim: 512                  # Output feature vector size
+
+  # Vision Transformer (ViT-B16) settings
+  transformer:
+    backbone: "ViT-B16"
+    role: "Global tread pattern understanding"
+    patch_size: 16                    # 224/16 = 14x14 = 196 patches
+    pretrained: true
+    fine_tune_last_blocks: 2
+    dropout_rate: 0.2
+    output_dim: 512
+
+  # RNN (BiLSTM) settings
+  rnn:
+    architecture: "BiLSTM"
+    role: "Sequential tread analysis"
+    input_dim: 7                      # Features per tread position
+    hidden_units: 128
+    num_layers: 2
+    bidirectional: true
+    dropout_rate: 0.2
+    output_dim: 256
+
+  # ANN Fusion Network settings
+  fusion:
+    type: "deep_dense_gated"
+    role: "Final prediction fusion"
+    output_dim: 512
+    hidden_dim: 1024
+    dropout_rate: 0.35
+
+  # ANN Prediction Head settings
+  prediction_head:
+    shared_dim: 512
+    dropout_rate: 0.25
+    num_wear_classes: 6       # center, edge, patchy, uniform, one-side, cupping
+    num_damage_classes: 7     # TireDamageClass: NoDamage, Crack, Cut, Bulge, Puncture, Sidewall, Uneven
+    num_health_classes: 6     # TireHealthClass: New, Good, Moderate, HeavyWear, ReplaceSoon, Critical
+    num_tread_classes: 5      # TreadDepthClass: New, Good, Moderate, ReplaceSoon, Dangerous
+
+  # Output heads
+  outputs:
+    tread_depth:
+      type: regression
+      units: 4                        # T1-T4 predictions (0-12mm each)
+      activation: sigmoid
+    health_score:
+      type: regression
+      units: 1
+      activation: sigmoid
+      mc_dropout_samples: 20          # Monte Carlo uncertainty estimation
+    remaining_life:
+      type: regression
+      units: 1
+      activation: sigmoid
+    wear_pattern:
+      type: classification
+      num_classes: 6                  # center, edge, patchy, uniform, one-side, cupping
+      activation: softmax
+    tire_damage:
+      type: classification
+      num_classes: 7                  # TireDamageClass values
+      activation: softmax
+    tire_health_class:
+      type: classification
+      num_classes: 6                  # TireHealthClass values
+      activation: softmax
+
+  # Context input
+  context:
+    raw_dim: 32                       # Input from Weather + Maps
+    projected_dim: 64
+
+# TurboQuant Optimization
+optimization:
+  quantization:
+    fp16: true
+    int8: true
+    calibration_samples: 100
+  pruning:
+    enabled: false                    # Enable for edge devices
+    target_sparsity: 0.5
+    begin_step: 0
+    end_step: 1000
+    frequency: 100
+  benchmark:
+    n_runs: 50
+    warmup_runs: 5

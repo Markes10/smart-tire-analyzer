@@ -1,0 +1,38 @@
+# Kubernetes Service — LoadBalancer for Smart Tire Backend
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: smart-tire-backend-svc
+  namespace: smart-tire
+  labels:
+    app: smart-tire-backend
+spec:
+  type: LoadBalancer
+  selector:
+    app: smart-tire-backend
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8000
+      protocol: TCP
+  sessionAffinity: "None"
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: smart-tire
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: smart-tire-model-pvc
+  namespace: smart-tire
+spec:
+  accessModes:
+    - ReadOnlyMany
+  resources:
+    requests:
+      storage: 2Gi

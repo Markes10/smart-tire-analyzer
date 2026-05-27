@@ -1,0 +1,10 @@
+{
+  "image_id": "IMG20260121114341.jpg",
+  "health_score": 4.39,
+  "remaining_life_km": 2875.0,
+  "remaining_life_pred": 3.5937499999999996,
+  "risk_score": 30,
+  "risk_level": "MODERATE",
+  "replacement_urgency": "Immediate",
+  "replace_recommended": true
+}

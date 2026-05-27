@@ -1,0 +1,9 @@
+# Continuous Learning Classes
+classes:
+  - Correct Prediction
+  - Low Confidence
+  - Wrong Prediction
+  - Needs Retraining
+  - Verified Data
+notes: |
+  Use these tags to mark examples for the continuous learning/retraining pipeline.

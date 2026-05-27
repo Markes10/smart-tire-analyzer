@@ -1,0 +1,22 @@
+{
+    "css.lint.unknownAtRules": "ignore",
+    "scss.lint.unknownAtRules": "ignore",
+    "less.lint.unknownAtRules": "ignore",
+    "tailwindCSS.includeLanguages": {
+        "typescript": "javascript",
+        "typescriptreact": "html",
+        "javascriptreact": "html",
+        "css": "css",
+        "scss": "scss",
+        "html": "html"
+    },
+    "tailwindCSS.emmetCompletions": true,
+    "tailwindCSS.experimental.configFile": "tailwind.config.js",
+    "editor.quickSuggestions": {
+        "strings": true
+    },
+    "files.associations": {
+        "*.css": "css",
+        "*.pcss": "css"
+    }
+}

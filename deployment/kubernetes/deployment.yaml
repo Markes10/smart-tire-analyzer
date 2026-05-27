@@ -1,0 +1,87 @@
+# Kubernetes Deployment — Smart Tire Analyzer Backend
+# Production-grade deployment with rolling updates and probes.
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: smart-tire-backend
+  namespace: smart-tire
+  labels:
+    app: smart-tire-backend
+    version: "1.0.0"
+spec:
+  replicas: 2                      # Start with 2 replicas
+  selector:
+    matchLabels:
+      app: smart-tire-backend
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0            # Zero-downtime deployments
+  template:
+    metadata:
+      labels:
+        app: smart-tire-backend
+        version: "1.0.0"
+    spec:
+      containers:
+        - name: backend
+          image: smarttire/backend:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+              name: http
+          env:
+            - name: GEMINI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: smart-tire-secrets
+                  key: gemini-api-key
+            - name: GOOGLE_MAPS_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: smart-tire-secrets
+                  key: maps-api-key
+            - name: OPENWEATHER_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: smart-tire-secrets
+                  key: weather-api-key
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: smart-tire-secrets
+                  key: database-url
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "2Gi"
+              cpu: "1000m"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 3
+          volumeMounts:
+            - name: model-storage
+              mountPath: /app/ai_model/saved_models
+              readOnly: true
+      volumes:
+        - name: model-storage
+          persistentVolumeClaim:
+            claimName: smart-tire-model-pvc
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000

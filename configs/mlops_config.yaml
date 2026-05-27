@@ -1,0 +1,28 @@
+mlops:
+  project_name: smart-tire-analyzer
+  mode: local-first-final-year-project
+  dataset_versioning:
+    tool: dvc
+    manifest: dataset/metadata/dataset_manifest.json
+    fallback: sha256 fingerprint from dataset metadata, schemas, and splits
+  experiment_tracking:
+    local_tracker: training_logs/mlops_events
+    optional_tools:
+      - mlflow
+      - weights-and-biases
+  model_registry:
+    local_registry: ai_model/saved_models/model_registry.json
+    promotion_policy: acceptance gate must pass before model_best.pt becomes runtime
+  deployment:
+    docker_compose: deployment/docker/docker-compose.yml
+    kubernetes:
+      - deployment/kubernetes/deployment.yaml
+      - deployment/kubernetes/service.yaml
+      - deployment/kubernetes/hpa.yaml
+    optional_orchestrators:
+      - kubeflow
+      - airflow
+  monitoring:
+    dashboard_endpoint: /enterprise/dashboard
+    drift_signal: feedback wrong-prediction rate
+    auto_retraining: controlled by AUTO_RETRAIN and RETRAIN_THRESHOLD

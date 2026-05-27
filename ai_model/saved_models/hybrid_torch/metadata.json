@@ -1,0 +1,59 @@
+{
+  "generated_at": "2026-05-25T16:30:55.792326+00:00",
+  "model_version": "pytorch_hybrid:efficientnetv2_b0_vit_b16_bilstm_tcn_attention_calibrated",
+  "architecture": {
+    "cnn": "EfficientNetV2-B0",
+    "transformer": "ViT-B/16",
+    "rnn": "BiLSTM + TCN",
+    "fusion": "Cross-Modal Attention + Deep Dense Fusion Network",
+    "ann": "Multi-task Prediction Heads"
+  },
+  "condition_labels": [
+    "safe",
+    "moderate",
+    "replace"
+  ],
+  "wear_labels": [
+    "center_wear",
+    "edge_wear",
+    "patchy_wear",
+    "uniform_wear",
+    "one_side_wear",
+    "cupping_wear"
+  ],
+  "dataset": {
+    "train": 757,
+    "validation": 163,
+    "test": 162
+  },
+  "tread_sequence_source": "runtime_visual_proxy",
+  "label_leakage_prevented": true,
+  "stage2_status": "completed",
+  "device": "cuda",
+  "best_validation_loss": 5.359706,
+  "best_validation_tread_mae_mm": 0.6802,
+  "checkpoint": "ai_model\\saved_models\\hybrid_torch\\model_best.pt",
+  "calibration": "ai_model\\saved_models\\hybrid_torch\\tread_calibration.json",
+  "inference_strategy": {
+    "test_time_augmentation": true,
+    "symmetric_horizontal_flip": true,
+    "tread_calibration": true,
+    "mixup": {
+      "probability": 0.5,
+      "alpha": 0.2
+    }
+  },
+  "acceptance": {
+    "passed": false,
+    "checks": {
+      "tread_mae_mm": true,
+      "avg_tread_mae_mm": true,
+      "tread_within_1mm": false
+    },
+    "thresholds": {
+      "max_tread_mae_mm": 1.0,
+      "max_avg_tread_mae_mm": 1.0,
+      "min_tread_within_1mm": 0.85
+    }
+  }
+}
