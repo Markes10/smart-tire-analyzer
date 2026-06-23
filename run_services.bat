@@ -1,15 +1,10 @@
 @echo off
 REM ============================================================================
-REM Smart Tire Analyzer - FULL PROJECT LAUNCHER
-REM ============================================================================
-REM One-click launcher for every deployment mode:
-REM   [1] Local Dev   - Python venv + Next.js dev servers in separate windows
-REM   [2] Docker       - Full containerized stack (Backend + Frontend + Redis + Nginx)
-REM   [3] Docker Dev   - Backend only in Docker, Frontend runs locally (fast rebuild)
-REM   [4] Kubernetes   - Deploy to local K8s cluster (Docker Desktop K8s)
-REM   [5] Health Check - Verify all services are responding
-REM   [6] Stop All     - Stop all running containers / K8s resources
-REM   [7] Exit
+REM Smart Tire Analyzer — AUTO DEPLOY
+REM Double-click this script to automatically build & deploy the full stack:
+REM   1. Docker Desktop (docker-compose: backend + frontend + redis + nginx)
+REM   2. Kubernetes     (kubectl apply: backend + frontend deployments)
+REM   3. Health check   (verify all services respond)
 REM ============================================================================
 
 setlocal enabledelayedexpansion
@@ -17,355 +12,407 @@ setlocal enabledelayedexpansion
 set "REPO_ROOT=%~dp0"
 if "%REPO_ROOT:~-1%"=="\" set "REPO_ROOT=%REPO_ROOT:~0,-1%"
 
-set "VENV_DIR=%REPO_ROOT%\.venv"
-set "VENV_PY=%VENV_DIR%\Scripts\python.exe"
-set "VENV_PIP=%VENV_DIR%\Scripts\pip.exe"
-set "BACKEND_DIR=%REPO_ROOT%\backend"
-set "FRONTEND_DIR=%REPO_ROOT%\frontend"
 set "COMPOSE_FILE=%REPO_ROOT%\deployment\docker\docker-compose.yml"
 set "K8S_DIR=%REPO_ROOT%\deployment\kubernetes"
 set "K8S_NS=smart-tire"
 
-:MENU
+set "ALL_OK=1"
+set "SKIP_K8S=0"
+
+title Smart Tire Analyzer — Auto Deploy
+
 cls
 echo.
 echo  ============================================================
-echo            SMART TIRE ANALYZER - PROJECT LAUNCHER
+echo       SMART TIRE ANALYZER — AUTO DEPLOY
 echo  ============================================================
 echo.
-echo   [1]  Local Development     (Python + Next.js on host)
-echo   [2]  Docker Full Stack     (Backend + Frontend + Redis + Nginx)
-echo   [3]  Docker Backend Only   (Backend in container, FE local)
-echo   [4]  Kubernetes Deploy     (Deploy to local K8s cluster)
-echo   [5]  Health Check          (Test all running services)
-echo   [6]  Stop All              (Kill containers + K8s resources)
-echo   [7]  Exit
+echo  This script will automatically:
+echo    1. Check prerequisites (Docker Desktop, kubectl)
+echo    2. Build Docker images for backend ^& frontend
+echo    3. Deploy full stack via Docker Compose
+echo    4. Deploy to Kubernetes
+echo    5. Verify all services are healthy
 echo.
-echo  ============================================================
-echo.
-set /p "choice=  Select option (1-7): "
-
-if "%choice%"=="1" goto LOCAL
-if "%choice%"=="2" goto DOCKER_FULL
-if "%choice%"=="3" goto DOCKER_BACKEND
-if "%choice%"=="4" goto KUBERNETES
-if "%choice%"=="5" goto HEALTH
-if "%choice%"=="6" goto STOP
-if "%choice%"=="7" exit /b 0
-echo.
-echo  [!] Invalid option. Press any key to try again...
-pause >nul
-goto MENU
-
-REM ============================================================================
-REM 1. LOCAL DEVELOPMENT
-REM ============================================================================
-:LOCAL
-cls
-echo.
-echo  [1/4] Checking Python virtual environment...
-if not exist "%VENV_PY%" (
-    echo  [*] Virtual environment not found. Creating one...
-    python -m venv "%VENV_DIR%"
-    if !ERRORLEVEL! NEQ 0 (
-        echo  [ERROR] Failed to create virtualenv. Is Python installed and in PATH?
-        pause
-        goto MENU
-    )
-    echo  [OK] Virtual environment created.
-) else (
-    echo  [OK] Virtual environment found.
-)
-
-echo.
-echo  [2/4] Installing/updating Python backend dependencies...
-"%VENV_PIP%" install -q -r "%BACKEND_DIR%\requirements.txt" 2>nul
-if !ERRORLEVEL! NEQ 0 (
-    echo  [WARN] Some Python packages may have failed. Continuing anyway...
-) else (
-    echo  [OK] Python dependencies ready.
-)
-
-echo.
-echo  [3/4] Installing/updating Frontend (Next.js) dependencies...
-if not exist "%FRONTEND_DIR%\node_modules" (
-    echo  [*] node_modules not found. Running npm install...
-    npm --prefix "%FRONTEND_DIR%" install --no-audit --no-fund
-) else (
-    echo  [OK] Frontend dependencies already installed.
-)
-
-echo.
-echo  [4/4] Setting up environment file...
-if not exist "%REPO_ROOT%\.env" (
-    if exist "%REPO_ROOT%\.env.example" (
-        copy /Y "%REPO_ROOT%\.env.example" "%REPO_ROOT%\.env" >nul
-        echo  [OK] Created .env from .env.example - add your API keys.
-    ) else (
-        echo  [WARN] No .env.example found. Create .env manually if needed.
-    )
-) else (
-    echo  [OK] .env file exists.
-)
-
-echo.
+echo  Press Ctrl+C at any time to abort.
 echo  ------------------------------------------------------------
-echo   Starting Backend (FastAPI) on http://127.0.0.1:8000 ...
-echo  ------------------------------------------------------------
-start "SmartTire-Backend" cmd /k "title Smart Tire - Backend && echo. && echo  Backend running at http://127.0.0.1:8000 && echo  API docs at http://127.0.0.1:8000/docs && echo. && set PYTHONPATH=%REPO_ROOT%;%BACKEND_DIR% && cd /d "%BACKEND_DIR%" && "%VENV_PY%" -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload"
-
-echo.
-echo  ------------------------------------------------------------
-echo   Starting Frontend (Next.js) on http://127.0.0.1:3000 ...
-echo  ------------------------------------------------------------
-start "SmartTire-Frontend" cmd /k "title Smart Tire - Frontend && echo. && echo  Frontend running at http://127.0.0.1:3000 && echo. && cd /d "%FRONTEND_DIR%" && npm run dev"
-
-echo.
-echo  ============================================================
-echo   Services are starting in separate windows:
-echo     Backend:  http://127.0.0.1:8000  (API docs: /docs)
-echo     Frontend: http://127.0.0.1:3000
-echo  ============================================================
 echo.
 pause
-goto MENU
 
 REM ============================================================================
-REM 2. DOCKER FULL STACK
+REM PHASE 1 — PREREQUISITES
 REM ============================================================================
-:DOCKER_FULL
 cls
 echo.
+echo  ============================================================
+echo     [Phase 1/5] — Checking Prerequisites
+echo  ============================================================
+echo.
+
 echo  [1/3] Checking Docker Desktop...
 docker info >nul 2>&1
 if !ERRORLEVEL! NEQ 0 (
-    echo  [ERROR] Docker Desktop is not running!
-    echo  Please start Docker Desktop and try again.
-    pause
-    goto MENU
+    echo  [FAIL] Docker Desktop is NOT running.
+    echo         Start Docker Desktop and try again.
+    set "ALL_OK=0"
+    goto RESULT
 )
-echo  [OK] Docker Desktop is running.
-
+echo  [OK]   Docker Desktop is running.
 echo.
-echo  [2/3] Setting up environment file...
+
+echo  [2/3] Checking kubectl and Kubernetes cluster...
+kubectl version --client >nul 2>&1
+if !ERRORLEVEL! NEQ 0 (
+    echo  [WARN] kubectl not found. K8s deployment will be skipped.
+    set "SKIP_K8S=1"
+) else (
+    kubectl cluster-info >nul 2>&1
+    if !ERRORLEVEL! NEQ 0 (
+        echo  [WARN] Cannot connect to K8s cluster. K8s deployment will be skipped.
+        set "SKIP_K8S=1"
+    ) else (
+        echo  [OK]   kubectl found and connected to K8s cluster.
+    )
+)
+echo.
+
+echo  [3/3] Checking environment file...
 if not exist "%REPO_ROOT%\.env" (
     if exist "%REPO_ROOT%\.env.example" (
         copy /Y "%REPO_ROOT%\.env.example" "%REPO_ROOT%\.env" >nul
-        echo  [OK] Created .env from .env.example.
+        echo  [OK]   Created .env from .env.example.
+    ) else (
+        echo  [WARN] No .env found. Using defaults.
+    )
+) else (
+    echo  [OK]   .env file exists.
+)
+echo.
+pause
+
+REM ============================================================================
+REM PHASE 2 — BUILD DOCKER IMAGES
+REM ============================================================================
+cls
+echo.
+echo  ============================================================
+echo     [Phase 2/5] — Building Docker Images
+echo  ============================================================
+echo.
+echo  This may take 5-15 minutes on first run...
+echo.
+cd /d "%REPO_ROOT%"
+docker compose -f "%COMPOSE_FILE%" build 2>&1
+if !ERRORLEVEL! NEQ 0 (
+    echo.
+    echo  [FAIL] Docker image build failed. Check Docker Desktop logs.
+    set "ALL_OK=0"
+    goto RESULT
+)
+echo.
+echo  [OK]   Docker images built successfully.
+echo.
+pause
+
+REM ============================================================================
+REM PHASE 3 — DEPLOY VIA DOCKER COMPOSE
+REM ============================================================================
+cls
+echo.
+echo  ============================================================
+echo     [Phase 3/5] — Deploying via Docker Compose
+echo  ============================================================
+echo.
+
+echo  Starting full container stack in detached mode...
+docker compose -f "%COMPOSE_FILE%" up -d 2>&1
+if !ERRORLEVEL! NEQ 0 (
+    echo.
+    echo  [FAIL] Docker Compose deploy failed.
+    set "ALL_OK=0"
+    goto RESULT
+)
+echo.
+echo  [OK]   Docker Compose stack started.
+echo.
+echo  Waiting for backend to become healthy (up to 3 minutes)...
+echo.
+
+set "BACKEND_HEALTHY=0"
+for /l %%i in (1,1,36) do (
+    curl -s -o nul -w "%%{http_code}" http://localhost:8000/health > "%TEMP%\sta_health.tmp" 2>nul
+    set /p HEALTH=<"%TEMP%\sta_health.tmp"
+    if "!HEALTH!"=="200" (
+        set "BACKEND_HEALTHY=1"
+        echo.
+        echo  [OK]   Backend is healthy (HTTP 200).
+        goto COMPOSE_DONE
+    )
+    echo     Attempt %%i/36 — waiting 5s...
+    timeout /t 5 /nobreak >nul
+)
+
+:COMPOSE_DONE
+if "!BACKEND_HEALTHY!"=="0" (
+    echo.
+    echo  [WARN] Backend health check timed out (3 min).
+    echo         It may still be loading models. Check logs:
+    echo           docker logs smart-tire-backend
+)
+echo.
+echo  [OK]   Docker Compose deployment complete.
+echo         Backend:  http://localhost:8000  (API docs: /docs)
+echo         Frontend: http://localhost:8081
+echo         Nginx:    http://localhost:8080
+echo         Redis:    localhost:6379
+echo.
+pause
+
+REM ============================================================================
+REM PHASE 4 — DEPLOY TO KUBERNETES
+REM ============================================================================
+cls
+if "%SKIP_K8S%"=="1" (
+    echo.
+    echo  ============================================================
+    echo     [Phase 4/5] — Kubernetes  [SKIPPED]
+    echo  ============================================================
+    echo.
+    echo  Skipping K8s deployment because kubectl/K8s cluster
+    echo  is not available.
+    echo.
+    pause
+    goto HEALTH_CHECK
+)
+
+echo.
+echo  ============================================================
+echo     [Phase 4/5] — Deploying to Kubernetes
+echo  ============================================================
+echo.
+
+echo  [1/6] Creating namespace "%K8S_NS%"...
+kubectl create namespace %K8S_NS% --dry-run=client -o yaml 2>nul | kubectl apply -f - >nul
+echo  [OK]   Namespace ready.
+echo.
+
+echo  [2/6] Applying backend deployment...
+kubectl apply -f "%K8S_DIR%\deployment.yaml" 2>&1
+if !ERRORLEVEL! NEQ 0 (
+    echo  [FAIL] Backend deployment failed.
+    set "ALL_OK=0"
+) else (
+    echo  [OK]   Backend deployment applied.
+)
+echo.
+
+echo  [3/6] Applying frontend deployment...
+if exist "%K8S_DIR%\frontend-deployment.yaml" (
+    kubectl apply -f "%K8S_DIR%\frontend-deployment.yaml" 2>&1
+    if !ERRORLEVEL! NEQ 0 (
+        echo  [WARN] Frontend deployment apply had issues.
+    ) else (
+        echo  [OK]   Frontend deployment applied.
+    )
+) else (
+    echo  [WARN] frontend-deployment.yaml not found. Skipping.
+)
+echo.
+
+echo  [4/6] Applying backend service...
+kubectl apply -f "%K8S_DIR%\service.yaml" 2>&1
+if !ERRORLEVEL! NEQ 0 (
+    echo  [WARN] Service apply had issues.
+) else (
+    echo  [OK]   Backend service applied.
+)
+echo.
+
+echo  [5/6] Applying HPA (optional)...
+kubectl apply -f "%K8S_DIR%\hpa.yaml" 2>&1
+if !ERRORLEVEL! NEQ 0 (
+    echo  [WARN] HPA apply failed (optional).
+) else (
+    echo  [OK]   HPA applied.
+)
+echo.
+
+echo  [6/6] Waiting for rollout (up to 5 min)...
+echo.
+kubectl -n %K8S_NS% rollout status deployment/smart-tire-backend --timeout=300s
+if !ERRORLEVEL! NEQ 0 (
+    echo  [WARN] Backend rollout timed out.
+)
+echo.
+
+if exist "%K8S_DIR%\frontend-deployment.yaml" (
+    kubectl -n %K8S_NS% rollout status deployment/smart-tire-frontend --timeout=120s 2>nul
+)
+
+echo.
+echo  [OK]   Kubernetes deployment complete.
+echo.
+echo  K8s Pods:
+kubectl -n %K8S_NS% get pods -o wide 2>nul
+echo.
+echo  K8s Services:
+kubectl -n %K8S_NS% get svc -o wide 2>nul
+echo.
+pause
+
+REM ============================================================================
+REM PHASE 5 — HEALTH CHECK DASHBOARD
+REM ============================================================================
+:HEALTH_CHECK
+cls
+echo.
+echo  ============================================================
+echo     [Phase 5/5] — Service Health Dashboard
+echo  ============================================================
+echo.
+echo  Checking all services...
+echo.
+
+echo  ┌─────────────────────────────────────────────────────────────────────┐
+echo  │ SERVICE                  STATUS       URL                          │
+echo  ├─────────────────────────────────────────────────────────────────────┤
+
+set "S1=—"
+curl -s -o nul -w "%%{http_code}" http://localhost:8000/health > "%TEMP%\sta1.tmp" 2>nul
+set /p S1=<"%TEMP%\sta1.tmp"
+if "!S1!"=="200" (echo  │ Backend (Compose)        HEALTHY     http://localhost:8000) else (echo  │ Backend (Compose)        DOWN        http://localhost:8000)
+
+set "S2=—"
+curl -s -o nul -w "%%{http_code}" http://localhost:8081 > "%TEMP%\sta2.tmp" 2>nul
+set /p S2=<"%TEMP%\sta2.tmp"
+if "!S2!"=="200" (echo  │ Frontend (Compose)       HEALTHY     http://localhost:8081) else (echo  │ Frontend (Compose)       DOWN        http://localhost:8081)
+
+set "S3=—"
+curl -s -o nul -w "%%{http_code}" http://localhost:8080 > "%TEMP%\sta3.tmp" 2>nul
+set /p S3=<"%TEMP%\sta3.tmp"
+if "!S3!"=="200" (echo  │ Nginx Proxy              HEALTHY     http://localhost:8080) else (echo  │ Nginx Proxy              DOWN        http://localhost:8080)
+
+set "S4=—"
+curl -s -o nul -w "%%{http_code}" http://localhost:8000/docs > "%TEMP%\sta4.tmp" 2>nul
+set /p S4=<"%TEMP%\sta4.tmp"
+if "!S4!"=="200" (echo  │ API Docs (Swagger)       HEALTHY     http://localhost:8000/docs) else (echo  │ API Docs (Swagger)       DOWN        http://localhost:8000/docs)
+
+if "%SKIP_K8S%"=="0" (
+    kubectl -n %K8S_NS% get pods -o wide 2>nul | findstr /R "backend.*Running" >nul
+    if !ERRORLEVEL! EQU 0 (echo  │ K8s Backend Pod          HEALTHY     ) else (echo  │ K8s Backend Pod          PENDING     )
+
+    if exist "%K8S_DIR%\frontend-deployment.yaml" (
+        kubectl -n %K8S_NS% get pods -o wide 2>nul | findstr /R "frontend.*Running" >nul
+        if !ERRORLEVEL! EQU 0 (echo  │ K8s Frontend Pod         HEALTHY     ) else (echo  │ K8s Frontend Pod         PENDING     )
     )
 )
 
+echo  └─────────────────────────────────────────────────────────────────────┘
+
+del "%TEMP%\sta*.tmp" 2>nul
 echo.
-echo  [3/3] Building and starting full stack...
-echo  [*] This may take several minutes on first run...
+
+REM ============================================================================
+REM DEPLOYMENT SUMMARY
+REM ============================================================================
+:RESULT
 echo.
-cd /d "%REPO_ROOT%"
-docker compose -f "%COMPOSE_FILE%" up --build -d
-if !ERRORLEVEL! EQU 0 (
+echo  ============================================================
+echo                    DEPLOYMENT SUMMARY
+echo  ============================================================
+echo.
+echo  Docker Compose (Docker Desktop):
+echo    Backend API:    http://localhost:8000
+echo    API Docs:       http://localhost:8000/docs
+echo    Frontend App:   http://localhost:8081
+echo    Nginx Proxy:    http://localhost:8080
+echo    Redis:          localhost:6379
+echo.
+echo  To view container logs:
+echo    docker compose -f deployment\docker\docker-compose.yml logs -f
+echo.
+
+if "%SKIP_K8S%"=="0" (
+    echo  Kubernetes (namespace: %K8S_NS%):
+    echo    View pods:     kubectl -n %K8S_NS% get pods
+    echo    View logs:     kubectl -n %K8S_NS% logs deployment/smart-tire-backend
+    echo    Port-forward:  kubectl -n %K8S_NS% port-forward svc/smart-tire-backend-svc 8000:80
     echo.
-    echo  ============================================================
-    echo   Docker stack deployed successfully!
-    echo     Backend:   http://localhost:8000  (API docs: /docs)
-    echo     Frontend:  http://localhost:8081
-    echo     Nginx:     http://localhost:80
-    echo     Redis:     localhost:6379
-    echo  ============================================================
+)
+
+if "!ALL_OK!"=="0" (
+    echo  [!] WARNING: Some services failed to deploy.
+    echo      Check Docker Desktop logs and try again.
+    echo.
 ) else (
+    echo  [OK] All services deployed successfully!
     echo.
-    echo  [ERROR] Docker Compose failed. Check Docker Desktop logs.
 )
-echo.
-pause
-goto MENU
 
-REM ============================================================================
-REM 3. DOCKER BACKEND ONLY
-REM ============================================================================
-:DOCKER_BACKEND
-cls
-echo.
-echo  [1/2] Checking Docker Desktop...
-docker info >nul 2>&1
-if !ERRORLEVEL! NEQ 0 (
-    echo  [ERROR] Docker Desktop is not running!
-    pause
-    goto MENU
-)
-echo  [OK] Docker Desktop is running.
-
-echo.
-echo  [2/2] Starting backend container only...
-echo  [*] Frontend will run locally for fast iteration.
+echo  ------------------------------------------------------------
+echo   Open Frontend in browser:  http://localhost:8081
+echo   Open API Docs:             http://localhost:8000/docs
+echo  ------------------------------------------------------------
 echo.
 
-docker stop smart-tire-backend >nul 2>&1
-docker rm smart-tire-backend >nul 2>&1
-
-cd /d "%REPO_ROOT%"
-docker compose -f "%COMPOSE_FILE%" up --build -d backend redis
-if !ERRORLEVEL! EQU 0 (
-    echo  [OK] Backend container started on http://localhost:8000
-    echo.
-    echo  Starting local frontend...
-    start "SmartTire-Frontend" cmd /k "title Smart Tire - Frontend and Backend in Docker && echo. && echo  Frontend: http://127.0.0.1:3000 && echo  Backend:  http://localhost:8000 (Docker) && echo. && cd /d "%FRONTEND_DIR%" && npm run dev"
+:ASK_OPEN
+set /p "OPEN=Open Frontend in browser? (Y/N): "
+if /i "!OPEN!"=="Y" (
+    start http://localhost:8081
+    echo  [OK] Browser opened.
+) else if /i "!OPEN!"=="N" (
+    echo  Skipped.
 ) else (
-    echo  [ERROR] Failed to start backend container.
+    goto ASK_OPEN
 )
 echo.
-pause
-goto MENU
+
+:ASK_STOP
+echo  ------------------------------------------------------------
+echo   The stack is still running in the background.
+echo   Would you like to stop all services?
+echo  ------------------------------------------------------------
+echo.
+set /p "STOP=Stop services? (Y/N): "
+if /i "!STOP!"=="Y" goto SHUTDOWN
+if /i "!STOP!"=="N" (
+    echo.
+    echo  Services will keep running. Close this window to exit.
+    echo  To stop later, re-run this script or use:
+    echo    docker compose -f deployment\docker\docker-compose.yml down
+    echo.
+    timeout /t 5 /nobreak >nul
+    exit /b 0
+)
+goto ASK_STOP
 
 REM ============================================================================
-REM 4. KUBERNETES DEPLOYMENT
+REM SHUTDOWN
 REM ============================================================================
-:KUBERNETES
+:SHUTDOWN
 cls
 echo.
 echo  ============================================================
-echo   KUBERNETES DEPLOYMENT
+echo                    SHUTTING DOWN
 echo  ============================================================
 echo.
 
-echo  [1/5] Checking kubectl...
-kubectl version --client >nul 2>&1
-if !ERRORLEVEL! NEQ 0 (
-    echo  [ERROR] kubectl is not installed or not in PATH.
-    echo  Install via: winget install Kubernetes.kubectl
-    pause
-    goto MENU
-)
-echo  [OK] kubectl found.
-
-echo.
-echo  [2/5] Checking Kubernetes cluster connection...
-kubectl cluster-info >nul 2>&1
-if !ERRORLEVEL! NEQ 0 (
-    echo  [ERROR] Cannot connect to a Kubernetes cluster.
-    echo  Enable Kubernetes in Docker Desktop settings, then retry.
-    pause
-    goto MENU
-)
-echo  [OK] Connected to K8s cluster.
-
-echo.
-echo  [3/5] Applying namespace and manifests...
-cd /d "%K8S_DIR%"
-kubectl apply -f "%K8S_DIR%\service.yaml" 2>&1
-if !ERRORLEVEL! NEQ 0 (
-    echo  [ERROR] Failed to apply service.yaml
-    pause
-    goto MENU
-)
-kubectl apply -f "%K8S_DIR%\deployment.yaml" 2>&1
-if !ERRORLEVEL! NEQ 0 (
-    echo  [ERROR] Failed to apply deployment.yaml
-    pause
-    goto MENU
-)
-kubectl apply -f "%K8S_DIR%\hpa.yaml" 2>&1
-if !ERRORLEVEL! NEQ 0 (
-    echo  [WARN] Failed to apply hpa.yaml (non-fatal, HPA optional)
-)
-echo  [OK] Manifests applied.
-
-echo.
-echo  [4/5] Waiting for rollout to complete...
-echo  [*] This may take a few minutes on first deploy...
-kubectl -n %K8S_NS% rollout status deployment/smart-tire-backend --timeout=300s
-if !ERRORLEVEL! NEQ 0 (
-    echo  [WARN] Rollout timed out. Pods may still be starting.
-)
-
-echo.
-echo  [5/5] Retrieving service endpoint...
-kubectl -n %K8S_NS% get svc smart-tire-backend-svc -o wide
-echo.
-echo  To access the API via port-forward, run:
-echo    kubectl -n %K8S_NS% port-forward svc/smart-tire-backend-svc 8000:80
-echo  Then open: http://localhost:8000/docs
-echo.
-echo  ============================================================
-echo   K8s deployment complete!
-echo  ============================================================
-echo.
-pause
-goto MENU
-
-REM ============================================================================
-REM 5. HEALTH CHECK
-REM ============================================================================
-:HEALTH
-cls
-echo.
-echo  ============================================================
-echo   SERVICE HEALTH CHECK
-echo  ============================================================
-echo.
-
-echo  [1] Backend API (http://localhost:8000/health)...
-curl -s -o nul -w "    Status: %%{http_code}\n" http://localhost:8000/health 2>nul
-if !ERRORLEVEL! NEQ 0 echo    Status: UNREACHABLE
-
-echo.
-echo  [2] Frontend (http://localhost:3000)...
-curl -s -o nul -w "    Status: %%{http_code}\n" http://localhost:3000 2>nul
-if !ERRORLEVEL! NEQ 0 echo    Status: UNREACHABLE
-
-echo.
-echo  [3] Nginx (http://localhost:80)...
-curl -s -o nul -w "    Status: %%{http_code}\n" http://localhost:80 2>nul
-if !ERRORLEVEL! NEQ 0 echo    Status: UNREACHABLE
-
-echo.
-echo  [4] Kubernetes pods (if deployed)...
-kubectl -n %K8S_NS% get pods -o wide 2>nul
-if !ERRORLEVEL! NEQ 0 echo    K8s: kubectl not available or cluster not running
-
-echo.
-echo  ============================================================
-echo.
-pause
-goto MENU
-
-REM ============================================================================
-REM 6. STOP ALL
-REM ============================================================================
-:STOP
-cls
-echo.
-echo  ============================================================
-echo   STOPPING ALL SERVICES
-echo  ============================================================
-echo.
-
-echo  [1/3] Stopping Docker Compose stack...
-cd /d "%REPO_ROOT%"
+echo  [1/2] Stopping Docker Compose stack...
 docker compose -f "%COMPOSE_FILE%" down 2>nul
 if !ERRORLEVEL! EQU 0 (
-    echo  [OK] Docker Compose stack stopped.
+    echo  [OK]   Docker stack stopped.
 ) else (
-    echo  [WARN] docker-compose down failed (stack may not be running).
+    echo  [WARN] Docker Compose down failed.
 )
+echo.
 
+if "%SKIP_K8S%"=="0" (
+    echo  [2/2] Deleting Kubernetes resources...
+    kubectl delete namespace %K8S_NS% --ignore-not-found 2>nul
+    echo  [OK]   K8s resources deleted.
+)
 echo.
-echo  [2/3] Removing stray containers...
-docker stop smart-tire-backend >nul 2>&1
-docker rm smart-tire-backend >nul 2>&1
-echo  [OK] Stray containers cleaned.
-
+echo  All services stopped. Goodbye!
 echo.
-echo  [3/3] Deleting Kubernetes resources...
-kubectl -n %K8S_NS% delete hpa smart-tire-hpa --ignore-not-found 2>nul
-kubectl -n %K8S_NS% delete svc smart-tire-backend-svc --ignore-not-found 2>nul
-kubectl -n %K8S_NS% delete deployment smart-tire-backend --ignore-not-found 2>nul
-kubectl -n %K8S_NS% delete pvc smart-tire-model-pvc --ignore-not-found 2>nul
-kubectl delete namespace %K8S_NS% --ignore-not-found 2>nul
-echo  [OK] K8s resources deleted.
-
-echo.
-echo  ============================================================
-echo   All services stopped.
-echo  ============================================================
-echo.
-pause
-goto MENU
+timeout /t 3 /nobreak >nul
+exit /b 0
