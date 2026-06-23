@@ -25,6 +25,7 @@ COPY ai_model/ ./ai_model/
 COPY api_integrations/ ./api_integrations/
 COPY continuous_learning/ ./continuous_learning/
 COPY configs/ ./configs/
+COPY utils/ ./utils/
 
 # ── Create required directories ───────────────────────────────────────────
 RUN mkdir -p logs/training logs/inference logs/retraining logs/errors \

@@ -32,7 +32,7 @@ metadata:
   namespace: smart-tire
 spec:
   accessModes:
-    - ReadOnlyMany
+    - ReadWriteOnce
   resources:
     requests:
       storage: 2Gi

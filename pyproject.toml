@@ -1,7 +1,7 @@
 # Smart Tire Analyzer — Project Metadata & Dev Tools
 [build-system]
 requires = ["setuptools>=68", "wheel"]
-build-backend = "setuptools.backends.legacy:build"
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "smart-tire-analyzer"

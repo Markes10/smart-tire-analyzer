@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react"
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMapEvents } from "react-leaflet"
 import type * as L from "leaflet"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -28,6 +28,10 @@ function parseMapCoord(value: string): MapCoord | null {
     return { lat, lng }
 }
 
+function subscribeToClientSnapshot() {
+    return () => {}
+}
+
 function MapClickHandler({
     mode,
     onLocationSelect,
@@ -50,23 +54,11 @@ export function RouteMapSelector({
     destination,
     onRouteChange,
 }: RouteMapSelectorProps) {
-    const [sourceCoord, setSourceCoord] = useState<MapCoord | null>(null)
-    const [destCoord, setDestCoord] = useState<MapCoord | null>(null)
     const [selectMode, setSelectMode] = useState<"source" | "destination" | null>(null)
-    const [isClient, setIsClient] = useState(false)
-    const [icons, setIcons] = useState<{ defaultIcon?: any; sourceIcon?: any; destIcon?: any }>({})
-
-    useEffect(() => {
-        setIsClient(true)
-    }, [])
-
-    useEffect(() => {
-        setSourceCoord(parseMapCoord(source))
-    }, [source])
-
-    useEffect(() => {
-        setDestCoord(parseMapCoord(destination))
-    }, [destination])
+    const [icons, setIcons] = useState<{ sourceIcon?: L.Icon; destIcon?: L.Icon }>({})
+    const isClient = useSyncExternalStore(subscribeToClientSnapshot, () => true, () => false)
+    const sourceCoord = useMemo(() => parseMapCoord(source), [source])
+    const destCoord = useMemo(() => parseMapCoord(destination), [destination])
 
     // Dynamically import leaflet on the client and create marker icons to avoid
     // accessing browser globals during module evaluation at build time.
@@ -77,16 +69,6 @@ export function RouteMapSelector({
         import("leaflet")
             .then((leaflet) => {
                 const Llib = (leaflet as any).default || leaflet
-
-                const defaultIcon = Llib.icon({
-                    iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png",
-                    iconRetinaUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png",
-                    shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png",
-                    iconSize: [25, 41],
-                    iconAnchor: [12, 41],
-                    popupAnchor: [1, -34],
-                    shadowSize: [41, 41],
-                })
 
                 const sourceIcon = Llib.icon({
                     iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png",
@@ -108,7 +90,7 @@ export function RouteMapSelector({
                     shadowSize: [41, 41],
                 })
 
-                if (mounted) setIcons({ defaultIcon, sourceIcon, destIcon })
+                if (mounted) setIcons({ sourceIcon, destIcon })
             })
             .catch(() => {
                 // ignore import errors during build-time or if leaflet is unavailable
@@ -123,10 +105,8 @@ export function RouteMapSelector({
         const locationName = `${lat.toFixed(4)}, ${lng.toFixed(4)}`
 
         if (mode === "source") {
-            setSourceCoord({ lat, lng })
             onRouteChange(locationName, destination)
         } else {
-            setDestCoord({ lat, lng })
             onRouteChange(source, locationName)
         }
 
@@ -134,12 +114,10 @@ export function RouteMapSelector({
     }
 
     const clearSource = () => {
-        setSourceCoord(null)
         onRouteChange("", destination)
     }
 
     const clearDestination = () => {
-        setDestCoord(null)
         onRouteChange(source, "")
     }
 
@@ -155,7 +133,7 @@ export function RouteMapSelector({
                 </CardHeader>
                 <CardContent>
                     <div className="h-96 flex items-center justify-center bg-muted rounded-lg">
-                        Loading map...
+                        Loading map&hellip;
                     </div>
                 </CardContent>
             </Card>
@@ -183,7 +161,7 @@ export function RouteMapSelector({
                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                             attribution="&copy; OpenStreetMap contributors"
                         />
-                        {sourceCoord && (
+                        {sourceCoord && icons.sourceIcon && (
                             <Marker
                                 position={[sourceCoord.lat, sourceCoord.lng] as L.LatLngExpression}
                                 icon={icons.sourceIcon}
@@ -191,7 +169,7 @@ export function RouteMapSelector({
                                 <Popup>Source Location</Popup>
                             </Marker>
                         )}
-                        {destCoord && (
+                        {destCoord && icons.destIcon && (
                             <Marker
                                 position={[destCoord.lat, destCoord.lng] as L.LatLngExpression}
                                 icon={icons.destIcon}

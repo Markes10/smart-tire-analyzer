@@ -16,8 +16,8 @@ alembic==1.13.1                  # DB migrations
 # ── AI / ML ────────────────────────────────────────────────────────────────
 tensorflow==2.16.1               # Full TF for training
 tensorflow-hub==0.16.1
-torch==2.11.0                    # Runtime/training for fresh PyTorch hybrid model
-torchvision==0.26.0              # ViT-B/16 backbone and image transforms
+torch==2.4.1                    # Runtime/training for fresh PyTorch hybrid model
+torchvision==0.19.1              # ViT-B/16 backbone and image transforms
 timm>=1.0.12,<2.0               # EfficientNetV2-B0 backbone
 numpy==1.26.4
 opencv-python-headless==4.9.0.80 # Image processing (headless = no GUI deps)
@@ -27,7 +27,9 @@ albumentations==1.4.6            # Image augmentation
 
 # ── Data ───────────────────────────────────────────────────────────────────
 pandas==2.2.2
+openpyxl==3.1.2
 scikit-learn==1.4.2
+threadpoolctl==3.5.0
 
 # ── Validation ─────────────────────────────────────────────────────────────
 pydantic==2.7.1

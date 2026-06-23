@@ -2,7 +2,7 @@
  * History Screen — Browse and filter past tire analysis records.
  */
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import {
   View, Text, TouchableOpacity,
   StyleSheet, TextInput,
@@ -31,6 +31,9 @@ const COLORS = {
   textMuted: "#484F58",
 };
 
+function HistoryItemSeparator() {
+  return <View style={styles.itemSeparator} />;
+}
 
 export default function HistoryScreen() {
   const navigation = useNavigation();
@@ -41,13 +44,21 @@ export default function HistoryScreen() {
 
   useEffect(() => {
     loadHistory();
-  }, []);
+  }, [loadHistory]);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     await loadHistory(1);
     setRefreshing(false);
-  }, []);
+  }, [loadHistory]);
+
+  const refreshControl = useMemo(() => (
+    <RefreshControl
+      refreshing={refreshing}
+      onRefresh={onRefresh}
+      tintColor={COLORS.accent}
+    />
+  ), [onRefresh, refreshing]);
 
   // Filter + search
   const filtered = history.filter((item: any) => {
@@ -189,15 +200,9 @@ export default function HistoryScreen() {
         renderItem={renderItem}
         ListEmptyComponent={renderEmpty}
         contentContainerStyle={styles.list}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            tintColor={COLORS.accent}
-          />
-        }
+        refreshControl={refreshControl}
         showsVerticalScrollIndicator={false}
-        ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+        ItemSeparatorComponent={HistoryItemSeparator}
       />
     </SafeAreaView>
   );
@@ -263,6 +268,7 @@ const styles = StyleSheet.create({
   filterTabText: { fontSize: 11, color: COLORS.textSecondary, fontWeight: "600" },
   filterTabTextActive: { color: COLORS.accent },
   list: { paddingHorizontal: 16, paddingBottom: 32 },
+  itemSeparator: { height: 10 },
   card: {
     backgroundColor: COLORS.card,
     borderRadius: 14,

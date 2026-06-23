@@ -2,14 +2,18 @@
 
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { useTheme, themeTemplates, type ThemeMode } from "@/components/theme-provider"
+import { useTheme } from "@/components/theme-provider"
+import { themeTemplates, type ThemeMode } from "@/components/theme-templates"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Slider } from "@/components/ui/slider"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { useState } from "react"
 import { Sun, Moon, Monitor, Check, Palette, ArrowLeft, RotateCcw } from "lucide-react"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
+import { ApiKeysForm } from "@/components/api-keys-form"
+import { getApiKeys, saveApiKeys } from "@/lib/api-keys"
 
 const colorPresets = [
   { name: "Teal", hue: "160", color: "#10b981" },
@@ -28,6 +32,71 @@ const modeOptions: { value: ThemeMode; label: string; icon: React.ReactNode; des
   { value: "system", label: "System", icon: <Monitor className="h-5 w-5" />, description: "Match device settings" },
 ]
 
+function settingsLivePreview() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Live Preview</CardTitle>
+        <CardDescription>
+          See how your selected theme looks across different UI elements
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="grid gap-6 sm:grid-cols-2">
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label>Buttons</Label>
+              <div className="flex flex-wrap gap-2">
+                <Button size="sm">Primary</Button>
+                <Button size="sm" variant="secondary">Secondary</Button>
+                <Button size="sm" variant="outline">Outline</Button>
+                <Button size="sm" variant="ghost">Ghost</Button>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label>Status Indicators</Label>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <div className="h-3 w-3 rounded-full bg-success" />
+                  <span className="text-sm text-muted-foreground">Success</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="h-3 w-3 rounded-full bg-warning" />
+                  <span className="text-sm text-muted-foreground">Warning</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="h-3 w-3 rounded-full bg-critical" />
+                  <span className="text-sm text-muted-foreground">Critical</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <Card className="border-2">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base">Sample Analysis Card</CardTitle>
+              <CardDescription>Tire health status preview</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center">
+                    <span className="text-sm font-bold text-primary-foreground">85</span>
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium">Good Condition</div>
+                    <div className="text-xs text-muted-foreground">Last checked today</div>
+                  </div>
+                </div>
+                <Button size="sm" variant="outline">Details</Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
 export default function SettingsPage() {
   const { 
     mode, 
@@ -37,6 +106,7 @@ export default function SettingsPage() {
     activeTemplate, 
     applyTemplate,
   } = useTheme()
+  const [apiKeysRefresh, setApiKeysRefresh] = useState(0)
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -53,25 +123,25 @@ export default function SettingsPage() {
               <ArrowLeft className="h-4 w-4" />
               Back to Home
             </Link>
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-3xl font-bold text-foreground">Theme Settings</h1>
-                <p className="mt-1 text-muted-foreground">
-                  Customize the appearance of Smart Tire Analyzer
-                </p>
-              </div>
-              <Button 
-                variant="outline" 
-                onClick={() => applyTemplate("default-dark")}
-                className="hidden sm:flex"
-              >
-                <RotateCcw className="mr-2 h-4 w-4" />
-                Reset to Default
-              </Button>
+            <div>
+              <h1 className="text-3xl font-bold text-foreground">Settings</h1>
+              <p className="mt-1 text-muted-foreground">
+                Customize your experience and manage API keys
+              </p>
             </div>
           </div>
 
-          <div className="grid gap-8">
+          {/* API Keys Configuration */}
+          <ApiKeysForm
+            key={apiKeysRefresh}
+            initialKeys={getApiKeys()}
+            onSave={(keys) => {
+              saveApiKeys(keys)
+              setApiKeysRefresh((n) => n + 1)
+            }}
+          />
+
+          <div className="mt-8 grid gap-8">
             {/* Appearance Mode */}
             <Card>
               <CardHeader>
@@ -88,6 +158,7 @@ export default function SettingsPage() {
                   {modeOptions.map((option) => (
                     <button
                       key={option.value}
+                      type="button"
                       onClick={() => setMode(option.value)}
                       className={cn(
                         "flex flex-col items-center gap-3 p-4 rounded-lg border-2 transition-all",
@@ -131,6 +202,7 @@ export default function SettingsPage() {
                   {themeTemplates.map((template) => (
                     <button
                       key={template.id}
+                      type="button"
                       onClick={() => applyTemplate(template.id)}
                       className={cn(
                         "text-left rounded-lg border-2 overflow-hidden transition-all",
@@ -204,6 +276,7 @@ export default function SettingsPage() {
                     {colorPresets.map((preset) => (
                       <button
                         key={preset.hue}
+                        type="button"
                         onClick={() => setColors({ ...colors, primary: preset.hue })}
                         className={cn(
                           "flex flex-col items-center gap-2 p-2 rounded-lg border transition-all",
@@ -292,67 +365,7 @@ export default function SettingsPage() {
               </CardContent>
             </Card>
 
-            {/* Live Preview */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Live Preview</CardTitle>
-                <CardDescription>
-                  See how your selected theme looks across different UI elements
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-6 sm:grid-cols-2">
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <Label>Buttons</Label>
-                      <div className="flex flex-wrap gap-2">
-                        <Button size="sm">Primary</Button>
-                        <Button size="sm" variant="secondary">Secondary</Button>
-                        <Button size="sm" variant="outline">Outline</Button>
-                        <Button size="sm" variant="ghost">Ghost</Button>
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Status Indicators</Label>
-                      <div className="flex items-center gap-4">
-                        <div className="flex items-center gap-2">
-                          <div className="h-3 w-3 rounded-full bg-success" />
-                          <span className="text-sm text-muted-foreground">Success</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="h-3 w-3 rounded-full bg-warning" />
-                          <span className="text-sm text-muted-foreground">Warning</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="h-3 w-3 rounded-full bg-critical" />
-                          <span className="text-sm text-muted-foreground">Critical</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <Card className="border-2">
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-base">Sample Analysis Card</CardTitle>
-                      <CardDescription>Tire health status preview</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center">
-                            <span className="text-sm font-bold text-primary-foreground">85</span>
-                          </div>
-                          <div>
-                            <div className="text-sm font-medium">Good Condition</div>
-                            <div className="text-xs text-muted-foreground">Last checked today</div>
-                          </div>
-                        </div>
-                        <Button size="sm" variant="outline">Details</Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              </CardContent>
-            </Card>
+            {settingsLivePreview()}
 
             {/* Mobile Reset Button */}
             <div className="sm:hidden">

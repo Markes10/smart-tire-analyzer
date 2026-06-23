@@ -19,6 +19,12 @@ from pathlib import Path
 from typing import Any
 
 from app.config import settings
+from app.services.legacy_model_catalog import (
+    get_legacy_architecture_catalog,
+    get_legacy_class_summary,
+    get_legacy_versions_snapshot,
+    get_orchestrator_status,
+)
 from app.services.security_service import SecurityService
 
 logger = logging.getLogger(__name__)
@@ -213,6 +219,8 @@ class EnterpriseAIService:
                 }
                 for module in REQUESTED_ARCHITECTURE_MODULES
             ],
+            "legacy_architectures": get_legacy_architecture_catalog(include_smoke=False),
+            "class_summary": get_legacy_class_summary(),
             "generated_at": datetime.now(timezone.utc).isoformat(),
         }
 
@@ -268,6 +276,8 @@ class EnterpriseAIService:
                 "feedback_loop": {
                     "total_feedback": feedback.get("total_feedback", 0),
                     "wrong_predictions": feedback.get("wrong_predictions", 0),
+                    "wrong_prediction_log_count": feedback.get("wrong_prediction_log_count", 0),
+                    "legacy_feedback_audit": feedback.get("legacy_feedback_audit", {}),
                     "retrain_ready": feedback.get("retrain_ready", False),
                 },
             },
@@ -276,6 +286,12 @@ class EnterpriseAIService:
             "edge_ai": self.edge_ai_status(),
             "federated_learning": self.federated_learning_status(),
             "synthetic_data_engine": self.synthetic_data_status(),
+            "legacy_diagnostics": {
+                "generated_unix": int(time.time()),
+                "legacy_architecture_count": len(architecture.get("legacy_architectures", [])),
+                "orchestrators": mlops.get("orchestrators", {}),
+                "legacy_versions": mlops.get("legacy_versions", {}),
+            },
         }
 
     def confidence_estimation(
@@ -476,6 +492,9 @@ class EnterpriseAIService:
                 "registered": registry_path.exists() or metadata_path.exists(),
                 "latest_model": self._read_latest_model_version(registry_path, metadata_path),
             },
+            "legacy_versions": get_legacy_versions_snapshot(),
+            "orchestrators": get_orchestrator_status(),
+            "class_summary": get_legacy_class_summary(),
             "ci_cd_deployment": {
                 "docker": (PROJECT_ROOT / "deployment" / "docker" / "docker-compose.yml").exists(),
                 "kubernetes": (PROJECT_ROOT / "deployment" / "kubernetes" / "deployment.yaml").exists(),
@@ -600,6 +619,7 @@ class EnterpriseAIService:
             "kubernetes": (PROJECT_ROOT / "deployment" / "kubernetes" / "deployment.yaml").exists(),
             "microservices": ["backend-api", "frontend-web", "model-runtime", "monitoring-dashboard"],
             "deployment_maturity": "cloud_native_ready",
+            "orchestrators": get_orchestrator_status(),
         }
 
     def record_mlops_event(self, event_type: str, payload: dict[str, Any]) -> Path:
@@ -674,6 +694,8 @@ class EnterpriseAIService:
                 {"label": "left_shoulder", "box": [0.02, 0.1, 0.2, 0.8], "intensity": 0.82},
                 {"label": "right_shoulder", "box": [0.78, 0.1, 0.2, 0.8], "intensity": 0.82},
             ]
+        if wear_label == "side_wall_wear":
+            return [{"label": "outer_shoulder_sidewall_edge", "box": [0.78, 0.08, 0.2, 0.84], "intensity": 0.88}]
         if wear_label == "one_side_wear":
             return [{"label": "outer_shoulder", "box": [0.02, 0.08, 0.32, 0.84], "intensity": 0.9}]
         if wear_label == "cupping_wear":

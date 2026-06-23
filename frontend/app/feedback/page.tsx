@@ -1,6 +1,3 @@
-"use client"
-
-import { useEffect, useState } from "react"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { TireFeedbackForm } from "@/components/tire-feedback-form"
@@ -27,27 +24,22 @@ function formatRetrainState(stats?: FeedbackStats | null) {
   return stats.retrain_ready ? "Ready" : "Monitoring"
 }
 
-export default function FeedbackPage() {
-  const [stats, setStats] = useState<FeedbackStats | null>(null)
-  const [statsError, setStatsError] = useState<string | null>(null)
-
-  useEffect(() => {
-    let mounted = true
-
-    async function loadStats() {
-      try {
-        const data = await getFeedbackStats()
-        if (mounted) setStats(data)
-      } catch (err) {
-        if (mounted) setStatsError(err instanceof Error ? err.message : "Could not load feedback stats.")
-      }
+async function loadFeedbackStats() {
+  try {
+    return {
+      stats: await getFeedbackStats(),
+      statsError: null,
     }
-
-    loadStats()
-    return () => {
-      mounted = false
+  } catch (err) {
+    return {
+      stats: undefined,
+      statsError: err instanceof Error ? err.message : "Could not load feedback stats.",
     }
-  }, [])
+  }
+}
+
+export default async function FeedbackPage() {
+  const { stats, statsError } = await loadFeedbackStats()
 
   return (
     <div className="flex min-h-screen flex-col">

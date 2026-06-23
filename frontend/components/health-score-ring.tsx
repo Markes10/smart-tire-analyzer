@@ -6,25 +6,25 @@ interface HealthScoreRingProps {
   strokeWidth?: number
 }
 
+function getScoreColor(score: number) {
+  if (score >= 80) return "text-success"
+  if (score >= 60) return "text-chart-3"
+  if (score >= 40) return "text-warning"
+  return "text-critical"
+}
+
+function getScoreLabel(score: number) {
+  if (score >= 80) return "Excellent"
+  if (score >= 60) return "Good"
+  if (score >= 40) return "Fair"
+  if (score >= 20) return "Poor"
+  return "Critical"
+}
+
 export function HealthScoreRing({ score, size = 180, strokeWidth = 12 }: HealthScoreRingProps) {
   const radius = (size - strokeWidth) / 2
   const circumference = radius * 2 * Math.PI
   const offset = circumference - (score / 100) * circumference
-
-  const getScoreColor = (score: number) => {
-    if (score >= 80) return "text-success"
-    if (score >= 60) return "text-chart-3"
-    if (score >= 40) return "text-warning"
-    return "text-critical"
-  }
-
-  const getScoreLabel = (score: number) => {
-    if (score >= 80) return "Excellent"
-    if (score >= 60) return "Good"
-    if (score >= 40) return "Fair"
-    if (score >= 20) return "Poor"
-    return "Critical"
-  }
 
   return (
     <div className="relative inline-flex items-center justify-center">

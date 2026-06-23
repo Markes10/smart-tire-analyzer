@@ -180,9 +180,10 @@ export function ImageUpload({ label, description, value, onChange }: ImageUpload
 
         {isCameraOpen ? (
           <div className="space-y-3">
-            <div className="relative aspect-video overflow-hidden rounded-lg bg-black">
+            <div className="relative aspect-video overflow-hidden rounded-lg bg-neutral-950">
               <video
                 ref={videoRef}
+                aria-label={`${label} live camera preview`}
                 autoPlay
                 muted
                 playsInline
@@ -211,17 +212,12 @@ export function ImageUpload({ label, description, value, onChange }: ImageUpload
             />
           </div>
         ) : (
-          <div
-            className="flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted/30 p-6 transition-colors hover:border-primary/50 hover:bg-muted/50"
-            role="button"
-            tabIndex={0}
+          <>
+          <button
+            type="button"
+            className="flex w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-border bg-muted/30 p-6 transition-colors hover:border-primary/50 hover:bg-muted/50"
+            aria-label={`${label} image dropzone`}
             onClick={() => fileInputRef.current?.click()}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault()
-                fileInputRef.current?.click()
-              }
-            }}
             onDragOver={(e) => { e.preventDefault(); setIsDragOver(true) }}
             onDragLeave={() => setIsDragOver(false)}
             onDrop={handleDrop}
@@ -237,16 +233,14 @@ export function ImageUpload({ label, description, value, onChange }: ImageUpload
                 JPEG, PNG, or WebP up to 10MB
               </p>
             </div>
-            <div className="mt-4 flex gap-2">
+          </button>
+            <div className="mt-4 flex justify-center gap-2">
               <Button
                 type="button"
                 size="sm"
                 variant="secondary"
                 className="gap-1.5"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  fileInputRef.current?.click()
-                }}
+                onClick={() => fileInputRef.current?.click()}
               >
                 <Upload className="h-3.5 w-3.5" />
                 Browse
@@ -257,17 +251,14 @@ export function ImageUpload({ label, description, value, onChange }: ImageUpload
                 variant="outline"
                 className="gap-1.5"
                 disabled={isStartingCamera}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  startCamera()
-                }}
+                onClick={startCamera}
               >
                 {isStartingCamera ? (
                   <RotateCcw className="h-3.5 w-3.5 animate-spin" />
                 ) : (
                   <Camera className="h-3.5 w-3.5" />
                 )}
-                {isStartingCamera ? "Opening..." : "Camera"}
+                {isStartingCamera ? "Opening…" : "Camera"}
               </Button>
             </div>
             {cameraError && (
@@ -275,7 +266,7 @@ export function ImageUpload({ label, description, value, onChange }: ImageUpload
                 {cameraError}
               </p>
             )}
-          </div>
+          </>
         )}
         {cameraError && (value || isCameraOpen) && (
           <p className="mt-3 text-xs text-destructive">{cameraError}</p>
@@ -295,6 +286,7 @@ export function ImageUpload({ label, description, value, onChange }: ImageUpload
         <input
           ref={fileInputRef}
           type="file"
+          aria-label={`${label} image upload`}
           accept={ACCEPTED_IMAGE_TYPES}
           className="hidden"
           onChange={handleFileSelect}
@@ -302,6 +294,7 @@ export function ImageUpload({ label, description, value, onChange }: ImageUpload
         <input
           ref={cameraInputRef}
           type="file"
+          aria-label={`${label} camera upload`}
           accept={ACCEPTED_IMAGE_TYPES}
           capture="environment"
           className="hidden"

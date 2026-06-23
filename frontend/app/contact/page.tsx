@@ -17,8 +17,8 @@ const contactMethods = [
     icon: Mail,
     title: "Email Us",
     description: "Send us an email anytime",
-    value: "hello@smarttire.ai",
-    href: "mailto:hello@smarttire.ai",
+    value: "25cp08tyre@gmail.com",
+    href: "mailto:25cp08tyre@gmail.com",
   },
   {
     icon: Phone,
@@ -31,8 +31,8 @@ const contactMethods = [
     icon: MapPin,
     title: "Visit Us",
     description: "Come say hello at our HQ",
-    value: "San Francisco, CA",
-    href: "https://maps.google.com",
+    value: "Agnel Technical Educational Complex, Assagao, Goa 403507",
+    href: "https://www.google.com/maps/search/?api=1&query=Agnel+Technical+Educational+Complex,+Assagao,+Goa+403507",
   },
 ]
 

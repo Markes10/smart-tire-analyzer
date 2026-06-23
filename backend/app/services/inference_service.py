@@ -29,29 +29,54 @@ HYBRID_METADATA_PATH = HYBRID_MODEL_DIR / "metadata.json"
 
 
 def _infer_wear_pattern_from_depths(depths: list[float]) -> str:
-    depth_array = np.asarray(depths, dtype=np.float32)
-    inner_avg = float(np.mean(depth_array[:2]))
-    outer_avg = float(np.mean(depth_array[2:]))
-    center_avg = float(np.mean(depth_array[1:3]))
-    edge_avg = float(np.mean(np.asarray([depth_array[0], depth_array[3]], dtype=np.float32)))
+    """
+    Determine tire wear pattern from four depth measurements
+    (inner, near-center, far-center, outer) measured in mm.
 
-    diff = float(np.max(depth_array) - np.min(depth_array))
-    inner_outer_diff = abs(inner_avg - outer_avg)
+    Side-wall wear = significantly higher wear on the outer edge compared to
+    the inner edge, i.e. outer depth >> inner depth.
+    """
+    depths_arr = np.asarray(depths, dtype=np.float32)
+
+    diff = depths_arr.max() - depths_arr.min()
+    inner = depths_arr[0]
+    outer = depths_arr[-1]
+    center_avg = depths_arr[1:3].mean()
+
+    side_wall_ratio = 1.5
+    min_diff = 0.8
+
+    if outer - inner > min_diff and outer / max(inner, 0.01) > side_wall_ratio:
+        return "side_wall_wear"
+    if (inner - outer) > 1.5:
+        return "one_side_wear"
+
+    try:
+        from ai_model.rnn.temporal_features import classify_wear_pattern_from_depths
+
+        return str(classify_wear_pattern_from_depths(depths))
+    except Exception:
+        pass
 
     if diff < 0.5:
         return "uniform_wear"
-    if center_avg < edge_avg - 0.8:
+    if center_avg < outer - 0.8:
         return "center_wear"
-    if edge_avg < center_avg - 0.8:
+    if inner < center_avg - 0.8:
         return "edge_wear"
-    if inner_outer_diff > 1.5:
-        return "one_side_wear"
     if diff > 2.0:
         return "patchy_wear"
     return "patchy_wear"
 
 
 def _confidence_from_depths(depths: list[float]) -> float:
+    try:
+        from ai_model.rnn.temporal_features import compute_confidence_from_wear_pattern
+
+        return float(compute_confidence_from_wear_pattern(depths))
+    except Exception:
+        pass
+
     depth_array = np.clip(np.asarray(depths, dtype=np.float32), 0.0, 12.0)
     depth_std = float(np.std(depth_array))
     depth_range = float(np.max(depth_array) - np.min(depth_array))
@@ -126,11 +151,18 @@ class InferenceService:
         self._model_source = "not_loaded"
         self._model_checkpoint = str(HYBRID_ACCEPTED_MODEL_PATH)
         self._load_error: str | None = None
+        self._tabular_bundle: tuple[Any, dict[str, Any], str] | None = None
+        self._tabular_checked = False
 
     async def initialize(self) -> None:
         """Load the best available model without blocking the event loop."""
         loop = asyncio.get_event_loop()
         await loop.run_in_executor(None, self._load_model)
+        if not self.is_ready():
+            raise RuntimeError(
+                f"Trained hybrid model could not be loaded: {self._load_error or 'unknown error'}"
+            )
+        await loop.run_in_executor(None, self._sanity_check)
 
     def _load_model(self) -> None:
         """Load the best available trained model."""
@@ -201,14 +233,52 @@ class InferenceService:
             return HYBRID_ACCEPTED_MODEL_PATH, HYBRID_METADATA_PATH, "accepted"
         if not HYBRID_LAST_MODEL_PATH.exists():
             return None
+        return HYBRID_LAST_MODEL_PATH, HYBRID_METADATA_PATH, "unaccepted_last"
 
-        eval_reports = sorted(
-            HYBRID_MODEL_DIR.glob("model_last_eval*.json"),
-            key=lambda path: path.stat().st_mtime,
-            reverse=True,
-        )
-        metadata_path = eval_reports[0] if eval_reports else HYBRID_METADATA_PATH
-        return HYBRID_LAST_MODEL_PATH, metadata_path, "unaccepted_last"
+    def _sanity_check(self) -> None:
+        """Validate the loaded runtime can produce a report-shaped prediction."""
+        try:
+            if self._hybrid_model is None:
+                raise RuntimeError("hybrid model is not loaded")
+
+            dummy_image = np.zeros((64, 64, 3), dtype=np.uint8)
+            encoded_ok, encoded = cv2.imencode(".jpg", dummy_image)
+            if not encoded_ok:
+                raise RuntimeError("could not encode sanity-check dummy image")
+            decoded = cv2.imdecode(encoded, cv2.IMREAD_COLOR)
+            if decoded is None:
+                raise RuntimeError("could not decode sanity-check dummy image")
+
+            sample_depths = [5.0, 5.0, 5.0, 5.0]
+            depth_label = _infer_wear_pattern_from_depths(sample_depths)
+            depth_confidence = _confidence_from_depths(sample_depths)
+            if not isinstance(depth_label, str):
+                raise AssertionError("depth-derived wear_pattern is not a string")
+            if not 0.1 <= float(depth_confidence) <= 1.0:
+                raise AssertionError("depth-derived confidence is outside [0.1, 1.0]")
+
+            from ai_model.hybrid_torch.constants import TREAD_SEQUENCE_DIM
+            from ai_model.rnn.sequence_builder import build_tread_sequence
+
+            tread_sequence = build_tread_sequence(sample_depths, target_dim=TREAD_SEQUENCE_DIM)
+            prediction = self._hybrid_infer(decoded, tread_sequence)
+            wear = prediction.get("wear_pattern", {})
+            wear_pattern = wear.get("label") if isinstance(wear, dict) else wear
+            confidence = prediction.get("confidence", wear.get("confidence") if isinstance(wear, dict) else None)
+
+            if not isinstance(wear_pattern, str):
+                raise AssertionError("sanity-check wear_pattern is not a string")
+            if not isinstance(confidence, (int, float)) or not 0.1 <= float(confidence) <= 1.0:
+                raise AssertionError("sanity-check confidence is outside [0.1, 1.0]")
+
+            logger.info(
+                "Inference sanity check passed: wear_pattern=%s confidence=%.4f",
+                wear_pattern,
+                float(confidence),
+            )
+        except Exception as exc:
+            logger.exception("Inference sanity check failed: %s", exc)
+            raise RuntimeError(f"Inference sanity check failed: {exc}") from exc
 
     async def predict(
         self,
@@ -300,6 +370,7 @@ class InferenceService:
         prediction["blur_score"] = round(float(blur_score), 2)
         prediction["blur_threshold"] = blur_threshold
         prediction["model_version"] = self._model_version
+        self._attach_model_diagnostics(prediction, context_data)
         return prediction
 
     def _estimate_depths_from_image(self, processed_image: np.ndarray) -> list[float]:
@@ -349,39 +420,33 @@ class InferenceService:
         tread_seq: np.ndarray,
     ) -> dict[str, Any]:
         from ai_model.hybrid_torch.constants import CONDITION_LABELS
-        from ai_model.hybrid_torch.dataset import bgr_image_to_tensor
-        from ai_model.hybrid_torch.calibration import apply_tread_calibration_array
-        import torch
+        from ai_model.hybrid_torch.runtime import predict_hybrid
 
         tta_variants = self._build_tta_images(image_bgr)
-        image_tensor = torch.stack([bgr_image_to_tensor(image) for image, _ in tta_variants], dim=0).to(self._hybrid_device)
-        sequence_tensor = (
-            torch.from_numpy(np.asarray(tread_seq, dtype=np.float32))
-            .unsqueeze(0)
-            .repeat(len(tta_variants), 1, 1)
-            .to(self._hybrid_device)
-        )
-
-        with torch.no_grad():
-            outputs = self._hybrid_model({"image": image_tensor, "tread_sequence": sequence_tensor})
-            tread_outputs = outputs["tread_depths"].clone()
-            for index, (_, flip_tread_positions) in enumerate(tta_variants):
-                if flip_tread_positions:
-                    tread_outputs[index] = torch.flip(tread_outputs[index], dims=[0])
-            averaged_outputs = {
-                key: value.mean(dim=0, keepdim=True)
-                for key, value in outputs.items()
+        tta_outputs: list[dict[str, np.ndarray]] = []
+        for variant_image, flip_tread_positions in tta_variants:
+            raw = predict_hybrid(
+                self._hybrid_model,
+                self._hybrid_device,
+                variant_image,
+                tread_seq,
+            )
+            typed_raw = {
+                key: np.asarray(value).copy()
+                for key, value in raw.items()
+                if key != "source"
             }
-            averaged_outputs["tread_depths"] = tread_outputs.mean(dim=0, keepdim=True)
-            wear_probs = torch.softmax(averaged_outputs["wear_pattern"], dim=1)
-            condition_probs_tensor = torch.softmax(averaged_outputs["condition"], dim=1)
+            if flip_tread_positions:
+                typed_raw["tread_depths"] = np.flip(typed_raw["tread_depths"], axis=1).copy()
+            tta_outputs.append(typed_raw)
 
-        tread_depths = apply_tread_calibration_array(
-            averaged_outputs["tread_depths"].detach().cpu().numpy(),
-            self._hybrid_metadata.get("_tread_calibrator"),
-        )
+        averaged_outputs = {
+            key: np.mean(np.stack([raw[key] for raw in tta_outputs], axis=0), axis=0)
+            for key in ("tread_depths", "health_score", "remaining_life", "wear_pattern", "condition_probs")
+        }
 
-        condition_probs = condition_probs_tensor.detach().cpu().numpy()[0]
+        tread_depths = averaged_outputs["tread_depths"]
+        condition_probs = averaged_outputs["condition_probs"][0]
         best_condition = int(np.argmax(condition_probs))
 
         # --- Safety Guardrail Post-Processing: Align Tread Depth with Condition Classification ---
@@ -415,9 +480,9 @@ class InferenceService:
 
         raw_outputs = {
             "tread_depths": tread_depths,
-            "health_score": averaged_outputs["health_score"].detach().cpu().numpy(),
-            "remaining_life": averaged_outputs["remaining_life"].detach().cpu().numpy(),
-            "wear_pattern": wear_probs.detach().cpu().numpy(),
+            "health_score": averaged_outputs["health_score"],
+            "remaining_life": averaged_outputs["remaining_life"],
+            "wear_pattern": averaged_outputs["wear_pattern"],
             "source": np.asarray(["pytorch_hybrid"], dtype=object),
         }
         confidence = float(np.max(condition_probs))
@@ -436,7 +501,143 @@ class InferenceService:
             label: round(float(condition_probs[index]), 4)
             for index, label in enumerate(CONDITION_LABELS)
         }
+        self._apply_depth_wear_override(prediction, tread_depths[0])
         return prediction
+
+    def _attach_model_diagnostics(
+        self,
+        prediction: dict[str, Any],
+        context_data: dict[str, Any] | None,
+    ) -> None:
+        """Attach non-blocking legacy helper diagnostics to the prediction."""
+        depths = self._depths_from_prediction(prediction)
+        if len(depths) == 4:
+            temporal_payload: dict[str, Any] = {
+                "depth_wear_pattern": _infer_wear_pattern_from_depths(depths),
+                "depth_confidence": round(float(_confidence_from_depths(depths)), 4),
+            }
+            try:
+                from ai_model.rnn.temporal_features import extract_wear_velocity
+
+                temporal_payload["wear_velocity"] = extract_wear_velocity([depths], [0])
+            except Exception as exc:
+                temporal_payload["wear_velocity"] = {"available": False, "reason": str(exc)}
+            prediction["temporal_features"] = temporal_payload
+            prediction["tabular_crosscheck"] = self._tabular_crosscheck(depths)
+            prediction["legacy_classification"] = self._legacy_classification(depths, prediction)
+
+        context_vector = _fit_last_dim(_context_to_vector(context_data, target_dim=64)[np.newaxis, :], 64)[0]
+        prediction["context_vector"] = {
+            "dimension": int(context_vector.shape[-1]),
+            "nonzero_count": int(np.count_nonzero(context_vector)),
+            "l2_norm": round(float(np.linalg.norm(context_vector)), 4),
+            "preview": [round(float(value), 4) for value in context_vector[:8]],
+        }
+
+    def _depths_from_prediction(self, prediction: dict[str, Any]) -> list[float]:
+        tread = prediction.get("tread_depths_mm", {})
+        if not isinstance(tread, dict):
+            return []
+        depths: list[float] = []
+        for key in ("tread_1", "tread_2", "tread_3", "tread_4"):
+            try:
+                depths.append(float(tread[key]))
+            except (KeyError, TypeError, ValueError):
+                return []
+        return depths
+
+    def _tabular_crosscheck(self, depths: list[float]) -> dict[str, Any]:
+        try:
+            from ai_model.tabular_model import load_trained_model, predict_from_depths
+
+            if not self._tabular_checked:
+                self._tabular_bundle = load_trained_model(device=self._hybrid_device)
+                self._tabular_checked = True
+            if self._tabular_bundle is None:
+                return {
+                    "available": False,
+                    "reason": "tabular model weights unavailable",
+                }
+            model, metadata, device_name = self._tabular_bundle
+            crosscheck = predict_from_depths(model, metadata, device_name, depths)
+            return {
+                "available": True,
+                "condition_label": crosscheck.get("condition_label"),
+                "condition_confidence": round(float(crosscheck.get("condition_confidence", 0.0)), 4),
+                "health_score": round(float(crosscheck.get("health_score", 0.0)), 2),
+                "remaining_life_km": round(float(crosscheck.get("remaining_life_km", 0.0)), 0),
+            }
+        except Exception as exc:
+            self._tabular_checked = True
+            return {"available": False, "reason": str(exc)}
+
+    def _legacy_classification(self, depths: list[float], prediction: dict[str, Any]) -> dict[str, Any]:
+        try:
+            from ai_model.classes import NUM_WEAR_CLASSES, build_smart_tire_report, tread_to_condition
+
+            average_depth = float(np.mean(np.asarray(depths, dtype=np.float32)))
+            wear = prediction.get("wear_pattern", {})
+            wear_label = str(wear.get("label", "uniform_wear")) if isinstance(wear, dict) else "uniform_wear"
+            class_wear_label = {
+                "uniform_wear": "even_wear",
+                "patchy_wear": "patch_wear",
+                "side_wall_wear": "one_side_wear",
+            }.get(wear_label, wear_label)
+            smart_report = build_smart_tire_report(
+                health_score=float(prediction.get("health_score", 5.0)),
+                tread_depth_mm=average_depth,
+                wear_label=class_wear_label,
+                confidence_score=float(prediction.get("confidence", 0.75)),
+            )
+            return {
+                "available": True,
+                "num_wear_classes": int(NUM_WEAR_CLASSES),
+                "tread_condition": tread_to_condition(average_depth),
+                "report": smart_report.to_dict(),
+            }
+        except Exception as exc:
+            return {"available": False, "reason": str(exc)}
+
+    def _apply_depth_wear_override(
+        self,
+        prediction: dict[str, Any],
+        tread_depths_mm: np.ndarray,
+    ) -> None:
+        depths = [float(value) for value in np.asarray(tread_depths_mm, dtype=np.float32).reshape(-1)[:4]]
+        if len(depths) != 4:
+            return
+
+        depth_label = _infer_wear_pattern_from_depths(depths)
+        prediction["depth_derived_wear_pattern"] = depth_label
+        if depth_label != "side_wall_wear":
+            return
+
+        original_wear = dict(prediction.get("wear_pattern", {}))
+        prediction["model_wear_pattern_before_depth_override"] = original_wear.get("label")
+        inner = depths[0]
+        outer = depths[-1]
+        diff = max(depths) - min(depths)
+        severity = "critical" if diff >= 3.0 else "high" if diff >= 2.0 else "moderate"
+        confidence = _confidence_from_depths(depths)
+
+        probabilities = dict(original_wear.get("probabilities") or {})
+        probabilities["side_wall_wear"] = round(float(confidence), 4)
+        prediction["wear_pattern"] = {
+            "class_id": -1,
+            "label": "side_wall_wear",
+            "label_display": "Side-Wall Wear",
+            "cause": "Outer shoulder wear concentrated on the tire edge",
+            "advice": "Inspect wheel alignment, camber, and the outer shoulder before continued use.",
+            "severity": severity,
+            "confidence": round(float(confidence), 4),
+            "probabilities": probabilities,
+        }
+        prediction["side_wall_wear_rule"] = {
+            "outer_minus_inner_mm": round(float(outer - inner), 4),
+            "outer_inner_ratio": round(float(outer / max(inner, 0.01)), 4),
+            "min_diff_mm": 0.8,
+            "side_wall_ratio": 1.5,
+        }
 
     def _build_tta_images(self, image_bgr: np.ndarray) -> list[tuple[np.ndarray, bool]]:
         """Small deterministic test-time augmentations for smoother predictions."""

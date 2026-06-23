@@ -2,6 +2,8 @@ import sys
 from pathlib import Path
 
 import pytest
+from fastapi import FastAPI
+from fastapi.testclient import TestClient
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "backend"))
 
@@ -46,3 +48,42 @@ def test_ollama_reasoning_normalizes_json_fields():
     assert result["risk_level"] == "LOW"
     assert result["replacement_urgency"] == "monitor"
     assert result["safety_score"] == 88
+
+
+def test_route_road_condition_endpoint_returns_maps_context(monkeypatch):
+    from app.routes import inference as inference_route
+
+    calls = {}
+
+    class FakeMapsService:
+        async def get_route_road_context(self, source_lat, source_lon, destination_lat, destination_lon):
+            calls["coords"] = (source_lat, source_lon, destination_lat, destination_lon)
+            return {
+                "road_condition": "fair",
+                "road_condition_basis": "Street View visual texture showed mixed surfaces.",
+                "route_distance_km": 12.4,
+                "street_view_available": True,
+                "street_view_sample_count": 5,
+                "street_view_covered_samples": 4,
+                "street_view_visual_summary": "Street View coverage 4/5; visual road texture signals: mixed: 2.",
+            }
+
+    monkeypatch.setattr(inference_route, "MapsService", lambda: FakeMapsService())
+
+    app = FastAPI()
+    app.include_router(inference_route.router, prefix="/analyze")
+    response = TestClient(app).post(
+        "/analyze/route-road-condition",
+        json={
+            "source_latitude": 28.6139,
+            "source_longitude": 77.209,
+            "destination_latitude": 28.7041,
+            "destination_longitude": 77.1025,
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert calls["coords"] == pytest.approx((28.6139, 77.209, 28.7041, 77.1025))
+    assert payload["road_condition"] == "fair"
+    assert payload["street_view_available"] is True

@@ -19,6 +19,7 @@ const endpoints = [
     request: `multipart/form-data
 image: File (required)
 sidewall_image: File (optional)
+context: JSON string (optional)
 latitude: number (optional)
 longitude: number (optional)
 tire_brand: string (optional)
@@ -34,7 +35,7 @@ mileage_km: number (optional)`,
     "tread_depths_mm": { "average": 6.2, "min": 5.8, "max": 6.6 },
     "health_score": 7.8,
     "remaining_life_km": 42000,
-    "wear_pattern": { "label": "uniform_wear", "severity": "low" }
+    "wear_pattern": { "label": "uniform_wear | side_wall_wear", "severity": "low" }
   }
 }`,
   },
@@ -147,10 +148,16 @@ to_date=2026-05-14`,
 const codeExamples = {
   curl: `curl -X POST "${apiBaseUrl}/analyze" \\
   -F "image=@tire_image.jpg" \\
+  -F "context={\\"latitude\\":28.6139,\\"longitude\\":77.2090}" \\
   -F "latitude=28.6139" \\
   -F "longitude=77.2090"`,
   javascript: `const formData = new FormData();
 formData.append("image", fileInput.files[0]);
+formData.append("context", JSON.stringify({
+  latitude: 28.6139,
+  longitude: 77.2090,
+  tire_pressure_psi: 32,
+}));
 
 const response = await fetch("${apiBaseUrl}/analyze", {
   method: "POST",

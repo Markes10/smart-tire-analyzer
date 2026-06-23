@@ -1,78 +1,8 @@
 "use client"
 
 import * as React from "react"
-import { createContext, useContext, useEffect, useState, useCallback } from "react"
-
-export type ThemeMode = "light" | "dark" | "system"
-
-export interface ThemeColors {
-  primary: string
-  secondary: string
-}
-
-export interface ThemeTemplate {
-  id: string
-  name: string
-  description: string
-  mode: ThemeMode
-  colors: ThemeColors
-  preview: {
-    background: string
-    foreground: string
-    primary: string
-  }
-}
-
-export const themeTemplates: ThemeTemplate[] = [
-  {
-    id: "default-dark",
-    name: "Automotive Dark",
-    description: "Default dark theme with teal accents",
-    mode: "dark",
-    colors: { primary: "160", secondary: "260" },
-    preview: { background: "#0d0d11", foreground: "#f2f2f2", primary: "#10b981" },
-  },
-  {
-    id: "ocean-dark",
-    name: "Ocean Night",
-    description: "Deep blue theme for focused work",
-    mode: "dark",
-    colors: { primary: "220", secondary: "240" },
-    preview: { background: "#0a1628", foreground: "#e2e8f0", primary: "#3b82f6" },
-  },
-  {
-    id: "sunset-dark",
-    name: "Sunset Drive",
-    description: "Warm amber tones for comfort",
-    mode: "dark",
-    colors: { primary: "35", secondary: "15" },
-    preview: { background: "#1c1412", foreground: "#fef3c7", primary: "#f59e0b" },
-  },
-  {
-    id: "rose-dark",
-    name: "Rose Garage",
-    description: "Modern rose accent theme",
-    mode: "dark",
-    colors: { primary: "350", secondary: "280" },
-    preview: { background: "#18101a", foreground: "#fce7f3", primary: "#ec4899" },
-  },
-  {
-    id: "default-light",
-    name: "Clean Light",
-    description: "Bright theme for daytime use",
-    mode: "light",
-    colors: { primary: "160", secondary: "220" },
-    preview: { background: "#ffffff", foreground: "#1f2937", primary: "#10b981" },
-  },
-  {
-    id: "ocean-light",
-    name: "Sky Blue",
-    description: "Calm blue light theme",
-    mode: "light",
-    colors: { primary: "220", secondary: "200" },
-    preview: { background: "#f8fafc", foreground: "#1e293b", primary: "#3b82f6" },
-  },
-]
+import { createContext, use, useCallback, useEffect, useMemo, useState } from "react"
+import { themeTemplates, type ThemeColors, type ThemeMode } from "@/components/theme-templates"
 
 interface ThemeContextType {
   mode: ThemeMode
@@ -87,6 +17,30 @@ interface ThemeContextType {
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
+const THEME_STORAGE_KEY = "smart-tire:v1:theme"
+const defaultTheme = {
+  mode: "dark" as ThemeMode,
+  colors: { primary: "160", secondary: "260" },
+  activeTemplate: "default-dark" as string | null,
+}
+
+function getStoredTheme() {
+  if (typeof window === "undefined") return defaultTheme
+
+  const savedTheme = localStorage.getItem(THEME_STORAGE_KEY) ?? localStorage.getItem("smart-tire-theme")
+  if (!savedTheme) return defaultTheme
+
+  try {
+    const parsed = JSON.parse(savedTheme)
+    return {
+      mode: parsed.mode || defaultTheme.mode,
+      colors: parsed.colors || defaultTheme.colors,
+      activeTemplate: parsed.activeTemplate || null,
+    }
+  } catch {
+    return defaultTheme
+  }
+}
 
 function getSystemTheme(): "light" | "dark" {
   if (typeof window === "undefined") return "dark"
@@ -94,31 +48,13 @@ function getSystemTheme(): "light" | "dark" {
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [mode, setModeState] = useState<ThemeMode>("dark")
-  const [colors, setColorsState] = useState<ThemeColors>({ primary: "160", secondary: "260" })
-  const [activeTemplate, setActiveTemplate] = useState<string | null>("default-dark")
+  const [theme, setTheme] = useState(getStoredTheme)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
-  const [mounted, setMounted] = useState(false)
+  const { mode, colors, activeTemplate } = theme
 
   const resolvedMode = mode === "system" ? getSystemTheme() : mode
 
   useEffect(() => {
-    setMounted(true)
-    const savedTheme = localStorage.getItem("smart-tire-theme")
-    if (savedTheme) {
-      try {
-        const parsed = JSON.parse(savedTheme)
-        setModeState(parsed.mode || "dark")
-        setColorsState(parsed.colors || { primary: "160", secondary: "260" })
-        setActiveTemplate(parsed.activeTemplate || null)
-      } catch {
-        // Use defaults
-      }
-    }
-  }, [])
-
-  useEffect(() => {
-    if (!mounted) return
     const root = document.documentElement
     if (resolvedMode === "dark") {
       root.classList.add("dark")
@@ -184,10 +120,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       root.style.setProperty("--sidebar-accent-foreground", `oklch(0.2 0.01 ${secondaryHue})`)
       root.style.setProperty("--sidebar-border", `oklch(0.92 0.005 ${secondaryHue})`)
     }
-  }, [mode, colors, resolvedMode, mounted])
+  }, [mode, colors, resolvedMode])
 
   const saveTheme = useCallback((newMode: ThemeMode, newColors: ThemeColors, newTemplate: string | null) => {
-    localStorage.setItem("smart-tire-theme", JSON.stringify({
+    localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify({
       mode: newMode,
       colors: newColors,
       activeTemplate: newTemplate,
@@ -195,23 +131,25 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   const setMode = useCallback((newMode: ThemeMode) => {
-    setModeState(newMode)
-    setActiveTemplate(null)
-    saveTheme(newMode, colors, null)
-  }, [colors, saveTheme])
+    setTheme((current) => {
+      const next = { ...current, mode: newMode, activeTemplate: null }
+      saveTheme(next.mode, next.colors, next.activeTemplate)
+      return next
+    })
+  }, [saveTheme])
 
   const setColors = useCallback((newColors: ThemeColors) => {
-    setColorsState(newColors)
-    setActiveTemplate(null)
-    saveTheme(mode, newColors, null)
-  }, [mode, saveTheme])
+    setTheme((current) => {
+      const next = { ...current, colors: newColors, activeTemplate: null }
+      saveTheme(next.mode, next.colors, next.activeTemplate)
+      return next
+    })
+  }, [saveTheme])
 
   const applyTemplate = useCallback((templateId: string) => {
     const template = themeTemplates.find(t => t.id === templateId)
     if (template) {
-      setModeState(template.mode)
-      setColorsState(template.colors)
-      setActiveTemplate(templateId)
+      setTheme({ mode: template.mode, colors: template.colors, activeTemplate: templateId })
       saveTheme(template.mode, template.colors, templateId)
     }
   }, [saveTheme])
@@ -219,20 +157,25 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (mode !== "system") return
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)")
-    const handleChange = () => { setModeState("system") }
+    const handleChange = () => setTheme((current) => ({ ...current }))
     mediaQuery.addEventListener("change", handleChange)
     return () => mediaQuery.removeEventListener("change", handleChange)
   }, [mode])
 
+  const value = useMemo(
+    () => ({ mode, setMode, colors, setColors, activeTemplate, applyTemplate, resolvedMode, isSettingsOpen, setIsSettingsOpen }),
+    [mode, setMode, colors, setColors, activeTemplate, applyTemplate, resolvedMode, isSettingsOpen],
+  )
+
   return (
-    <ThemeContext.Provider value={{ mode, setMode, colors, setColors, activeTemplate, applyTemplate, resolvedMode, isSettingsOpen, setIsSettingsOpen }}>
+    <ThemeContext.Provider value={value}>
       {children}
     </ThemeContext.Provider>
   )
 }
 
 export function useTheme() {
-  const context = useContext(ThemeContext)
+  const context = use(ThemeContext)
   if (context === undefined) {
     throw new Error("useTheme must be used within a ThemeProvider")
   }

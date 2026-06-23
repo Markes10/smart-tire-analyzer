@@ -1,8 +1,15 @@
-import { defineConfig } from "eslint/config"
-import nextVitals from "eslint-config-next/core-web-vitals"
-import nextTypescript from "eslint-config-next/typescript"
+import { FlatCompat } from "@eslint/eslintrc"
+import { dirname } from "path"
+import { fileURLToPath } from "url"
 
-export default defineConfig([
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
+
+const compat = new FlatCompat({
+  baseDirectory: __dirname,
+})
+
+export default [
   {
     ignores: [
       ".next/**",
@@ -11,8 +18,7 @@ export default defineConfig([
       "App.tsx",
     ],
   },
-  ...nextVitals,
-  ...nextTypescript,
+  ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
@@ -20,4 +26,4 @@ export default defineConfig([
       "react-hooks/set-state-in-effect": "off",
     },
   },
-])
+]

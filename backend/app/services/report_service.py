@@ -80,6 +80,13 @@ class ReportService:
                 "runtime_tread_sequence_mm",
                 "condition_prediction",
                 "condition_probabilities",
+                "depth_derived_wear_pattern",
+                "model_wear_pattern_before_depth_override",
+                "side_wall_wear_rule",
+                "temporal_features",
+                "tabular_crosscheck",
+                "legacy_classification",
+                "context_vector",
             )
             if prediction_result.get(key) is not None
         }

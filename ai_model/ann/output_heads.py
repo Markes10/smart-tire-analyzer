@@ -71,6 +71,11 @@ CLASS_TO_CANONICAL_WEAR_LABEL: dict[WearPatternClass, str] = {
     WearPatternClass.FEATHERING_WEAR: "patchy_wear",
 }
 
+SIDE_WALL_WEAR_LABEL = "side_wall_wear"
+SIDE_WALL_WEAR_DISPLAY = "Side-Wall Wear"
+SIDE_WALL_WEAR_CAUSE = "Outer shoulder wear concentrated on the tire edge"
+SIDE_WALL_WEAR_ADVICE = "Inspect wheel alignment, camber, and the outer shoulder before continued use."
+
 
 def _as_numpy(value: Any) -> np.ndarray:
     if hasattr(value, "numpy"):
@@ -116,6 +121,8 @@ def _resolve_wear_class(label: str) -> WearPatternClass:
 
 
 def _canonical_wear_label(label: str) -> str:
+    if label == SIDE_WALL_WEAR_LABEL:
+        return SIDE_WALL_WEAR_LABEL
     return CLASS_TO_CANONICAL_WEAR_LABEL[_resolve_wear_class(label)]
 
 
@@ -138,21 +145,20 @@ def _wear_probabilities(probabilities: np.ndarray) -> dict[str, float]:
 
 def _infer_wear_pattern_from_depths(depths: list[float] | np.ndarray) -> str:
     depth_array = np.asarray(depths, dtype=np.float32)
-    inner_avg = float(np.mean(depth_array[:2]))
-    outer_avg = float(np.mean(depth_array[2:]))
-    center_avg = float(np.mean(depth_array[1:3]))
-    edge_avg = float(np.mean(np.asarray([depth_array[0], depth_array[3]], dtype=np.float32)))
-
     diff = float(np.max(depth_array) - np.min(depth_array))
-    inner_outer_diff = abs(inner_avg - outer_avg)
+    inner = float(depth_array[0])
+    outer = float(depth_array[-1])
+    center_avg = float(np.mean(depth_array[1:3]))
 
+    if outer - inner > 0.8 and outer / max(inner, 0.01) > 1.5:
+        return SIDE_WALL_WEAR_LABEL
     if diff < 0.5:
         return "uniform_wear"
-    if center_avg < edge_avg - 0.8:
+    if center_avg < outer - 0.8:
         return "center_wear"
-    if edge_avg < center_avg - 0.8:
+    if inner < center_avg - 0.8:
         return "edge_wear"
-    if inner_outer_diff > 1.5:
+    if (inner - outer) > 1.5:
         return "one_side_wear"
     if diff > 2.0:
         return "patchy_wear"
@@ -234,8 +240,15 @@ def denormalize_outputs(
         prediction.setdefault("source", source)
         wear = dict(prediction.get("wear_pattern", {}))
         wear["label"] = _canonical_wear_label(wear.get("label", "uniform_wear"))
-        wear_class = _resolve_wear_class(wear["label"])
-        wear.setdefault("cause", wear_class.cause)
+        if wear["label"] == SIDE_WALL_WEAR_LABEL:
+            wear.setdefault("label_display", SIDE_WALL_WEAR_DISPLAY)
+            wear.setdefault("cause", SIDE_WALL_WEAR_CAUSE)
+            wear.setdefault("advice", SIDE_WALL_WEAR_ADVICE)
+        else:
+            wear_class = _resolve_wear_class(wear["label"])
+            wear.setdefault("label_display", wear_class.label)
+            wear.setdefault("cause", wear_class.cause)
+            wear.setdefault("advice", wear_class.advice)
         wear.setdefault("severity", _wear_severity_from_depths(wear["label"], prediction["tread_depths_mm"]))
         wear.setdefault("confidence", prediction["confidence"])
         prediction["wear_pattern"] = wear
@@ -270,7 +283,7 @@ def denormalize_outputs(
         wear_confidence = 0.72
 
     wear_label = _canonical_wear_label(wear_label)
-    wear_class = _resolve_wear_class(wear_label)
+    wear_class = None if wear_label == SIDE_WALL_WEAR_LABEL else _resolve_wear_class(wear_label)
     wear_severity = _wear_severity_from_depths(wear_label, tread_stats)
 
     confidence = float(
@@ -301,11 +314,11 @@ def denormalize_outputs(
         "tread_class": tread_class,
         "remaining_life_km": round(remaining_life, 0),
         "wear_pattern": {
-            "class_id": WEAR_PATTERN_INDEX_TO_LABEL.index(wear_label),
+            "class_id": -1 if wear_label == SIDE_WALL_WEAR_LABEL else WEAR_PATTERN_INDEX_TO_LABEL.index(wear_label),
             "label": wear_label,
-            "label_display": wear_class.label,
-            "cause": wear_class.cause,
-            "advice": wear_class.advice,
+            "label_display": SIDE_WALL_WEAR_DISPLAY if wear_label == SIDE_WALL_WEAR_LABEL else wear_class.label,
+            "cause": SIDE_WALL_WEAR_CAUSE if wear_label == SIDE_WALL_WEAR_LABEL else wear_class.cause,
+            "advice": SIDE_WALL_WEAR_ADVICE if wear_label == SIDE_WALL_WEAR_LABEL else wear_class.advice,
             "severity": wear_severity,
             "confidence": round(confidence, 4),
             "probabilities": _wear_probabilities(wear_probs),
@@ -335,11 +348,18 @@ def enrich_prediction_with_classes(prediction: dict[str, Any]) -> dict[str, Any]
 
     prediction["tire_condition_class"] = health_class.label
     prediction["tread_depth_class"] = tread_class.label
-    prediction["wear_pattern_class"] = {
-        "label": wear_class.label,
-        "cause": wear_class.cause,
-        "advice": wear_class.advice,
-    }
+    if wear_label == SIDE_WALL_WEAR_LABEL:
+        prediction["wear_pattern_class"] = {
+            "label": SIDE_WALL_WEAR_DISPLAY,
+            "cause": SIDE_WALL_WEAR_CAUSE,
+            "advice": SIDE_WALL_WEAR_ADVICE,
+        }
+    else:
+        prediction["wear_pattern_class"] = {
+            "label": wear_class.label,
+            "cause": wear_class.cause,
+            "advice": wear_class.advice,
+        }
     prediction["confidence_class"] = confidence_class.label
     prediction["advice"] = [advice.label for advice in advice_from_risk(risk_class)]
     return prediction
@@ -391,22 +411,28 @@ def _generate_alerts(predictions: dict[str, Any], risk_level: str) -> list[dict[
         )
 
     wear_label = _canonical_wear_label(wear.get("label", "uniform_wear"))
-    wear_class = _resolve_wear_class(wear_label)
+    if wear_label == SIDE_WALL_WEAR_LABEL:
+        wear_label_display = SIDE_WALL_WEAR_DISPLAY
+        wear_advice = SIDE_WALL_WEAR_ADVICE
+    else:
+        wear_class = _resolve_wear_class(wear_label)
+        wear_label_display = wear_class.label
+        wear_advice = wear_class.advice
     wear_severity = wear.get("severity", "low")
     if wear_severity == "critical":
         alerts.append(
             {
                 "level": DrivingRiskClass.CRITICAL.api_value,
-                "class": wear_class.label,
-                "message": f"Critical {wear_class.label.lower()} detected. {wear_class.advice}",
+                "class": wear_label_display,
+                "message": f"Critical {wear_label_display.lower()} detected. {wear_advice}",
             }
         )
     elif wear_severity == "high":
         alerts.append(
             {
                 "level": DrivingRiskClass.HIGH.api_value,
-                "class": wear_class.label,
-                "message": f"Severe {wear_class.label.lower()} detected. {wear_class.advice}",
+                "class": wear_label_display,
+                "message": f"Severe {wear_label_display.lower()} detected. {wear_advice}",
             }
         )
 
@@ -427,7 +453,13 @@ def _rule_based_reasoning(predictions: dict[str, Any], risk_level: str) -> dict[
     health = float(predictions.get("health_score", 5.0))
     wear = predictions.get("wear_pattern", {})
     wear_label = _canonical_wear_label(wear.get("label", "uniform_wear"))
-    wear_class = _resolve_wear_class(wear_label)
+    if wear_label == SIDE_WALL_WEAR_LABEL:
+        wear_cause = SIDE_WALL_WEAR_CAUSE
+        wear_advice = SIDE_WALL_WEAR_ADVICE
+    else:
+        wear_class = _resolve_wear_class(wear_label)
+        wear_cause = wear_class.cause
+        wear_advice = wear_class.advice
     risk_class = DrivingRiskClass[risk_level]
 
     advice_text = {
@@ -450,8 +482,8 @@ def _rule_based_reasoning(predictions: dict[str, Any], risk_level: str) -> dict[
         "advice_classes": [advice.label for advice in advice_from_risk(risk_class)],
         "replacement_recommended": risk_class in {DrivingRiskClass.CRITICAL, DrivingRiskClass.HIGH},
         "replacement_urgency": urgency[risk_class],
-        "primary_cause": wear.get("cause", wear_class.cause),
-        "additional_notes": wear_class.advice,
+        "primary_cause": wear.get("cause", wear_cause),
+        "additional_notes": wear.get("advice", wear_advice),
         "safety_score": int(max(0, min(100, health * 10))),
     }
 

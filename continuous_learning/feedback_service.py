@@ -22,17 +22,33 @@ def _load_feedback_log() -> list:
     if not WRONG_LOG_PATH.exists():
         return []
     try:
-        with open(WRONG_LOG_PATH) as f:
-            return json.load(f)
+        with open(WRONG_LOG_PATH, encoding="utf-8-sig") as f:
+            payload = json.load(f)
     except (json.JSONDecodeError, IOError):
         return []
+    if isinstance(payload, dict):
+        records = payload.get("records", [])
+        return records if isinstance(records, list) else []
+    if isinstance(payload, list):
+        return payload
+    return []
 
 
 def _save_feedback_log(entries: list):
     """Save the wrong prediction log to disk."""
     WRONG_LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
-    with open(WRONG_LOG_PATH, "w") as f:
-        json.dump(entries, f, indent=2, default=str)
+    payload = {
+        "records": entries,
+        "total": len(entries),
+        "last_updated": datetime.utcnow().isoformat(),
+    }
+    with open(WRONG_LOG_PATH, "w", encoding="utf-8") as f:
+        json.dump(payload, f, indent=2, default=str)
+
+
+def _entry_feedback_type(entry: Dict) -> str:
+    """Normalize legacy list entries and current wrong-log records."""
+    return str(entry.get("feedback_type") or entry.get("source") or "").lower()
 
 
 def store_feedback(
@@ -72,7 +88,7 @@ def store_feedback(
     # Count wrong predictions (exclude "correct" feedback)
     wrong_count = sum(
         1 for e in log
-        if e.get("feedback_type") in ("wrong", "inaccurate")
+        if _entry_feedback_type(e) in ("wrong", "inaccurate", "low_confidence")
         and not e.get("used_for_training", False)
     )
     retrain_ready = wrong_count >= RETRAIN_THRESHOLD
@@ -104,8 +120,8 @@ def get_feedback_stats() -> Dict:
     """Compute feedback statistics from the log file."""
     log = _load_feedback_log()
     total = len(log)
-    wrong = sum(1 for e in log if e.get("feedback_type") in ("wrong", "inaccurate"))
-    correct = sum(1 for e in log if e.get("feedback_type") == "correct")
+    wrong = sum(1 for e in log if _entry_feedback_type(e) in ("wrong", "inaccurate", "low_confidence"))
+    correct = sum(1 for e in log if _entry_feedback_type(e) == "correct")
     untrained = sum(1 for e in log if not e.get("used_for_training", False))
 
     accuracy_rate = round(correct / max(total, 1) * 100, 1)
@@ -114,7 +130,8 @@ def get_feedback_stats() -> Dict:
     # Pattern distribution of corrections
     pattern_counts: Dict[str, int] = {}
     for entry in log:
-        wp = entry.get("corrected_wear_pattern")
+        user_correction = entry.get("user_correction") if isinstance(entry.get("user_correction"), dict) else {}
+        wp = entry.get("corrected_wear_pattern") or user_correction.get("wear_pattern")
         if wp:
             pattern_counts[wp] = pattern_counts.get(wp, 0) + 1
 
@@ -135,7 +152,7 @@ def mark_feedback_used(feedback_ids: list):
     log = _load_feedback_log()
     updated = 0
     for entry in log:
-        if entry["feedback_id"] in feedback_ids:
+        if entry.get("feedback_id") in feedback_ids or entry.get("id") in feedback_ids:
             entry["used_for_training"] = True
             updated += 1
     _save_feedback_log(log)
@@ -147,7 +164,7 @@ def get_pending_corrections() -> list:
     log = _load_feedback_log()
     return [
         e for e in log
-        if e.get("feedback_type") in ("wrong", "inaccurate")
+        if _entry_feedback_type(e) in ("wrong", "inaccurate", "low_confidence")
         and not e.get("used_for_training", False)
     ]
 

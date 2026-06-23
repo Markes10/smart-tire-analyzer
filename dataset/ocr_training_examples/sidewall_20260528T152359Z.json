@@ -1,0 +1,31 @@
+{
+  "brand": "Goodyear",
+  "tire_model": "ASSURANCE TRIPLEMAX 2",
+  "tire_size": {
+    "raw": "195/60R16",
+    "width_mm": 195,
+    "aspect_ratio": 60,
+    "rim_diameter_inches": 16,
+    "full_formatted": "195/60 R16"
+  },
+  "load_index": 89,
+  "speed_rating": "H",
+  "dot_code": {
+    "full": "DOT JALR 2921",
+    "manufacture_week": 29,
+    "manufacture_year": 2021,
+    "manufacture_date_text": "Week 29, 2021"
+  },
+  "construction_type": "Radial",
+  "max_pressure_psi": 50,
+  "max_pressure_kpa": 340,
+  "country_of_origin": "INDIA",
+  "special_markings": [
+    "TUBELESS",
+    "OUTSIDE"
+  ],
+  "all_visible_text": "GOODYEAR ASSURANCE TRIPLEMAX 2 195/60R16 89H RADIAL TUBELESS MAX. PRESS. 340 kPa (50 PSI) OUTSIDE MADE IN INDIA DOT JALR 2921",
+  "extraction_confidence": "HIGH",
+  "extraction_notes": null,
+  "source": "gemini_vision"
+}

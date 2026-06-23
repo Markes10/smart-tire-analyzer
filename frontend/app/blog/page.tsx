@@ -129,6 +129,7 @@ export default function BlogPage() {
               {categories.map((category) => (
                 <button
                   key={category}
+                  type="button"
                   onClick={() => setActiveCategory(category)}
                   className={`whitespace-nowrap px-4 py-2 rounded-full font-medium text-sm transition-all ${activeCategory === category
                       ? "bg-primary text-primary-foreground"

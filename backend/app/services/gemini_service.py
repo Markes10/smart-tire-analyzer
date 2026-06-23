@@ -71,20 +71,38 @@ class GeminiService:
     - Automatic retry on transient failures  
     - Rule-based fallback when API unavailable
     - Prompt caching for duplicate requests
+    - Supports runtime API keys passed from frontend users
     """
 
-    def __init__(self):
-        # Prefer the global, quota-aware rotator initialized in main.py
-        rot = get_gemini_rotator()
-        if not rot:
-            # Fallback: create a local rotator from settings if available
-            keys = settings.get_gemini_keys()
-            rot = APIKeyRotator("gemini", keys, daily_quota=settings.GEMINI_DAILY_QUOTA) if keys else None
+    def __init__(self, runtime_keys: dict | None = None):
+        """
+        Initialize the Gemini service.
+        
+        Args:
+            runtime_keys: Optional dict with a "gemini" key for user-provided API key.
+                          If provided, this takes priority over env-var keys.
+        """
+        runtime_gemini_key = None
+        if runtime_keys and isinstance(runtime_keys, dict):
+            runtime_gemini_key = runtime_keys.get("gemini") or runtime_keys.get("GEMINI_API_KEY") or None
 
-        self.rotator = rot
-        self.enabled = bool(self.rotator and self.rotator.available_keys)
-        if not self.enabled:
-            logger.warning("No Gemini API keys configured — will use rule-based reasoning fallback")
+        if runtime_gemini_key:
+            # Use the user-provided key directly
+            logger.info("GeminiService initialized with runtime API key")
+            self.rotator = APIKeyRotator("gemini", [runtime_gemini_key], daily_quota=9999)
+            self.enabled = True
+        else:
+            # Prefer the global, quota-aware rotator initialized in main.py
+            rot = get_gemini_rotator()
+            if not rot:
+                # Fallback: create a local rotator from settings if available
+                keys = settings.get_gemini_keys()
+                rot = APIKeyRotator("gemini", keys, daily_quota=settings.GEMINI_DAILY_QUOTA) if keys else None
+
+            self.rotator = rot
+            self.enabled = bool(self.rotator and self.rotator.available_keys)
+            if not self.enabled:
+                logger.warning("No Gemini API keys configured — will use rule-based reasoning fallback")
 
     async def reason(
         self,
@@ -160,6 +178,32 @@ class GeminiService:
         """Build the Gemini reasoning prompt from prediction + context data."""
         tread = predictions.get("tread_depths_mm", {})
         wear = predictions.get("wear_pattern", {})
+
+        try:
+            from api_integrations.gemini import prompt_builder
+
+            prompt = prompt_builder.build_tire_reasoning_prompt(
+                predictions,
+                context,
+                include_examples=True,
+            )
+            confidence = float(predictions.get("confidence", wear.get("confidence", 1.0)))
+            if confidence < 0.65:
+                metadata = predictions.get("metadata") if isinstance(predictions.get("metadata"), dict) else {}
+                anomaly_features = {
+                    "wear_pattern": wear.get("label", "unknown"),
+                    "tread_depths_mm": tread,
+                    "condition_prediction": predictions.get("condition_prediction"),
+                    "model_diagnostics": metadata.get("model_diagnostics", {}),
+                }
+                prompt = (
+                    prompt
+                    + "\n\n"
+                    + prompt_builder.build_anomaly_detection_prompt(anomaly_features, confidence)
+                )
+            return prompt
+        except Exception as exc:
+            logger.debug("Gemini prompt_builder unavailable; using legacy template: %s", exc)
 
         return REASONING_PROMPT_TEMPLATE.format(
             avg_tread_mm=tread.get("average", 0.0),
@@ -289,6 +333,7 @@ class GeminiService:
         wear_notes = {
             "center_wear": "Check and reduce tire inflation pressure.",
             "edge_wear": "Check and increase tire inflation pressure.",
+            "side_wall_wear": "Inspect wheel alignment, camber, and the outer shoulder before continued use.",
             "patchy_wear": "Have wheel alignment and balance checked.",
             "one_side_wear": "Inspect camber angle — alignment adjustment required.",
             "cupping_wear": "Inspect shock absorbers and suspension immediately.",

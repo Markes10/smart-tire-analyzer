@@ -1,7 +1,7 @@
 "use client"
 
 interface WearPatternVisualProps {
-  pattern: "even" | "center" | "edge" | "one-side" | "cupping" | "feathering" | "patch"
+  pattern: "even" | "center" | "edge" | "side-wall" | "one-side" | "cupping" | "feathering" | "patch"
   wearLevels: number[] // Array of 5 zones from left to right
 }
 
@@ -9,6 +9,7 @@ const patternLabels: Record<WearPatternVisualProps["pattern"], string> = {
   "even": "Even Wear",
   "center": "Center Wear",
   "edge": "Edge Wear",
+  "side-wall": "Side-Wall Wear",
   "one-side": "One-Side Wear",
   "cupping": "Cupping",
   "feathering": "Feathering",
@@ -19,20 +20,23 @@ const patternDescriptions: Record<WearPatternVisualProps["pattern"], string> = {
   "even": "Normal wear pattern indicating proper alignment and inflation.",
   "center": "May indicate over-inflation. Reduce tire pressure to recommended levels.",
   "edge": "May indicate under-inflation. Increase tire pressure to recommended levels.",
+  "side-wall": "Outer shoulder wear is concentrated on the tire edge. Inspect alignment, camber, and sidewall condition.",
   "one-side": "Indicates alignment issues. Have your alignment checked.",
   "cupping": "Caused by worn suspension components. Have suspension inspected.",
   "feathering": "Often caused by toe misalignment. Have alignment checked.",
   "patch": "Indicates irregular wear from flat spots or damaged areas.",
 }
 
-export function WearPatternVisual({ pattern, wearLevels }: WearPatternVisualProps) {
-  const getWearColor = (level: number) => {
-    if (level >= 80) return "bg-success"
-    if (level >= 60) return "bg-chart-2"
-    if (level >= 40) return "bg-warning"
-    return "bg-critical"
-  }
+const tireZones = ["outer-left", "inner-left", "center", "inner-right", "outer-right"]
 
+function getWearColor(level: number) {
+  if (level >= 80) return "bg-success"
+  if (level >= 60) return "bg-chart-2"
+  if (level >= 40) return "bg-warning"
+  return "bg-critical"
+}
+
+export function WearPatternVisual({ pattern, wearLevels }: WearPatternVisualProps) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -43,7 +47,7 @@ export function WearPatternVisual({ pattern, wearLevels }: WearPatternVisualProp
       <div className="relative rounded-2xl border border-border/50 bg-muted/30 p-6">
         <div className="flex items-end justify-center gap-1">
           {wearLevels.map((level, index) => (
-            <div key={index} className="flex flex-col items-center gap-2">
+            <div key={tireZones[index] ?? `zone-${level}`} className="flex flex-col items-center gap-2">
               <div 
                 className={`w-8 rounded-t transition-all ${getWearColor(level)}`}
                 style={{ height: `${level * 0.8}px` }}

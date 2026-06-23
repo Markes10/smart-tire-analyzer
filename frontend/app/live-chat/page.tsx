@@ -33,6 +33,10 @@ const quickReplies = [
     "I have a technical issue",
 ]
 
+function formatTime(date: Date) {
+    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+}
+
 export default function LiveChatPage() {
     const [messages, setMessages] = useState<Message[]>(initialMessages)
     const [inputValue, setInputValue] = useState("")
@@ -108,10 +112,6 @@ export default function LiveChatPage() {
         } finally {
             setIsTyping(false)
         }
-    }
-
-    const formatTime = (date: Date) => {
-        return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
     }
 
     return (
@@ -206,9 +206,9 @@ export default function LiveChatPage() {
                                                 </div>
                                                 <div className="inline-block rounded-2xl bg-muted px-4 py-2">
                                                     <div className="flex gap-1">
-                                                        <span className="h-2 w-2 animate-bounce rounded-full bg-muted-foreground/50" />
-                                                        <span className="h-2 w-2 animate-bounce rounded-full bg-muted-foreground/50 [animation-delay:0.1s]" />
-                                                        <span className="h-2 w-2 animate-bounce rounded-full bg-muted-foreground/50 [animation-delay:0.2s]" />
+                                                        <span className="h-2 w-2 animate-pulse rounded-full bg-muted-foreground/50" />
+                                                        <span className="h-2 w-2 animate-pulse rounded-full bg-muted-foreground/50 [animation-delay:0.1s]" />
+                                                        <span className="h-2 w-2 animate-pulse rounded-full bg-muted-foreground/50 [animation-delay:0.2s]" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -237,25 +237,24 @@ export default function LiveChatPage() {
 
                                 {/* Input */}
                                 <div className="border-t border-border/50 p-4">
-                                    <form
-                                        onSubmit={(e) => {
-                                            e.preventDefault()
-                                            handleSend()
-                                        }}
-                                        className="flex gap-2"
-                                    >
+                                    <div className="flex gap-2">
                                         <Input
                                             value={inputValue}
                                             onChange={(e) => setInputValue(e.target.value)}
-                                            placeholder="Type your message..."
+                                            onKeyDown={(e) => {
+                                                if (e.key === "Enter") {
+                                                    void handleSend()
+                                                }
+                                            }}
+                                            placeholder="Type your message…"
                                             className="flex-1"
                                             disabled={isTyping}
                                         />
-                                        <Button type="submit" size="icon" disabled={isTyping}>
+                                        <Button type="button" size="icon" disabled={isTyping} onClick={() => void handleSend()}>
                                             <Send className="h-4 w-4" />
                                             <span className="sr-only">Send message</span>
                                         </Button>
-                                    </form>
+                                    </div>
                                 </div>
                             </CardContent>
                         </Card>

@@ -1,6 +1,7 @@
 "use client"
 
-import { useTheme, themeTemplates, type ThemeMode } from "@/components/theme-provider"
+import { useTheme } from "@/components/theme-provider"
+import { themeTemplates, type ThemeMode } from "@/components/theme-templates"
 import {
   Dialog,
   DialogContent,
@@ -141,7 +142,7 @@ export function ThemeSettings() {
               <h3 className="text-sm font-medium text-foreground mb-3">Primary Color</h3>
               <div className="grid grid-cols-4 gap-2">
                 {colorPresets.map((preset) => (
-                  <button
+                  <button type="button"
                     key={preset.hue}
                     onClick={() => setColors({ ...colors, primary: preset.hue })}
                     className={cn(

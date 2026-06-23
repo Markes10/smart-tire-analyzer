@@ -1,6 +1,7 @@
 'use client'
 
 import * as React from 'react'
+import { use } from 'react'
 import useEmblaCarousel, {
   type UseEmblaCarouselType,
 } from 'embla-carousel-react'
@@ -33,7 +34,7 @@ type CarouselContextProps = {
 const CarouselContext = React.createContext<CarouselContextProps | null>(null)
 
 function useCarousel() {
-  const context = React.useContext(CarouselContext)
+  const context = use(CarouselContext)
 
   if (!context) {
     throw new Error('useCarousel must be used within a <Carousel />')
@@ -60,12 +61,13 @@ function Carousel({
   )
   const [canScrollPrev, setCanScrollPrev] = React.useState(false)
   const [canScrollNext, setCanScrollNext] = React.useState(false)
+  const setApiRef = React.useRef(setApi)
 
-  const onSelect = React.useCallback((api: CarouselApi) => {
+  const onSelect = React.useEffectEvent((api: CarouselApi) => {
     if (!api) return
     setCanScrollPrev(api.canScrollPrev())
     setCanScrollNext(api.canScrollNext())
-  }, [])
+  })
 
   const scrollPrev = React.useCallback(() => {
     api?.scrollPrev()
@@ -89,45 +91,59 @@ function Carousel({
   )
 
   React.useEffect(() => {
-    if (!api || !setApi) return
-    setApi(api)
-  }, [api, setApi])
+    setApiRef.current = setApi
+  }, [setApi])
 
   React.useEffect(() => {
     if (!api) return
-    onSelect(api)
-    api.on('reInit', onSelect)
-    api.on('select', onSelect)
+    setApiRef.current?.(api)
+  }, [api])
+
+  React.useEffect(() => {
+    if (!api) return
+
+    const handleSelect = (selectedApi: CarouselApi) => {
+      onSelect(selectedApi)
+    }
+
+    handleSelect(api)
+    api.on('reInit', handleSelect)
+    api.on('select', handleSelect)
 
     return () => {
-      api?.off('select', onSelect)
+      api.off('reInit', handleSelect)
+      api.off('select', handleSelect)
     }
-  }, [api, onSelect])
+  }, [api])
+
+  const value = React.useMemo(
+    () => ({
+      carouselRef,
+      api,
+      opts,
+      orientation:
+        orientation || (opts?.axis === 'y' ? 'vertical' : 'horizontal'),
+      scrollPrev,
+      scrollNext,
+      canScrollPrev,
+      canScrollNext,
+    }),
+    [api, canScrollNext, canScrollPrev, carouselRef, opts, orientation, scrollNext, scrollPrev],
+  )
 
   return (
     <CarouselContext.Provider
-      value={{
-        carouselRef,
-        api: api,
-        opts,
-        orientation:
-          orientation || (opts?.axis === 'y' ? 'vertical' : 'horizontal'),
-        scrollPrev,
-        scrollNext,
-        canScrollPrev,
-        canScrollNext,
-      }}
+      value={value}
     >
-      <div
+      <section
         onKeyDownCapture={handleKeyDown}
         className={cn('relative', className)}
-        role="region"
         aria-roledescription="carousel"
         data-slot="carousel"
         {...props}
       >
         {children}
-      </div>
+      </section>
     </CarouselContext.Provider>
   )
 }
@@ -158,7 +174,6 @@ function CarouselItem({ className, ...props }: React.ComponentProps<'div'>) {
 
   return (
     <div
-      role="group"
       aria-roledescription="slide"
       data-slot="carousel-item"
       className={cn(

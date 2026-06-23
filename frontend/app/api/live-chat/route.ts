@@ -70,6 +70,8 @@ const SYSTEM_PROMPT = [
   "For safety-critical tire damage, low tread, bulges, punctures, or uncertain conditions, recommend a professional inspection and cautious driving.",
 ].join(" ")
 
+const RETRYABLE_PROVIDER_STATUSES = new Set([401, 403, 429, 500, 503])
+
 class LiveChatError extends Error {
   status: number
   detail?: string
@@ -96,13 +98,13 @@ function loadRepositoryEnvFallback() {
       continue
     }
 
-    const separatorIndex = trimmed.indexOf("=")
-    if (separatorIndex <= 0) {
+    const [rawKey, ...rawValueParts] = trimmed.split("=")
+    const key = rawKey.trim()
+    if (!key || rawValueParts.length === 0) {
       continue
     }
 
-    const key = trimmed.slice(0, separatorIndex).trim()
-    const value = trimmed.slice(separatorIndex + 1).trim().replace(/^['"]|['"]$/g, "")
+    const value = rawValueParts.join("=").trim().replace(/^['"]|['"]$/g, "")
 
     if (!process.env[key]) {
       process.env[key] = value
@@ -147,8 +149,10 @@ function getEnvList(...values: Array<string | undefined>): string[] {
     value
       ? value
         .split(",")
-        .map((item) => item.trim())
-        .filter(Boolean)
+        .flatMap((item) => {
+          const trimmed = item.trim()
+          return trimmed ? [trimmed] : []
+        })
       : []
   ))
 
@@ -240,6 +244,7 @@ async function postJson(url: string, headers: HeadersInit, payload: unknown): Pr
       headers,
       body: JSON.stringify(payload),
       signal: controller.signal,
+      cache: "no-store",
     })
   } finally {
     clearTimeout(timeout)
@@ -326,9 +331,12 @@ async function callGemini(messages: ClientChatMessage[]): Promise<ChatResult> {
     },
   }
 
-  let lastError: LiveChatError | null = null
+  async function tryApiKey(index: number): Promise<ChatResult> {
+    const apiKey = apiKeys[index]
+    if (!apiKey) {
+      throw new LiveChatError("Gemini is unavailable right now.", 503)
+    }
 
-  for (const apiKey of apiKeys) {
     const response = await postJson(
       `${baseUrl}/${normalizeGeminiModelPath(model)}:generateContent`,
       {
@@ -340,17 +348,17 @@ async function callGemini(messages: ClientChatMessage[]): Promise<ChatResult> {
     const { data, text } = await readJsonResponse<GeminiResponse>(response)
 
     if (!response.ok) {
-      lastError = new LiveChatError(
+      const error = new LiveChatError(
         `Gemini returned ${response.status} for ${model}.`,
         502,
         buildErrorDetail(data, text),
       )
 
-      if ([401, 403, 429, 500, 503].includes(response.status)) {
-        continue
+      if (RETRYABLE_PROVIDER_STATUSES.has(response.status) && index < apiKeys.length - 1) {
+        return tryApiKey(index + 1)
       }
 
-      throw lastError
+      throw error
     }
 
     const reply = data?.candidates?.[0]?.content?.parts
@@ -374,7 +382,7 @@ async function callGemini(messages: ClientChatMessage[]): Promise<ChatResult> {
     }
   }
 
-  throw lastError || new LiveChatError("Gemini is unavailable right now.", 503)
+  return tryApiKey(0)
 }
 
 async function callOpenAiCompatible(messages: ClientChatMessage[]): Promise<ChatResult> {
@@ -483,9 +491,16 @@ async function callOllama(messages: ClientChatMessage[]): Promise<ChatResult> {
     },
   }
 
-  let lastConnectionError = ""
+  async function tryBaseUrl(index: number, lastConnectionError = ""): Promise<ChatResult> {
+    const baseUrl = baseUrls[index]
+    if (!baseUrl) {
+      throw new LiveChatError(
+        "Unable to reach local Ollama.",
+        503,
+        lastConnectionError || "Set LIVE_CHAT_PROVIDER=gemini or LIVE_CHAT_PROVIDER=openai-compatible to avoid Ollama.",
+      )
+    }
 
-  for (const baseUrl of baseUrls) {
     try {
       const response = await postJson(
         `${baseUrl}/api/chat`,
@@ -516,15 +531,14 @@ async function callOllama(messages: ClientChatMessage[]): Promise<ChatResult> {
         provider: "ollama",
       }
     } catch (error) {
-      lastConnectionError = error instanceof Error ? error.message : "Unknown Ollama connection error"
+      return tryBaseUrl(
+        index + 1,
+        error instanceof Error ? error.message : "Unknown Ollama connection error",
+      )
     }
   }
 
-  throw new LiveChatError(
-    "Unable to reach local Ollama.",
-    503,
-    lastConnectionError || "Set LIVE_CHAT_PROVIDER=gemini or LIVE_CHAT_PROVIDER=openai-compatible to avoid Ollama.",
-  )
+  return tryBaseUrl(0)
 }
 
 async function getChatCompletion(messages: ClientChatMessage[]): Promise<ChatResult> {

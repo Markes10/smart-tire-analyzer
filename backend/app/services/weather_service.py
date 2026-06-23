@@ -17,16 +17,31 @@ OWM_BASE = "https://api.openweathermap.org/data/2.5/weather"
 
 
 class WeatherService:
-    def __init__(self):
-        rot = get_weather_rotator()
-        if not rot:
-            keys = settings.get_weather_keys()
-            rot = APIKeyRotator("weather", keys, daily_quota=settings.OPENWEATHER_DAILY_QUOTA) if keys else None
+    def __init__(self, runtime_keys: dict | None = None):
+        """
+        Initialize the Weather service.
+        
+        Args:
+            runtime_keys: Optional dict with "openweather" key for user-provided API key.
+        """
+        runtime_weather_key = None
+        if runtime_keys and isinstance(runtime_keys, dict):
+            runtime_weather_key = runtime_keys.get("openweather") or runtime_keys.get("OPENWEATHER_API_KEY") or None
 
-        self.rotator = rot
-        self.enabled = bool(self.rotator and self.rotator.available_keys)
-        if not self.enabled:
-            logger.warning("No Weather API keys configured — using mock weather data")
+        if runtime_weather_key:
+            logger.info("WeatherService initialized with runtime API key")
+            self.rotator = APIKeyRotator("weather", [runtime_weather_key], daily_quota=9999)
+            self.enabled = True
+        else:
+            rot = get_weather_rotator()
+            if not rot:
+                keys = settings.get_weather_keys()
+                rot = APIKeyRotator("weather", keys, daily_quota=settings.OPENWEATHER_DAILY_QUOTA) if keys else None
+
+            self.rotator = rot
+            self.enabled = bool(self.rotator and self.rotator.available_keys)
+            if not self.enabled:
+                logger.warning("No Weather API keys configured — using mock weather data")
 
     async def get_weather(self, lat: float, lon: float) -> Dict:
         """

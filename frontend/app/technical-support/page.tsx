@@ -73,11 +73,13 @@ const statusItems = [
 export default function TechnicalSupportPage() {
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [isSubmitted, setIsSubmitted] = useState(false)
+    const [ticketNumber, setTicketNumber] = useState<string | null>(null)
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         setIsSubmitting(true)
         await new Promise(resolve => setTimeout(resolve, 1500))
+        setTicketNumber(`ST-${Math.floor(100000 + Math.random() * 900000)}`)
         setIsSubmitting(false)
         setIsSubmitted(true)
     }
@@ -147,13 +149,16 @@ export default function TechnicalSupportPage() {
                                                     Ticket Submitted!
                                                 </h3>
                                                 <p className="mt-2 text-muted-foreground">
-                                                    Ticket #ST-{Math.floor(100000 + Math.random() * 900000)} has been created.
+                                                    Ticket #{ticketNumber} has been created.
                                                     We will respond within 24 hours.
                                                 </p>
                                                 <Button
                                                     variant="outline"
                                                     className="mt-6"
-                                                    onClick={() => setIsSubmitted(false)}
+                                                    onClick={() => {
+                                                        setTicketNumber(null)
+                                                        setIsSubmitted(false)
+                                                    }}
                                                 >
                                                     Submit Another Ticket
                                                 </Button>
@@ -262,8 +267,8 @@ export default function TechnicalSupportPage() {
                                 </p>
 
                                 <Accordion type="single" collapsible className="mt-6">
-                                    {faqItems.map((item, index) => (
-                                        <AccordionItem key={index} value={`item-${index}`}>
+                                    {faqItems.map((item) => (
+                                        <AccordionItem key={item.question} value={item.question.toLowerCase().replace(/[^a-z0-9]+/g, "-")}>
                                             <AccordionTrigger className="text-left text-foreground">
                                                 {item.question}
                                             </AccordionTrigger>

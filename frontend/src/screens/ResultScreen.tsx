@@ -90,9 +90,9 @@ export default function ResultScreen() {
         {/* ── Alerts ───────────────────────────────────────────────────── */}
         {alerts?.length > 0 && (
           <View style={styles.section}>
-            {alerts.map((alert: any, i: number) => (
+            {alerts.map((alert: any) => (
               <View
-                key={i}
+                key={`${alert.level}-${alert.message}`}
                 style={[
                   styles.alertItem,
                   { borderColor: RISK_COLORS[alert.level] || COLORS.orange }
@@ -130,7 +130,7 @@ export default function ResultScreen() {
               const val = tread[key] || 0;
               const color = val < 1.6 ? COLORS.red : val < 3.0 ? COLORS.orange : COLORS.green;
               return (
-                <View key={i} style={[styles.treadCell, { borderColor: color }]}>
+                <View key={key} style={[styles.treadCell, { borderColor: color }]}>
                   <Text style={styles.treadPos}>T{i + 1}</Text>
                   <Text style={[styles.treadVal, { color }]}>{val.toFixed(1)}</Text>
                   <Text style={styles.treadUnit}>mm</Text>
@@ -175,7 +175,7 @@ export default function ResultScreen() {
             {data.replace_immediately && (
               <View style={styles.replaceNow}>
                 <Text style={styles.replaceNowText}>
-                  🔴 REPLACE TIRES IMMEDIATELY — Safety Critical
+                  🔴 REPLACE TIRES IMMEDIATELY: Safety Critical
                 </Text>
               </View>
             )}

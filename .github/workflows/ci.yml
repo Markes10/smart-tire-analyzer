@@ -2,9 +2,9 @@ name: Smart Tire CI
 
 on:
   push:
-    branches: [main, master, develop]
+    branches: [main, master, develop, 'feature/**']
   pull_request:
-    branches: [main, master, develop]
+    branches: [main, master, develop, 'feature/**']
 
 jobs:
   backend:
@@ -28,6 +28,7 @@ jobs:
       - name: Run pytest
         run: pytest tests/ -v --tb=short
         env:
+          PYTHONPATH: backend
           GEMINI_API_KEY: test_key
           GOOGLE_MAPS_API_KEY: test_key
           OPENWEATHER_API_KEY: test_key

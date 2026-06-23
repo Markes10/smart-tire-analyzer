@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from backend.app.services import continuous_learning_service as service
+import continuous_learning.sample_storage as service
 
 
 def test_save_feedback_correction_returns_trainable_paths(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
@@ -44,6 +44,7 @@ def test_save_feedback_correction_rejects_missing_analysis_image(tmp_path: Path,
     monkeypatch.setattr(service, "CONTINUOUS_ROOT", tmp_path)
     monkeypatch.setattr(service, "CORRECTIONS_DIR", tmp_path / "corrections")
     monkeypatch.setattr(service, "LABELS_CSV", tmp_path / "labels.csv")
+    monkeypatch.setattr(service, "PROJECT_ROOT", tmp_path)
 
     with pytest.raises(ValueError, match="no saved analysis image"):
         service.save_feedback_correction(

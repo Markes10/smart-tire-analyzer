@@ -5,15 +5,17 @@ POST /analyze - tire image upload, preprocessing, AI inference, and report build
 from __future__ import annotations
 
 import asyncio
+import json
 import logging
 import sys
 import time
 import uuid
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
 
 from fastapi import APIRouter, BackgroundTasks, Depends, File, Form, HTTPException, Request, UploadFile
 from fastapi.responses import JSONResponse
+from pydantic import BaseModel, Field
 
 from app.config import settings
 from app.database.crud import save_analysis_result
@@ -23,6 +25,7 @@ from app.services.gemini_service import GeminiService
 from app.services.continuous_learning_service import save_analysis_sample
 from app.services.enterprise_ai_service import EnterpriseAIService
 from app.services.inference_service import InferenceService
+from app.services.mapillary_service import MapillaryService
 from app.services.maps_service import MapsService
 from app.services.notifications import NotificationService
 from app.services.ollama_service import OllamaService
@@ -44,6 +47,40 @@ _ALLOWED_CONTENT_TYPES = {"image/jpeg", "image/png", "image/webp"}
 _MAX_IMAGE_BYTES = 10 * 1024 * 1024
 
 
+class RouteRoadConditionRequest(BaseModel):
+    source_latitude: float = Field(..., ge=-90, le=90)
+    source_longitude: float = Field(..., ge=-180, le=180)
+    destination_latitude: float = Field(..., ge=-90, le=90)
+    destination_longitude: float = Field(..., ge=-180, le=180)
+
+
+def _parse_context_form(context: str | None) -> dict[str, Any]:
+    if context is None or not context.strip():
+        return {}
+    try:
+        payload = json.loads(context)
+    except json.JSONDecodeError as exc:
+        raise HTTPException(status_code=422, detail="context must be valid JSON") from exc
+    if not isinstance(payload, dict):
+        raise HTTPException(status_code=422, detail="context must be a JSON object")
+    return payload
+
+
+def _context_float(context: dict[str, Any], key: str) -> float | None:
+    value = context.get(key)
+    if value is None or value == "":
+        return None
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _set_if_present(target: dict[str, Any], key: str, value: Any) -> None:
+    if value is not None:
+        target[key] = value
+
+
 def get_inference_service(request: Request) -> InferenceService:
     svc = getattr(request.app.state, "inference_service", None)
     if svc is None:
@@ -61,6 +98,7 @@ async def _load_context(
     source_longitude: float | None = None,
     destination_latitude: float | None = None,
     destination_longitude: float | None = None,
+    runtime_api_keys: dict | None = None,
 ) -> dict:
     has_route = all(
         value is not None
@@ -76,8 +114,18 @@ async def _load_context(
         return {}
 
     try:
-        maps_svc = MapsService()
-        weather_svc = WeatherService()
+        # Use Mapillary when a mapillary token is provided, otherwise fall back to MapsService
+        mapillary_token = None
+        if runtime_api_keys and isinstance(runtime_api_keys, dict):
+            mapillary_token = runtime_api_keys.get("mapillary") or None
+
+        if mapillary_token:
+            maps_svc: Any = MapillaryService(access_token=mapillary_token)
+            logger.info("[%s] Using Mapillary imagery for road context", session_id)
+        else:
+            maps_svc = MapsService(runtime_keys=runtime_api_keys)
+
+        weather_svc = WeatherService(runtime_keys=runtime_api_keys)
         if has_route:
             assert source_latitude is not None
             assert source_longitude is not None
@@ -116,6 +164,30 @@ async def _load_context(
 
 
 @router.post(
+    "/route-road-condition",
+    summary="Analyze route road condition",
+    description=(
+        "Analyze a source-to-destination route with Google Directions and Street View "
+        "samples, returning road condition, route distance, and visual texture summary."
+    ),
+)
+async def analyze_route_road_condition(payload: RouteRoadConditionRequest) -> dict[str, Any]:
+    try:
+        return await MapsService().get_route_road_context(
+            payload.source_latitude,
+            payload.source_longitude,
+            payload.destination_latitude,
+            payload.destination_longitude,
+        )
+    except Exception as exc:
+        logger.exception("Route road-condition analysis failed: %s", exc)
+        raise HTTPException(
+            status_code=502,
+            detail="Could not analyze road condition for the selected route.",
+        ) from exc
+
+
+@router.post(
     "",
     response_model=AnalysisResponse,
     summary="Analyze tire image",
@@ -142,6 +214,7 @@ async def analyze_tire(
     temperature_c: Optional[float] = Form(None, description="Optional IoT tire temperature reading"),
     vibration_g: Optional[float] = Form(None, description="Optional IoT vibration reading"),
     speed_kmph: Optional[float] = Form(None, description="Optional vehicle speed reading"),
+    context: Optional[str] = Form(None, description="Optional JSON context object"),
     inference_svc: InferenceService = Depends(get_inference_service),
 ):
     session_id = str(uuid.uuid4())
@@ -150,6 +223,50 @@ async def analyze_tire(
     logger.info("[%s] Analysis request received: %s", session_id, image.filename)
 
     try:
+        request_context = _parse_context_form(context)
+        resolved_latitude = latitude if latitude is not None else _context_float(request_context, "latitude")
+        resolved_longitude = longitude if longitude is not None else _context_float(request_context, "longitude")
+        resolved_source_latitude = (
+            source_latitude if source_latitude is not None else _context_float(request_context, "source_latitude")
+        )
+        resolved_source_longitude = (
+            source_longitude if source_longitude is not None else _context_float(request_context, "source_longitude")
+        )
+        resolved_destination_latitude = (
+            destination_latitude
+            if destination_latitude is not None
+            else _context_float(request_context, "destination_latitude")
+        )
+        resolved_destination_longitude = (
+            destination_longitude
+            if destination_longitude is not None
+            else _context_float(request_context, "destination_longitude")
+        )
+        resolved_tire_pressure_psi = (
+            tire_pressure_psi if tire_pressure_psi is not None else _context_float(request_context, "tire_pressure_psi")
+        )
+        resolved_temperature_c = (
+            temperature_c if temperature_c is not None else _context_float(request_context, "temperature_c")
+        )
+        resolved_vibration_g = vibration_g if vibration_g is not None else _context_float(request_context, "vibration_g")
+        resolved_speed_kmph = speed_kmph if speed_kmph is not None else _context_float(request_context, "speed_kmph")
+        resolved_mileage_km = mileage_km if mileage_km is not None else _context_float(request_context, "mileage_km")
+
+        for key, value in (
+            ("latitude", resolved_latitude),
+            ("longitude", resolved_longitude),
+            ("source_latitude", resolved_source_latitude),
+            ("source_longitude", resolved_source_longitude),
+            ("destination_latitude", resolved_destination_latitude),
+            ("destination_longitude", resolved_destination_longitude),
+            ("tire_pressure_psi", resolved_tire_pressure_psi),
+            ("temperature_c", resolved_temperature_c),
+            ("vibration_g", resolved_vibration_g),
+            ("speed_kmph", resolved_speed_kmph),
+            ("mileage_km", resolved_mileage_km),
+        ):
+            _set_if_present(request_context, key, value)
+
         if image.content_type not in _ALLOWED_CONTENT_TYPES:
             analyze_status = "invalid_content_type"
             raise HTTPException(status_code=422, detail="Image must be JPEG, PNG, or WebP")
@@ -198,15 +315,24 @@ async def analyze_tire(
                 SidewallService().extract_tire_details(sidewall_bytes, mime_type=sidewall_mime)
             )
 
+        # Extract runtime API keys passed from frontend (user-provided keys)
+        runtime_api_keys = request_context.pop("runtime_api_keys", {}) or {}
+        if not isinstance(runtime_api_keys, dict):
+            runtime_api_keys = {}
+        if runtime_api_keys:
+            logger.info("[%s] Using runtime API keys: %s", session_id, ", ".join(runtime_api_keys.keys()))
+
         context_data = await _load_context(
-            latitude,
-            longitude,
+            resolved_latitude,
+            resolved_longitude,
             session_id,
-            source_latitude=source_latitude,
-            source_longitude=source_longitude,
-            destination_latitude=destination_latitude,
-            destination_longitude=destination_longitude,
+            source_latitude=resolved_source_latitude,
+            source_longitude=resolved_source_longitude,
+            destination_latitude=resolved_destination_latitude,
+            destination_longitude=resolved_destination_longitude,
+            runtime_api_keys=runtime_api_keys,
         )
+        context_data = {**request_context, **context_data}
 
         try:
             prediction_result = await inference_svc.predict(
@@ -263,7 +389,8 @@ async def analyze_tire(
 
         if reasoning is None:
             try:
-                reasoning = await GeminiService().reason(predictions=prediction_result, context=context_data)
+                gemini_svc = GeminiService(runtime_keys=runtime_api_keys)
+                reasoning = await gemini_svc.reason(predictions=prediction_result, context=context_data)
             except Exception as exc:
                 logger.warning("[%s] Gemini reasoning failed, using fallback: %s", session_id, exc)
                 reasoning = None
@@ -272,19 +399,19 @@ async def analyze_tire(
             "tire_brand": tire_brand,
             "tire_model": tire_model,
             "tire_size": tire_size,
-            "mileage_km": mileage_km,
-            "tire_pressure_psi": tire_pressure_psi,
-            "temperature_c": temperature_c,
-            "vibration_g": vibration_g,
-            "speed_kmph": speed_kmph,
+            "mileage_km": resolved_mileage_km,
+            "tire_pressure_psi": resolved_tire_pressure_psi,
+            "temperature_c": resolved_temperature_c,
+            "vibration_g": resolved_vibration_g,
+            "speed_kmph": resolved_speed_kmph,
             "image_filename": image.filename,
             "sidewall_image_filename": sidewall_image.filename if sidewall_image else None,
-            "latitude": latitude,
-            "longitude": longitude,
-            "source_latitude": source_latitude,
-            "source_longitude": source_longitude,
-            "destination_latitude": destination_latitude,
-            "destination_longitude": destination_longitude,
+            "latitude": resolved_latitude,
+            "longitude": resolved_longitude,
+            "source_latitude": resolved_source_latitude,
+            "source_longitude": resolved_source_longitude,
+            "destination_latitude": resolved_destination_latitude,
+            "destination_longitude": resolved_destination_longitude,
         }
         if sidewall_details:
             sidewall_size = sidewall_details.get("tire_size")
@@ -304,10 +431,10 @@ async def analyze_tire(
             metadata=metadata,
         )
         sensor_data = {
-            "tire_pressure_psi": tire_pressure_psi,
-            "temperature_c": temperature_c,
-            "vibration_g": vibration_g,
-            "speed_kmph": speed_kmph,
+            "tire_pressure_psi": resolved_tire_pressure_psi,
+            "temperature_c": resolved_temperature_c,
+            "vibration_g": resolved_vibration_g,
+            "speed_kmph": resolved_speed_kmph,
         }
         final_report["enterprise_ai"] = EnterpriseAIService().build_analysis_extensions(
             final_report,

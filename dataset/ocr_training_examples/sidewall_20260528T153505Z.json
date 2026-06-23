@@ -1,0 +1,18 @@
+{
+  "raw": "195/60R16 89H",
+  "width_mm": 195,
+  "aspect_ratio": 60,
+  "rim_diameter_inches": 16,
+  "full_formatted": "195/60 R16",
+  "brand": null,
+  "tire_size": {
+    "raw": null,
+    "width_mm": null,
+    "aspect_ratio": null,
+    "rim_diameter_inches": null,
+    "full_formatted": null
+  },
+  "special_markings": [],
+  "extraction_confidence": "LOW",
+  "source": "gemini_vision"
+}

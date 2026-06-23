@@ -17,6 +17,10 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
+async def feedback_route_context():
+    return {"router": "feedback", "legacy_audit": True}
+
+
 @router.post(
     "",
     response_model=FeedbackResponse,
@@ -103,6 +107,16 @@ async def submit_feedback(request: FeedbackRequest):
 async def get_stats():
     """Return feedback statistics for monitoring model drift."""
     stats = await get_db_feedback_stats()
+    try:
+        from continuous_learning.feedback_service import get_feedback_stats as get_legacy_feedback_stats
+        from continuous_learning.wrong_predictions.store_wrong import get_wrong_count
+
+        legacy_stats = get_legacy_feedback_stats()
+        wrong_log_count = int(get_wrong_count())
+    except Exception as exc:
+        logger.warning("Legacy feedback audit unavailable: %s", exc)
+        legacy_stats = {"available": False, "error": str(exc)}
+        wrong_log_count = 0
     from continuous_learning.retraining.retrain_trigger import get_retrain_status
 
     retrain_status = get_retrain_status()
@@ -120,6 +134,8 @@ async def get_stats():
             "auto_retrain": retrain_status.get("auto_retrain", True),
             "auto_retrain_refresh": retrain_status.get("auto_retrain_refresh", False),
             "corrections_needed": max(0, threshold - pending_rows),
+            "wrong_prediction_log_count": wrong_log_count,
+            "legacy_feedback_audit": legacy_stats,
         }
     )
     return JSONResponse(content=stats)

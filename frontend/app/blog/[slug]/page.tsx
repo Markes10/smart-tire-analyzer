@@ -244,6 +244,60 @@ const blogPosts: { [key: string]: BlogPost } = {
     },
 }
 
+const categoryColors: { [key: string]: string } = {
+    Technology: "bg-primary text-primary-foreground",
+    Education: "bg-chart-2/20 text-chart-2",
+    Fleet: "bg-chart-3/20 text-chart-3",
+    Tips: "bg-warning/20 text-warning",
+    "Case Study": "bg-chart-4/20 text-chart-4",
+    Product: "bg-primary/20 text-primary",
+}
+
+function renderInlineContent(content: string) {
+    return content.split(/(<strong>.*?<\/strong>)/g).map((part) => {
+        const strongMatch = part.match(/^<strong>(.*?)<\/strong>$/)
+        if (strongMatch) {
+            return <strong key={`strong-${strongMatch[1]}`}>{strongMatch[1]}</strong>
+        }
+        return part
+    })
+}
+
+function renderPostContent(content: string) {
+    return Array.from(content.matchAll(/<(h2|h3|p)>([\s\S]*?)<\/\1>/g)).map((match) => {
+        const tag = match[1]
+        const text = match[2].trim()
+        const key = `${tag}-${text.slice(0, 80)}`
+        const children = renderInlineContent(text)
+
+        if (tag === "h2") {
+            return (
+                <h2 key={key}>
+                    {children}
+                </h2>
+            )
+        }
+
+        if (tag === "h3") {
+            return (
+                <h3 key={key}>
+                    {children}
+                </h3>
+            )
+        }
+
+        return (
+            <p key={key}>
+                {children}
+            </p>
+        )
+    })
+}
+
+function BlogPostContent({ content }: { content: string }) {
+    return renderPostContent(content)
+}
+
 export default function BlogPostPage() {
     const params = useParams()
     const slug = params?.slug as string
@@ -267,15 +321,6 @@ export default function BlogPostPage() {
                 <Footer />
             </div>
         )
-    }
-
-    const categoryColors: { [key: string]: string } = {
-        Technology: "bg-primary text-primary-foreground",
-        Education: "bg-chart-2/20 text-chart-2",
-        Fleet: "bg-chart-3/20 text-chart-3",
-        Tips: "bg-warning/20 text-warning",
-        "Case Study": "bg-chart-4/20 text-chart-4",
-        Product: "bg-primary/20 text-primary",
     }
 
     return (
@@ -337,10 +382,9 @@ export default function BlogPostPage() {
                     </header>
 
                     {/* Article Content */}
-                    <article
-                        className="prose max-w-none"
-                        dangerouslySetInnerHTML={{ __html: post.content }}
-                    />
+                    <article className="prose max-w-none">
+                        <BlogPostContent content={post.content} />
+                    </article>
 
                     {/* CTA Card */}
                     <div className="mt-16 border-t border-border/50 pt-16">

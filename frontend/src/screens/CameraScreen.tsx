@@ -62,7 +62,7 @@ export default function CameraScreen() {
     } finally {
       setIsAnalyzing(false);
     }
-  }, []);
+  }, [addToHistory, navigation, setError, setLatestAnalysis]);
 
   const handleCapture = async () => {
     if (!cameraRef.current) return;
@@ -181,7 +181,7 @@ export default function CameraScreen() {
       {isAnalyzing && (
         <View style={styles.analyzingOverlay}>
           <ActivityIndicator color="#58A6FF" size="large" />
-          <Text style={styles.analyzingText}>Analyzing tire...</Text>
+          <Text style={styles.analyzingText}>Analyzing tire…</Text>
           <Text style={styles.analyzingSubText}>Running AI model</Text>
         </View>
       )}

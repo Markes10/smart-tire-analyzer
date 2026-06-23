@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useReducer, useSyncExternalStore } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -17,76 +17,202 @@ interface TireImage {
   preview: string | null
 }
 
+type FeedbackState = {
+  tireImages: TireImage
+  sidewallImages: TireImage
+  sessionIdOverride: string | null
+  treadDepths: string[]
+  correctedWearPattern: string
+  feedback: string
+  isSubmitting: boolean
+  submitSuccess: boolean
+  submitError: string | null
+  submitResult: FeedbackResponse | null
+}
+
+type FeedbackAction =
+  | { type: "setTireImages"; value: TireImage }
+  | { type: "setSidewallImages"; value: TireImage }
+  | { type: "setSessionId"; value: string }
+  | { type: "setTreadDepth"; index: number; value: string }
+  | { type: "setCorrectedWearPattern"; value: string }
+  | { type: "setFeedback"; value: string }
+  | { type: "submitStarted" }
+  | { type: "submitSucceeded"; result: FeedbackResponse }
+  | { type: "submitFailed"; message: string }
+  | { type: "reset"; sessionId: string }
+
 const WEAR_PATTERN_OPTIONS = [
   { value: "even", label: "Even wear" },
   { value: "center_wear", label: "Center wear" },
   { value: "edge_wear", label: "Edge wear" },
+  { value: "side_wall_wear", label: "Side-wall wear" },
   { value: "uneven_wear", label: "Uneven wear" },
   { value: "one_sided_wear", label: "One-sided wear" },
   { value: "critical_wear", label: "Critical wear" },
 ]
 
-export function TireFeedbackForm() {
-  const [tireImages, setTireImages] = useState<TireImage>({ file: null, preview: null })
-  const [sidewallImages, setSidewallImages] = useState<TireImage>({ file: null, preview: null })
-  const [sessionId, setSessionId] = useState("")
-  const [originalPrediction, setOriginalPrediction] = useState<Record<string, any> | undefined>()
-  const [treadDepths, setTreadDepths] = useState(["", "", "", ""])
-  const [correctedWearPattern, setCorrectedWearPattern] = useState("unspecified")
-  const [feedback, setFeedback] = useState("")
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitSuccess, setSubmitSuccess] = useState(false)
-  const [submitError, setSubmitError] = useState<string | null>(null)
-  const [submitResult, setSubmitResult] = useState<FeedbackResponse | null>(null)
+const initialFeedbackState: FeedbackState = {
+  tireImages: { file: null, preview: null },
+  sidewallImages: { file: null, preview: null },
+  sessionIdOverride: null,
+  treadDepths: ["", "", "", ""],
+  correctedWearPattern: "unspecified",
+  feedback: "",
+  isSubmitting: false,
+  submitSuccess: false,
+  submitError: null,
+  submitResult: null,
+}
 
-  useEffect(() => {
-    try {
-      const stored = sessionStorage.getItem("smart-tire:last-analysis")
-      if (!stored) return
+let lastStoredAnalysisText: string | null = null
+let lastStoredAnalysisValue: Record<string, any> | undefined
 
-      const parsed = JSON.parse(stored) as Record<string, any>
-      if (typeof parsed.session_id === "string") {
-        setSessionId(parsed.session_id)
-        setOriginalPrediction(parsed)
-      }
-    } catch {
-      // Session storage is only a convenience; the user can paste a session ID.
+function subscribeStoredAnalysis() {
+  return () => {}
+}
+
+function getStoredAnalysisServerSnapshot() {
+  return undefined
+}
+
+function getStoredAnalysisSnapshot() {
+  try {
+    const stored =
+      sessionStorage.getItem("smart-tire:v1:last-analysis") ??
+      sessionStorage.getItem("smart-tire:last-analysis")
+
+    if (stored === lastStoredAnalysisText) {
+      return lastStoredAnalysisValue
     }
-  }, [])
+
+    lastStoredAnalysisText = stored
+    lastStoredAnalysisValue = stored ? JSON.parse(stored) as Record<string, any> : undefined
+    return lastStoredAnalysisValue
+  } catch {
+    lastStoredAnalysisText = null
+    lastStoredAnalysisValue = undefined
+    return undefined
+  }
+}
+
+function feedbackReducer(state: FeedbackState, action: FeedbackAction): FeedbackState {
+  switch (action.type) {
+    case "setTireImages":
+      return { ...state, tireImages: action.value }
+    case "setSidewallImages":
+      return { ...state, sidewallImages: action.value }
+    case "setSessionId":
+      return { ...state, sessionIdOverride: action.value }
+    case "setTreadDepth":
+      return {
+        ...state,
+        treadDepths: state.treadDepths.map((depth, index) => (
+          index === action.index ? action.value : depth
+        )),
+      }
+    case "setCorrectedWearPattern":
+      return { ...state, correctedWearPattern: action.value }
+    case "setFeedback":
+      return { ...state, feedback: action.value }
+    case "submitStarted":
+      return { ...state, isSubmitting: true, submitError: null, submitSuccess: false }
+    case "submitSucceeded":
+      return {
+        ...state,
+        isSubmitting: false,
+        submitSuccess: true,
+        submitResult: action.result,
+      }
+    case "submitFailed":
+      return { ...state, isSubmitting: false, submitError: action.message }
+    case "reset":
+      return {
+        ...initialFeedbackState,
+        sessionIdOverride: action.sessionId,
+      }
+    default:
+      return state
+  }
+}
+
+function tireFeedbackSuccessCard({
+  result,
+  onReset,
+}: {
+  result: FeedbackResponse | null
+  onReset: () => void
+}) {
+  return (
+    <Card className="border-green-200/50 bg-green-50/30 dark:border-green-900/30 dark:bg-green-950/20">
+      <CardContent className="flex flex-col items-center justify-center py-12">
+        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/50">
+          <CheckCircle2 className="h-6 w-6 text-green-600 dark:text-green-400" />
+        </div>
+        <h3 className="text-lg font-semibold text-foreground">Feedback Submitted Successfully</h3>
+        <p className="mt-2 text-center text-sm text-muted-foreground">
+          {result?.message ?? "Thank you for contributing to our tire analysis database."}
+        </p>
+        {result && (
+          <p className="mt-3 text-center text-xs text-muted-foreground">
+            Pending learning rows: {result.pending_learning_rows ?? 0} / {result.retrain_threshold ?? "--"}
+          </p>
+        )}
+        <Button onClick={onReset} className="mt-6 gap-2">
+          <RotateCcw className="h-4 w-4" />
+          Submit Another Feedback
+        </Button>
+      </CardContent>
+    </Card>
+  )
+}
+
+function tireFeedbackInfoAlert() {
+  return (
+    <Alert>
+      <AlertTriangle className="h-4 w-4" />
+      <AlertDescription>
+        Your correction is sent to the backend feedback API and added to the continuous-learning queue for validated retraining.
+      </AlertDescription>
+    </Alert>
+  )
+}
+
+export function TireFeedbackForm() {
+  const [state, dispatch] = useReducer(feedbackReducer, initialFeedbackState)
+  const storedAnalysis = useSyncExternalStore(
+    subscribeStoredAnalysis,
+    getStoredAnalysisSnapshot,
+    getStoredAnalysisServerSnapshot,
+  )
+  const sessionId = state.sessionIdOverride ?? (
+    typeof storedAnalysis?.session_id === "string" ? storedAnalysis.session_id : ""
+  )
 
   const handleTreadDepthChange = (index: number, value: string) => {
-    const newDepths = [...treadDepths]
-    newDepths[index] = value
-    setTreadDepths(newDepths)
+    dispatch({ type: "setTreadDepth", index, value })
   }
 
-  const allTreadDepthsFilled = treadDepths.every(depth => depth !== "")
+  const allTreadDepthsFilled = state.treadDepths.every(depth => depth !== "")
   const avgTreadDepth = allTreadDepthsFilled
-    ? (treadDepths.reduce((sum, depth) => sum + parseFloat(depth), 0) / 4).toFixed(1)
+    ? (state.treadDepths.reduce((sum, depth) => sum + parseFloat(depth), 0) / 4).toFixed(1)
     : null
 
-  const hasAllInputs = sessionId.trim() && allTreadDepthsFilled && feedback.trim()
+  const hasAllInputs = sessionId.trim() && allTreadDepthsFilled && state.feedback.trim()
 
   const handleReset = () => {
-    setTireImages({ file: null, preview: null })
-    setSidewallImages({ file: null, preview: null })
-    setSessionId(originalPrediction?.session_id ?? "")
-    setTreadDepths(["", "", "", ""])
-    setCorrectedWearPattern("unspecified")
-    setFeedback("")
-    setSubmitSuccess(false)
-    setSubmitError(null)
-    setSubmitResult(null)
+    dispatch({
+      type: "reset",
+      sessionId: typeof storedAnalysis?.session_id === "string" ? storedAnalysis.session_id : "",
+    })
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsSubmitting(true)
-    setSubmitError(null)
-    setSubmitSuccess(false)
+    dispatch({ type: "submitStarted" })
 
     try {
-      const numericDepths = treadDepths.map((depth) => Number(depth))
+      const numericDepths = state.treadDepths.map((depth) => Number(depth))
       if (!numericDepths.every((depth) => Number.isFinite(depth) && depth >= 0 && depth <= 12)) {
         throw new Error("Enter tread depth values between 0 and 12 mm.")
       }
@@ -102,44 +228,23 @@ export function TireFeedbackForm() {
           tread_3: numericDepths[2],
           tread_4: numericDepths[3],
         },
-        corrected_wear_pattern: correctedWearPattern === "unspecified" ? undefined : correctedWearPattern,
-        original_prediction: originalPrediction,
+        corrected_wear_pattern: state.correctedWearPattern === "unspecified" ? undefined : state.correctedWearPattern,
+        original_prediction: storedAnalysis,
         confidence_override: 0.9,
-        comment: feedback.trim(),
+        comment: state.feedback.trim(),
       })
 
-      setSubmitResult(result)
-      setSubmitSuccess(true)
+      dispatch({ type: "submitSucceeded", result })
     } catch (err) {
-      setSubmitError(err instanceof Error ? err.message : "Feedback submission failed.")
-    } finally {
-      setIsSubmitting(false)
+      dispatch({
+        type: "submitFailed",
+        message: err instanceof Error ? err.message : "Feedback submission failed.",
+      })
     }
   }
 
-  if (submitSuccess) {
-    return (
-      <Card className="border-green-200/50 bg-green-50/30 dark:border-green-900/30 dark:bg-green-950/20">
-        <CardContent className="flex flex-col items-center justify-center py-12">
-          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/50">
-            <CheckCircle2 className="h-6 w-6 text-green-600 dark:text-green-400" />
-          </div>
-          <h3 className="text-lg font-semibold text-foreground">Feedback Submitted Successfully</h3>
-          <p className="mt-2 text-center text-sm text-muted-foreground">
-            {submitResult?.message ?? "Thank you for contributing to our tire analysis database."}
-          </p>
-          {submitResult && (
-            <p className="mt-3 text-center text-xs text-muted-foreground">
-              Pending learning rows: {submitResult.pending_learning_rows ?? 0} / {submitResult.retrain_threshold ?? "--"}
-            </p>
-          )}
-          <Button onClick={handleReset} className="mt-6 gap-2">
-            <RotateCcw className="h-4 w-4" />
-            Submit Another Feedback
-          </Button>
-        </CardContent>
-      </Card>
-    )
+  if (state.submitSuccess) {
+    return tireFeedbackSuccessCard({ result: state.submitResult, onReset: handleReset })
   }
 
   return (
@@ -160,14 +265,14 @@ export function TireFeedbackForm() {
             <ImageUpload
               label="Tire Tread"
               description="Front view of tire tread pattern"
-              value={tireImages.preview}
-              onChange={(file, preview) => setTireImages({ file, preview })}
+              value={state.tireImages.preview}
+              onChange={(file, preview) => dispatch({ type: "setTireImages", value: { file, preview } })}
             />
             <ImageUpload
               label="Sidewall"
               description="Side view showing sidewall condition and markings"
-              value={sidewallImages.preview}
-              onChange={(file, preview) => setSidewallImages({ file, preview })}
+              value={state.sidewallImages.preview}
+              onChange={(file, preview) => dispatch({ type: "setSidewallImages", value: { file, preview } })}
             />
           </div>
         </CardContent>
@@ -188,7 +293,7 @@ export function TireFeedbackForm() {
           <Input
             id="session-id"
             value={sessionId}
-            onChange={(e) => setSessionId(e.target.value)}
+            onChange={(e) => dispatch({ type: "setSessionId", value: e.target.value })}
             placeholder="Paste analysis session ID"
             className="font-mono text-sm"
           />
@@ -220,7 +325,7 @@ export function TireFeedbackForm() {
                     step="0.1"
                     min="0"
                     placeholder="e.g., 5.2"
-                    value={treadDepths[position - 1]}
+                    value={state.treadDepths[position - 1]}
                     onChange={(e) => handleTreadDepthChange(position - 1, e.target.value)}
                     className="pr-12"
                   />
@@ -273,7 +378,10 @@ export function TireFeedbackForm() {
         </CardHeader>
         <CardContent className="space-y-2">
           <Label htmlFor="wear-pattern">Wear Pattern</Label>
-          <Select value={correctedWearPattern} onValueChange={setCorrectedWearPattern}>
+          <Select
+            value={state.correctedWearPattern}
+            onValueChange={(value) => dispatch({ type: "setCorrectedWearPattern", value })}
+          >
             <SelectTrigger id="wear-pattern" className="w-full">
               <SelectValue />
             </SelectTrigger>
@@ -305,31 +413,25 @@ export function TireFeedbackForm() {
             <Label htmlFor="feedback">Your Feedback</Label>
             <Textarea
               id="feedback"
-              placeholder="Describe the tire's condition, any visible damage, wear patterns, or other observations..."
-              value={feedback}
-              onChange={(e) => setFeedback(e.target.value)}
+              placeholder="Describe the tire's condition, any visible damage, wear patterns, or other observations…"
+              value={state.feedback}
+              onChange={(e) => dispatch({ type: "setFeedback", value: e.target.value })}
               maxLength={1000}
               className="min-h-32 resize-none"
             />
             <p className="text-xs text-muted-foreground">
-              {feedback.length} / 1000 characters
+              {state.feedback.length} / 1000 characters
             </p>
           </div>
         </CardContent>
       </Card>
 
-      {/* Info Alert */}
-      <Alert>
-        <AlertTriangle className="h-4 w-4" />
-        <AlertDescription>
-          Your correction is sent to the backend feedback API and added to the continuous-learning queue for validated retraining.
-        </AlertDescription>
-      </Alert>
+      {tireFeedbackInfoAlert()}
 
-      {submitError && (
+      {state.submitError && (
         <Alert className="border-destructive/50 bg-destructive/5">
           <AlertTriangle className="h-4 w-4 text-destructive" />
-          <AlertDescription className="text-destructive">{submitError}</AlertDescription>
+          <AlertDescription className="text-destructive">{state.submitError}</AlertDescription>
         </Alert>
       )}
 
@@ -338,13 +440,13 @@ export function TireFeedbackForm() {
         <Button
           type="submit"
           size="lg"
-          disabled={!hasAllInputs || isSubmitting}
+          disabled={!hasAllInputs || state.isSubmitting}
           className="gap-2"
         >
-          {isSubmitting ? (
+          {state.isSubmitting ? (
             <>
               <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
-              Submitting...
+              Submitting&hellip;
             </>
           ) : (
             <>
@@ -353,7 +455,7 @@ export function TireFeedbackForm() {
             </>
           )}
         </Button>
-        {(tireImages.preview || sidewallImages.preview || treadDepths.some(d => d) || correctedWearPattern !== "unspecified" || feedback) && (
+        {(state.tireImages.preview || state.sidewallImages.preview || state.treadDepths.some(d => d) || state.correctedWearPattern !== "unspecified" || state.feedback) && (
           <Button
             type="button"
             size="lg"

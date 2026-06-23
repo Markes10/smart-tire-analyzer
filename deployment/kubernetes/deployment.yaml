@@ -10,7 +10,7 @@ metadata:
     app: smart-tire-backend
     version: "1.0.0"
 spec:
-  replicas: 2                      # Start with 2 replicas
+  replicas: 1                      # Start with 1 replica (PVC uses ReadWriteOnce)
   selector:
     matchLabels:
       app: smart-tire-backend
@@ -27,32 +27,35 @@ spec:
     spec:
       containers:
         - name: backend
-          image: smarttire/backend:latest
-          imagePullPolicy: Always
+          image: smart-tire-analyzer-backend:latest
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8000
               name: http
           env:
-            - name: GEMINI_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: smart-tire-secrets
-                  key: gemini-api-key
-            - name: GOOGLE_MAPS_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: smart-tire-secrets
-                  key: maps-api-key
-            - name: OPENWEATHER_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: smart-tire-secrets
-                  key: weather-api-key
+            - name: GEMINI_API_KEYS
+              value: ""
+            - name: GOOGLE_MAPS_API_KEYS
+              value: ""
+            - name: OPENWEATHER_API_KEYS
+              value: ""
+            - name: MAPILLARY_API_KEYS
+              value: ""
             - name: DATABASE_URL
-              valueFrom:
-                secretKeyRef:
-                  name: smart-tire-secrets
-                  key: database-url
+              value: "sqlite+aiosqlite:///./data/smart_tire.db"
+            - name: BACKEND_CORS_ORIGINS
+              value: "http://localhost:3000,http://localhost:8081"
+            - name: AUTH_ENABLED
+              value: "false"
+            - name: AUTO_RETRAIN
+              value: "false"
+          volumeMounts:
+            - name: model-storage
+              mountPath: /app/ai_model/saved_models
+              readOnly: true
+            - name: data-storage
+              mountPath: /app/data
+          command: ["uvicorn", "backend.app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]
           resources:
             requests:
               memory: "512Mi"
@@ -74,14 +77,12 @@ spec:
             initialDelaySeconds: 30
             periodSeconds: 10
             failureThreshold: 3
-          volumeMounts:
-            - name: model-storage
-              mountPath: /app/ai_model/saved_models
-              readOnly: true
       volumes:
         - name: model-storage
           persistentVolumeClaim:
             claimName: smart-tire-model-pvc
+        - name: data-storage
+          emptyDir: {}
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000

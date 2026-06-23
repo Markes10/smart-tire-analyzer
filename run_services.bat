@@ -1,594 +1,371 @@
 @echo off
-setlocal EnableExtensions EnableDelayedExpansion
+REM ============================================================================
+REM Smart Tire Analyzer - FULL PROJECT LAUNCHER
+REM ============================================================================
+REM One-click launcher for every deployment mode:
+REM   [1] Local Dev   - Python venv + Next.js dev servers in separate windows
+REM   [2] Docker       - Full containerized stack (Backend + Frontend + Redis + Nginx)
+REM   [3] Docker Dev   - Backend only in Docker, Frontend runs locally (fast rebuild)
+REM   [4] Kubernetes   - Deploy to local K8s cluster (Docker Desktop K8s)
+REM   [5] Health Check - Verify all services are responding
+REM   [6] Stop All     - Stop all running containers / K8s resources
+REM   [7] Exit
+REM ============================================================================
 
-rem ============================================================
-rem   Smart Tire Analyzer - Local + Docker Launcher
-rem
-rem   Common commands:
-rem     run_services.bat              Start local backend + frontend
-rem     run_services.bat start        Start local backend + frontend
-rem     run_services.bat restart      Restart local backend + frontend
-rem     run_services.bat stop         Stop local backend + frontend
-rem     run_services.bat status       Show local service status
-rem     run_services.bat logs         Follow local logs
-rem
-rem   Docker commands:
-rem     run_services.bat docker
-rem     run_services.bat docker-restart
-rem     run_services.bat docker-stop
-rem     run_services.bat docker-status
-rem     run_services.bat docker-logs
-rem
-rem   Optional environment overrides:
-rem     SMART_TIRE_BACKEND_PORT=8000
-rem     SMART_TIRE_FRONTEND_PORT=3000
-rem     SMART_TIRE_OPEN_BROWSER=1
-rem     SMART_TIRE_NO_PAUSE=1
-rem ============================================================
+setlocal enabledelayedexpansion
 
-set "ROOT=%~dp0"
-set "ROOT=!ROOT:~0,-1!"
-set "COMPOSE_FILE=!ROOT!\deployment\docker\docker-compose.yml"
-set "DOCKER_BACKEND_URL=http://localhost:8000"
-set "DOCKER_FRONTEND_URL=http://localhost:8081"
+set "REPO_ROOT=%~dp0"
+if "%REPO_ROOT:~-1%"=="\" set "REPO_ROOT=%REPO_ROOT:~0,-1%"
 
-if not defined SMART_TIRE_BACKEND_PORT set "SMART_TIRE_BACKEND_PORT=8000"
-if not defined SMART_TIRE_FRONTEND_PORT set "SMART_TIRE_FRONTEND_PORT=3000"
-if not defined SMART_TIRE_OPEN_BROWSER set "SMART_TIRE_OPEN_BROWSER=1"
+set "VENV_DIR=%REPO_ROOT%\.venv"
+set "VENV_PY=%VENV_DIR%\Scripts\python.exe"
+set "VENV_PIP=%VENV_DIR%\Scripts\pip.exe"
+set "BACKEND_DIR=%REPO_ROOT%\backend"
+set "FRONTEND_DIR=%REPO_ROOT%\frontend"
+set "COMPOSE_FILE=%REPO_ROOT%\deployment\docker\docker-compose.yml"
+set "K8S_DIR=%REPO_ROOT%\deployment\kubernetes"
+set "K8S_NS=smart-tire"
 
-set "LOCAL_BACKEND_HOST=127.0.0.1"
-set "LOCAL_FRONTEND_HOST=127.0.0.1"
-set "LOCAL_BACKEND_URL=http://!LOCAL_BACKEND_HOST!:!SMART_TIRE_BACKEND_PORT!"
-set "LOCAL_FRONTEND_URL=http://!LOCAL_FRONTEND_HOST!:!SMART_TIRE_FRONTEND_PORT!"
-set "BACKEND_OUT_LOG=!ROOT!\logs\backend-local.out.log"
-set "BACKEND_ERR_LOG=!ROOT!\logs\backend-local.err.log"
-set "FRONTEND_OUT_LOG=!ROOT!\logs\frontend-local.out.log"
-set "FRONTEND_ERR_LOG=!ROOT!\logs\frontend-local.err.log"
-
-cd /d "!ROOT!" || goto fail
-
-set "ACTION=%~1"
-if "!ACTION!"=="" set "ACTION=local"
-if /i "!ACTION!"=="start" set "ACTION=local"
-
-if /i "!ACTION!"=="local" goto start_local
-if /i "!ACTION!"=="restart" goto restart_local
-if /i "!ACTION!"=="stop" goto stop_local
-if /i "!ACTION!"=="status" goto status_local
-if /i "!ACTION!"=="logs" goto logs_local
-
-if /i "!ACTION!"=="docker" goto start_docker
-if /i "!ACTION!"=="docker-restart" goto restart_docker
-if /i "!ACTION!"=="docker-stop" goto stop_docker
-if /i "!ACTION!"=="docker-status" goto status_docker
-if /i "!ACTION!"=="docker-logs" goto logs_docker
-
-if /i "!ACTION!"=="help" goto help
-if /i "!ACTION!"=="--help" goto help
-if /i "!ACTION!"=="-h" goto help
-
-echo Unknown command: !ACTION!
-goto help
-
-:start_local
+:MENU
 cls
-echo ============================================================
-echo    Smart Tire Analyzer ^| Local Development
-echo ============================================================
-echo    Project : !ROOT!
-echo    Backend : !LOCAL_BACKEND_URL!
-echo    Frontend: !LOCAL_FRONTEND_URL!
 echo.
-
-call :ensure_env
-call :ensure_dirs
-call :ensure_python || goto fail
-call :ensure_backend_deps || goto fail
-call :ensure_frontend_deps || goto fail
-call :warn_missing_model
-
-set "PYTHONPATH=!ROOT!;!ROOT!\backend;!PYTHONPATH!"
-set "NEXT_PUBLIC_API_BASE_URL=!LOCAL_BACKEND_URL!"
-
-call :is_url_ready "!LOCAL_BACKEND_URL!/health"
-if errorlevel 1 (
-    call :ensure_port_available "!SMART_TIRE_BACKEND_PORT!" "Backend" || goto fail
-    echo    Starting backend...
-    call :start_backend || goto fail
-) else (
-    echo    Backend already responds at !LOCAL_BACKEND_URL!.
-)
-
+echo  ============================================================
+echo            SMART TIRE ANALYZER - PROJECT LAUNCHER
+echo  ============================================================
 echo.
-echo    Waiting for backend startup...
-call :wait_for_url "!LOCAL_BACKEND_URL!/health" "Backend API" 90
-if errorlevel 1 (
-    call :print_local_log_tail
-    goto fail
-)
-call :warn_backend_readiness "!LOCAL_BACKEND_URL!" "Backend API"
-
-call :is_url_ready "!LOCAL_FRONTEND_URL!"
-if errorlevel 1 (
-    call :ensure_port_available "!SMART_TIRE_FRONTEND_PORT!" "Frontend" || goto fail
-    echo.
-    echo    Starting frontend...
-    call :start_frontend || goto fail
-) else (
-    echo    Frontend already responds at !LOCAL_FRONTEND_URL!.
-)
-
+echo   [1]  Local Development     (Python + Next.js on host)
+echo   [2]  Docker Full Stack     (Backend + Frontend + Redis + Nginx)
+echo   [3]  Docker Backend Only   (Backend in container, FE local)
+echo   [4]  Kubernetes Deploy     (Deploy to local K8s cluster)
+echo   [5]  Health Check          (Test all running services)
+echo   [6]  Stop All              (Kill containers + K8s resources)
+echo   [7]  Exit
 echo.
-echo    Waiting for frontend startup...
-call :wait_for_url "!LOCAL_FRONTEND_URL!" "Frontend Web" 90
-if errorlevel 1 (
-    call :print_local_log_tail
-    goto fail
-)
-
+echo  ============================================================
 echo.
-echo    Reading backend health...
-powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-  "$base='!LOCAL_BACKEND_URL!';" ^
-  "try { $h=Invoke-RestMethod ($base + '/health') -TimeoutSec 8; Write-Host ('   status : ' + $h.status); Write-Host ('   model  : ' + $h.components.model); Write-Host ('   version: ' + $h.components.model_version) }" ^
-  "catch { Write-Host '   WARNING: Could not read backend health summary.' }"
+set /p "choice=  Select option (1-7): "
 
+if "%choice%"=="1" goto LOCAL
+if "%choice%"=="2" goto DOCKER_FULL
+if "%choice%"=="3" goto DOCKER_BACKEND
+if "%choice%"=="4" goto KUBERNETES
+if "%choice%"=="5" goto HEALTH
+if "%choice%"=="6" goto STOP
+if "%choice%"=="7" exit /b 0
 echo.
-echo ============================================================
-echo    Local services are running.
-echo.
-echo    Frontend    : !LOCAL_FRONTEND_URL!
-echo    Dashboard   : !LOCAL_FRONTEND_URL!/dashboard
-echo    Backend API : !LOCAL_BACKEND_URL!
-echo    API Docs    : !LOCAL_BACKEND_URL!/docs
-echo.
-echo    Useful commands:
-echo      run_services.bat status
-echo      run_services.bat logs
-echo      run_services.bat stop
-echo ============================================================
+echo  [!] Invalid option. Press any key to try again...
+pause >nul
+goto MENU
 
-call :should_open_browser
-if not errorlevel 1 (
-    start "" "!LOCAL_FRONTEND_URL!"
-    start "" "!LOCAL_BACKEND_URL!/docs"
-)
-goto done
-
-:restart_local
-call :stop_local_no_pause
-goto start_local
-
-:stop_local
-call :stop_local_no_pause
-goto done
-
-:stop_local_no_pause
-echo.
-echo    Stopping local Smart Tire Analyzer processes...
-powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-  "$root='!ROOT!';" ^
-  "$ports=@([int]'!SMART_TIRE_BACKEND_PORT!',[int]'!SMART_TIRE_FRONTEND_PORT!');" ^
-  "$portPids=@(Get-NetTCPConnection -LocalPort $ports -State Listen -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess -Unique);" ^
-  "$all=@(Get-CimInstance Win32_Process); $byId=@{}; $all | ForEach-Object { $byId[[int]$_.ProcessId]=$_ };" ^
-  "function Test-ProjectProc($proc){ $seen=@{}; $cur=$proc; while($cur -and -not $seen.ContainsKey([int]$cur.ProcessId)){ $seen[[int]$cur.ProcessId]=$true; if($cur.CommandLine -and $cur.CommandLine.IndexOf($root,[StringComparison]::OrdinalIgnoreCase) -ge 0){ return $true }; if(-not $cur.ParentProcessId -or -not $byId.ContainsKey([int]$cur.ParentProcessId)){ break }; $cur=$byId[[int]$cur.ParentProcessId] }; return $false };" ^
-  "$procs=$all | Where-Object { (Test-ProjectProc $_) -and (($_.CommandLine -match 'uvicorn') -or ($_.CommandLine -match 'next') -or ($_.CommandLine -match 'npm') -or ($portPids -contains $_.ProcessId)) };" ^
-  "if (-not $procs) { Write-Host '   No matching local processes found.'; exit 0 };" ^
-  "$procs | Sort-Object ProcessId -Unique | ForEach-Object { Write-Host ('   Stopping PID ' + $_.ProcessId + ': ' + $_.Name); Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }"
-exit /b 0
-
-:status_local
-echo.
-echo    Local service status
-echo    --------------------
-powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-  "$backend='!LOCAL_BACKEND_URL!'; $frontend='!LOCAL_FRONTEND_URL!'; $ports=@([int]'!SMART_TIRE_BACKEND_PORT!',[int]'!SMART_TIRE_FRONTEND_PORT!'); $root='!ROOT!';" ^
-  "try { $h=Invoke-RestMethod ($backend + '/health') -TimeoutSec 5; Write-Host ('Backend : alive / ' + $h.status) } catch { Write-Host 'Backend : not reachable' };" ^
-  "try { $r=Invoke-RestMethod ($backend + '/health/ready') -TimeoutSec 5; Write-Host ('Ready   : ' + $r.status + ' / model=' + $r.components.model + ' / database=' + $r.components.database) } catch { Write-Host 'Ready   : not ready or not reachable' };" ^
-  "try { $web=Invoke-WebRequest $frontend -UseBasicParsing -TimeoutSec 5; Write-Host ('Frontend: HTTP ' + $web.StatusCode) } catch { Write-Host 'Frontend: not reachable' };" ^
-  "Write-Host ''; Write-Host 'Listening ports:';" ^
-  "$all=@(Get-CimInstance Win32_Process); $byId=@{}; $all | ForEach-Object { $byId[[int]$_.ProcessId]=$_ };" ^
-  "function Test-ProjectProc($proc){ $seen=@{}; $cur=$proc; while($cur -and -not $seen.ContainsKey([int]$cur.ProcessId)){ $seen[[int]$cur.ProcessId]=$true; if($cur.CommandLine -and $cur.CommandLine.IndexOf($root,[StringComparison]::OrdinalIgnoreCase) -ge 0){ return $true }; if(-not $cur.ParentProcessId -or -not $byId.ContainsKey([int]$cur.ParentProcessId)){ break }; $cur=$byId[[int]$cur.ParentProcessId] }; return $false };" ^
-  "$rows=@(); Get-NetTCPConnection -LocalPort $ports -State Listen -ErrorAction SilentlyContinue | ForEach-Object { $proc=$byId[[int]$_.OwningProcess]; $rows += [pscustomobject]@{ LocalAddress=$_.LocalAddress; LocalPort=$_.LocalPort; PID=$_.OwningProcess; Process=if($proc){$proc.Name}else{'unknown'}; Project=if($proc -and (Test-ProjectProc $proc)){'yes'}else{'no'} } };" ^
-  "if($rows.Count){ $rows | Format-Table -AutoSize } else { Write-Host '   none' }"
-goto done
-
-:logs_local
-echo.
-echo    Following local logs. Press Ctrl+C to stop watching.
-echo.
-powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-  "$files=@('!BACKEND_ERR_LOG!','!BACKEND_OUT_LOG!','!FRONTEND_ERR_LOG!','!FRONTEND_OUT_LOG!') | Where-Object { Test-Path $_ };" ^
-  "if (-not $files) { Write-Host 'No local log files found yet.'; exit 0 };" ^
-  "Write-Host 'Watching:'; $files | ForEach-Object { Write-Host ('  ' + $_) };" ^
-  "Get-Content -Path $files -Tail 80 -Wait"
-goto done
-
-:start_docker
+REM ============================================================================
+REM 1. LOCAL DEVELOPMENT
+REM ============================================================================
+:LOCAL
 cls
-echo ============================================================
-echo    Smart Tire Analyzer ^| Docker Deployment
-echo ============================================================
-echo    Project : !ROOT!
-echo    Backend : !DOCKER_BACKEND_URL!
-echo    Frontend: !DOCKER_FRONTEND_URL!
 echo.
-
-call :check_compose_file || goto fail
-call :ensure_docker_engine || goto fail
-call :ensure_env
-call :ensure_dirs
-call :warn_missing_model
-
-echo.
-echo    Building and starting Docker containers...
-docker compose --project-directory "!ROOT!" -f "!COMPOSE_FILE!" up -d --build backend frontend
-if errorlevel 1 goto fail
-
-echo.
-echo    Waiting for backend startup...
-call :wait_for_url "!DOCKER_BACKEND_URL!/health" "Docker Backend API" 120 || goto fail
-call :warn_backend_readiness "!DOCKER_BACKEND_URL!" "Docker Backend API"
-
-echo.
-echo    Waiting for frontend startup...
-call :wait_for_url "!DOCKER_FRONTEND_URL!" "Docker Frontend Web" 90 || goto fail
-
-echo.
-echo ============================================================
-echo    Docker services are running.
-echo.
-echo    Frontend    : !DOCKER_FRONTEND_URL!
-echo    Dashboard   : !DOCKER_FRONTEND_URL!/dashboard
-echo    Backend API : !DOCKER_BACKEND_URL!
-echo    API Docs    : !DOCKER_BACKEND_URL!/docs
-echo ============================================================
-
-call :should_open_browser
-if not errorlevel 1 (
-    start "" "!DOCKER_FRONTEND_URL!"
-    start "" "!DOCKER_BACKEND_URL!/docs"
-)
-goto done
-
-:restart_docker
-call :check_compose_file || goto fail
-call :ensure_docker_engine || goto fail
-docker compose --project-directory "!ROOT!" -f "!COMPOSE_FILE!" down
-if errorlevel 1 goto fail
-goto start_docker
-
-:stop_docker
-call :check_compose_file || goto fail
-call :ensure_docker_engine || goto fail
-echo.
-echo    Stopping Docker containers...
-docker compose --project-directory "!ROOT!" -f "!COMPOSE_FILE!" down
-if errorlevel 1 goto fail
-goto done
-
-:status_docker
-call :check_compose_file || goto fail
-call :ensure_docker_engine || goto fail
-docker compose --project-directory "!ROOT!" -f "!COMPOSE_FILE!" ps
-goto done
-
-:logs_docker
-call :check_compose_file || goto fail
-call :ensure_docker_engine || goto fail
-docker compose --project-directory "!ROOT!" -f "!COMPOSE_FILE!" logs -f backend frontend
-goto done
-
-:help
-echo.
-echo Smart Tire Analyzer launcher
-echo.
-echo   run_services.bat                 Start local backend + frontend
-echo   run_services.bat start           Start local backend + frontend
-echo   run_services.bat restart         Restart local services
-echo   run_services.bat stop            Stop local services
-echo   run_services.bat status          Check local services
-echo   run_services.bat logs            Follow local logs
-echo.
-echo   run_services.bat docker          Build/start Docker services
-echo   run_services.bat docker-restart  Restart Docker services
-echo   run_services.bat docker-stop     Stop Docker services
-echo   run_services.bat docker-status   Check Docker services
-echo   run_services.bat docker-logs     Follow Docker logs
-echo.
-echo Environment overrides:
-echo   SMART_TIRE_BACKEND_PORT          Backend port, default 8000
-echo   SMART_TIRE_FRONTEND_PORT         Frontend port, default 3000
-echo   SMART_TIRE_OPEN_BROWSER          1 opens browser, 0 disables it
-echo   SMART_TIRE_NO_PAUSE              1 disables final pause
-goto done
-
-:ensure_python
-if exist "!ROOT!\.venv\Scripts\python.exe" (
-    set "PYTHON_EXE=!ROOT!\.venv\Scripts\python.exe"
-    exit /b 0
-)
-
-where python >nul 2>nul
-if errorlevel 1 (
-    echo    ERROR: Python was not found. Install Python 3.10+ and run this again.
-    exit /b 1
-)
-
-python -c "import sys; raise SystemExit(0 if sys.version_info >= (3, 10) else 1)" >nul 2>nul
-if errorlevel 1 (
-    echo    ERROR: Python 3.10 or newer is required.
-    exit /b 1
-)
-
-echo    Creating Python virtual environment...
-python -m venv "!ROOT!\.venv"
-if errorlevel 1 (
-    echo    ERROR: Could not create .venv.
-    exit /b 1
-)
-set "PYTHON_EXE=!ROOT!\.venv\Scripts\python.exe"
-exit /b 0
-
-:ensure_backend_deps
-set "BACKEND_DEPS_MARKER=!ROOT!\.venv\.backend-deps.stamp"
-set "NEED_BACKEND_DEPS=0"
-
-"!PYTHON_EXE!" -c "import fastapi, uvicorn, torch, torchvision, cv2, sqlalchemy" >nul 2>nul
-if errorlevel 1 set "NEED_BACKEND_DEPS=1"
-
-if "!NEED_BACKEND_DEPS!"=="0" (
-    if exist "!BACKEND_DEPS_MARKER!" (
-        call :file_newer_than "!ROOT!\backend\requirements.txt" "!BACKEND_DEPS_MARKER!"
-        if errorlevel 1 set "NEED_BACKEND_DEPS=1"
-    ) else (
-        powershell -NoProfile -ExecutionPolicy Bypass -Command "New-Item -ItemType File -Path '!BACKEND_DEPS_MARKER!' -Force | Out-Null"
+echo  [1/4] Checking Python virtual environment...
+if not exist "%VENV_PY%" (
+    echo  [*] Virtual environment not found. Creating one...
+    python -m venv "%VENV_DIR%"
+    if !ERRORLEVEL! NEQ 0 (
+        echo  [ERROR] Failed to create virtualenv. Is Python installed and in PATH?
+        pause
+        goto MENU
     )
-)
-
-if not "!NEED_BACKEND_DEPS!"=="1" exit /b 0
-
-echo    Installing backend Python dependencies...
-"!PYTHON_EXE!" -m pip install --upgrade pip
-if errorlevel 1 exit /b 1
-"!PYTHON_EXE!" -m pip install -r "!ROOT!\backend\requirements.txt"
-if errorlevel 1 (
-    echo    ERROR: Backend dependency install failed.
-    exit /b 1
-)
-powershell -NoProfile -ExecutionPolicy Bypass -Command "New-Item -ItemType File -Path '!BACKEND_DEPS_MARKER!' -Force | Out-Null"
-exit /b 0
-
-:ensure_frontend_deps
-where npm >nul 2>nul
-if errorlevel 1 (
-    echo    ERROR: npm was not found. Install Node.js, then run this again.
-    exit /b 1
-)
-if not exist "!ROOT!\frontend\package.json" (
-    echo    ERROR: Missing frontend package.json at !ROOT!\frontend\package.json
-    exit /b 1
-)
-
-call :frontend_deps_stale
-if not errorlevel 1 exit /b 0
-
-echo    Installing frontend dependencies...
-pushd "!ROOT!\frontend" >nul
-call npm install
-set "NPM_EXIT=!ERRORLEVEL!"
-popd >nul
-if not "!NPM_EXIT!"=="0" (
-    echo    ERROR: Frontend dependency install failed.
-    exit /b 1
-)
-powershell -NoProfile -ExecutionPolicy Bypass -Command "New-Item -ItemType File -Path '!ROOT!\frontend\node_modules\.smart-tire-install.stamp' -Force | Out-Null"
-exit /b 0
-
-:frontend_deps_stale
-powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-  "$root='!ROOT!'; $marker=Join-Path $root 'frontend\node_modules\.smart-tire-install.stamp'; $nodeModules=Join-Path $root 'frontend\node_modules';" ^
-  "if (-not (Test-Path $nodeModules)) { exit 1 };" ^
-  "$required=@('next','react','react-dom') | ForEach-Object { Join-Path $nodeModules $_ };" ^
-  "foreach($pkg in $required){ if(-not (Test-Path $pkg)){ exit 1 } };" ^
-  "if (-not (Test-Path $marker)) { New-Item -ItemType File -Path $marker -Force | Out-Null; exit 0 };" ^
-  "$markerTime=(Get-Item $marker).LastWriteTimeUtc;" ^
-  "$files=@('frontend\package.json','frontend\package-lock.json') | ForEach-Object { Join-Path $root $_ } | Where-Object { Test-Path $_ };" ^
-  "foreach($file in $files){ if((Get-Item $file).LastWriteTimeUtc -gt $markerTime){ exit 1 } };" ^
-  "exit 0"
-exit /b %ERRORLEVEL%
-
-:file_newer_than
-powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-  "$source='%~1'; $target='%~2';" ^
-  "if (-not (Test-Path $target)) { exit 1 };" ^
-  "if ((Get-Item $source).LastWriteTimeUtc -gt (Get-Item $target).LastWriteTimeUtc) { exit 1 };" ^
-  "exit 0"
-exit /b %ERRORLEVEL%
-
-:start_backend
-powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-  "$env:PYTHONPATH='!PYTHONPATH!';" ^
-  "$env:PYTHONUNBUFFERED='1';" ^
-  "Start-Process -FilePath '!PYTHON_EXE!' -ArgumentList @('-m','uvicorn','app.main:app','--app-dir','backend','--host','!LOCAL_BACKEND_HOST!','--port','!SMART_TIRE_BACKEND_PORT!') -WorkingDirectory '!ROOT!' -RedirectStandardOutput '!BACKEND_OUT_LOG!' -RedirectStandardError '!BACKEND_ERR_LOG!' -WindowStyle Hidden"
-exit /b %ERRORLEVEL%
-
-:start_frontend
-powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-  "$env:NEXT_PUBLIC_API_BASE_URL='!LOCAL_BACKEND_URL!';" ^
-  "Remove-Item Env:ELECTRON_RUN_AS_NODE -ErrorAction SilentlyContinue;" ^
-  "Start-Process -FilePath 'npm.cmd' -ArgumentList @('run','dev','--','--hostname','!LOCAL_FRONTEND_HOST!','-p','!SMART_TIRE_FRONTEND_PORT!') -WorkingDirectory '!ROOT!\frontend' -RedirectStandardOutput '!FRONTEND_OUT_LOG!' -RedirectStandardError '!FRONTEND_ERR_LOG!' -WindowStyle Hidden"
-exit /b %ERRORLEVEL%
-
-:ensure_port_available
-powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-  "$port=[int]'%~1'; $label='%~2'; $root='!ROOT!'; $blocked=$false;" ^
-  "$listeners=Get-NetTCPConnection -LocalPort $port -State Listen -ErrorAction SilentlyContinue;" ^
-  "if (-not $listeners) { exit 0 };" ^
-  "$all=@(Get-CimInstance Win32_Process); $byId=@{}; $all | ForEach-Object { $byId[[int]$_.ProcessId]=$_ };" ^
-  "function Test-ProjectProc($proc){ $seen=@{}; $cur=$proc; while($cur -and -not $seen.ContainsKey([int]$cur.ProcessId)){ $seen[[int]$cur.ProcessId]=$true; if($cur.CommandLine -and $cur.CommandLine.IndexOf($root,[StringComparison]::OrdinalIgnoreCase) -ge 0){ return $true }; if(-not $cur.ParentProcessId -or -not $byId.ContainsKey([int]$cur.ParentProcessId)){ break }; $cur=$byId[[int]$cur.ParentProcessId] }; return $false };" ^
-  "foreach($conn in $listeners) { $owner=$conn.OwningProcess; $proc=$byId[[int]$owner]; $cmd=if($proc){$proc.CommandLine}else{''}; $isProject=$proc -and (Test-ProjectProc $proc); if($isProject){ Write-Host ('   ' + $label + ' port ' + $port + ' is already used by this project (PID ' + $owner + ').') } else { Write-Host ('   ERROR: ' + $label + ' port ' + $port + ' is already in use by PID ' + $owner + '.'); if($proc){ Write-Host ('   Process: ' + $proc.Name); if($cmd){ Write-Host ('   Command: ' + $cmd) } }; $blocked=$true } };" ^
-  "if($blocked){ exit 1 } exit 0"
-exit /b %ERRORLEVEL%
-
-:check_compose_file
-if not exist "!COMPOSE_FILE!" (
-    echo    ERROR: Missing compose file: !COMPOSE_FILE!
-    exit /b 1
-)
-exit /b 0
-
-:check_docker_cli
-where docker >nul 2>nul
-if errorlevel 1 (
-    echo    ERROR: Docker CLI was not found. Install Docker Desktop first.
-    exit /b 1
-)
-docker compose version >nul 2>nul
-if errorlevel 1 (
-    echo    ERROR: Docker Compose v2 was not found. Update Docker Desktop first.
-    exit /b 1
-)
-exit /b 0
-
-:ensure_docker_engine
-call :check_docker_cli || exit /b 1
-docker info >nul 2>nul
-if not errorlevel 1 exit /b 0
-
-echo    Docker engine is not running. Starting Docker Desktop...
-if exist "%ProgramFiles%\Docker\Docker\Docker Desktop.exe" (
-    start "" "%ProgramFiles%\Docker\Docker\Docker Desktop.exe"
-) else if exist "%LocalAppData%\Docker\Docker Desktop.exe" (
-    start "" "%LocalAppData%\Docker\Docker Desktop.exe"
-) else if exist "%LocalAppData%\Docker\Docker\Docker Desktop.exe" (
-    start "" "%LocalAppData%\Docker\Docker\Docker Desktop.exe"
+    echo  [OK] Virtual environment created.
 ) else (
-    echo    ERROR: Could not find Docker Desktop.
-    exit /b 1
+    echo  [OK] Virtual environment found.
 )
 
-for /l %%i in (1,1,60) do (
-    docker info >nul 2>nul
-    if not errorlevel 1 (
-        echo    Docker Desktop is ready.
-        exit /b 0
-    )
-    echo    Waiting for Docker Desktop ... %%i/60
-    timeout /t 3 /nobreak >nul
+echo.
+echo  [2/4] Installing/updating Python backend dependencies...
+"%VENV_PIP%" install -q -r "%BACKEND_DIR%\requirements.txt" 2>nul
+if !ERRORLEVEL! NEQ 0 (
+    echo  [WARN] Some Python packages may have failed. Continuing anyway...
+) else (
+    echo  [OK] Python dependencies ready.
 )
 
-echo    ERROR: Docker Desktop did not become ready in time.
-exit /b 1
+echo.
+echo  [3/4] Installing/updating Frontend (Next.js) dependencies...
+if not exist "%FRONTEND_DIR%\node_modules" (
+    echo  [*] node_modules not found. Running npm install...
+    npm --prefix "%FRONTEND_DIR%" install --no-audit --no-fund
+) else (
+    echo  [OK] Frontend dependencies already installed.
+)
 
-:ensure_env
-if not exist "!ROOT!\.env" (
-    if exist "!ROOT!\.env.example" (
-        copy "!ROOT!\.env.example" "!ROOT!\.env" >nul
-        echo    Created .env from .env.example. Add API keys later if needed.
+echo.
+echo  [4/4] Setting up environment file...
+if not exist "%REPO_ROOT%\.env" (
+    if exist "%REPO_ROOT%\.env.example" (
+        copy /Y "%REPO_ROOT%\.env.example" "%REPO_ROOT%\.env" >nul
+        echo  [OK] Created .env from .env.example - add your API keys.
     ) else (
-        echo    No .env file found. Optional API integrations will use fallback mode.
+        echo  [WARN] No .env.example found. Create .env manually if needed.
+    )
+) else (
+    echo  [OK] .env file exists.
+)
+
+echo.
+echo  ------------------------------------------------------------
+echo   Starting Backend (FastAPI) on http://127.0.0.1:8000 ...
+echo  ------------------------------------------------------------
+start "SmartTire-Backend" cmd /k "title Smart Tire - Backend && echo. && echo  Backend running at http://127.0.0.1:8000 && echo  API docs at http://127.0.0.1:8000/docs && echo. && set PYTHONPATH=%REPO_ROOT%;%BACKEND_DIR% && cd /d "%BACKEND_DIR%" && "%VENV_PY%" -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload"
+
+echo.
+echo  ------------------------------------------------------------
+echo   Starting Frontend (Next.js) on http://127.0.0.1:3000 ...
+echo  ------------------------------------------------------------
+start "SmartTire-Frontend" cmd /k "title Smart Tire - Frontend && echo. && echo  Frontend running at http://127.0.0.1:3000 && echo. && cd /d "%FRONTEND_DIR%" && npm run dev"
+
+echo.
+echo  ============================================================
+echo   Services are starting in separate windows:
+echo     Backend:  http://127.0.0.1:8000  (API docs: /docs)
+echo     Frontend: http://127.0.0.1:3000
+echo  ============================================================
+echo.
+pause
+goto MENU
+
+REM ============================================================================
+REM 2. DOCKER FULL STACK
+REM ============================================================================
+:DOCKER_FULL
+cls
+echo.
+echo  [1/3] Checking Docker Desktop...
+docker info >nul 2>&1
+if !ERRORLEVEL! NEQ 0 (
+    echo  [ERROR] Docker Desktop is not running!
+    echo  Please start Docker Desktop and try again.
+    pause
+    goto MENU
+)
+echo  [OK] Docker Desktop is running.
+
+echo.
+echo  [2/3] Setting up environment file...
+if not exist "%REPO_ROOT%\.env" (
+    if exist "%REPO_ROOT%\.env.example" (
+        copy /Y "%REPO_ROOT%\.env.example" "%REPO_ROOT%\.env" >nul
+        echo  [OK] Created .env from .env.example.
     )
 )
-exit /b 0
 
-:ensure_dirs
-if not exist "!ROOT!\continuous_learning\wrong_predictions" mkdir "!ROOT!\continuous_learning\wrong_predictions" >nul 2>nul
-if not exist "!ROOT!\continuous_learning\user_feedback" mkdir "!ROOT!\continuous_learning\user_feedback" >nul 2>nul
-if not exist "!ROOT!\continuous_learning\model_versions" mkdir "!ROOT!\continuous_learning\model_versions" >nul 2>nul
-if not exist "!ROOT!\ai_model\saved_models" mkdir "!ROOT!\ai_model\saved_models" >nul 2>nul
-if not exist "!ROOT!\logs" mkdir "!ROOT!\logs" >nul 2>nul
-if not exist "!ROOT!\dataset\ocr_training_examples" mkdir "!ROOT!\dataset\ocr_training_examples" >nul 2>nul
-exit /b 0
-
-:warn_missing_model
-if not exist "!ROOT!\ai_model\saved_models\hybrid_torch\model_best.pt" if not exist "!ROOT!\ai_model\saved_models\hybrid_torch\model_last.pt" (
+echo.
+echo  [3/3] Building and starting full stack...
+echo  [*] This may take several minutes on first run...
+echo.
+cd /d "%REPO_ROOT%"
+docker compose -f "%COMPOSE_FILE%" up --build -d
+if !ERRORLEVEL! EQU 0 (
     echo.
-    echo    WARNING: Trained hybrid checkpoint was not found:
-    echo    !ROOT!\ai_model\saved_models\hybrid_torch\model_best.pt
-    echo    !ROOT!\ai_model\saved_models\hybrid_torch\model_last.pt
-    echo    Backend can still start, but inference may use fallback behavior.
+    echo  ============================================================
+    echo   Docker stack deployed successfully!
+    echo     Backend:   http://localhost:8000  (API docs: /docs)
+    echo     Frontend:  http://localhost:8081
+    echo     Nginx:     http://localhost:80
+    echo     Redis:     localhost:6379
+    echo  ============================================================
+) else (
+    echo.
+    echo  [ERROR] Docker Compose failed. Check Docker Desktop logs.
 )
-exit /b 0
-
-:warn_backend_readiness
-powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-  "$base='%~1'; $name='%~2';" ^
-  "try { $r=Invoke-RestMethod ($base + '/health/ready') -TimeoutSec 8; Write-Host ('   ' + $name + ' readiness: ' + $r.status + ' / model=' + $r.components.model + ' / database=' + $r.components.database); exit 0 }" ^
-  "catch { Write-Host ('   WARNING: ' + $name + ' is alive, but readiness is not fully ready.'); try { $h=Invoke-RestMethod ($base + '/health') -TimeoutSec 5; Write-Host ('   health status: ' + $h.status); Write-Host ('   model       : ' + $h.components.model) } catch {}; exit 0 }"
-exit /b 0
-
-:print_backend_health
-powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-  "$base='%~1';" ^
-  "try { $h=Invoke-RestMethod ($base + '/health') -TimeoutSec 8; Write-Host ('   status : ' + $h.status); Write-Host ('   model  : ' + $h.components.model); Write-Host ('   version: ' + $h.components.model_version) }" ^
-  "catch { Write-Host '   WARNING: Could not read backend health summary.' }"
-exit /b 0
-
-:is_url_ready
-powershell -NoProfile -ExecutionPolicy Bypass -Command "try { Invoke-WebRequest -Uri '%~1' -UseBasicParsing -TimeoutSec 3 | Out-Null; exit 0 } catch { exit 1 }"
-exit /b %ERRORLEVEL%
-
-:wait_for_url
-set "WAIT_URL=%~1"
-set "WAIT_NAME=%~2"
-set "WAIT_ATTEMPTS=%~3"
-for /l %%i in (1,1,!WAIT_ATTEMPTS!) do (
-    call :is_url_ready "!WAIT_URL!"
-    if not errorlevel 1 (
-        echo    !WAIT_NAME! is ready.
-        exit /b 0
-    )
-    echo    Waiting for !WAIT_NAME! ... %%i/!WAIT_ATTEMPTS!
-    timeout /t 2 /nobreak >nul
-)
-echo    ERROR: !WAIT_NAME! did not become ready.
-exit /b 1
-
-:print_local_log_tail
 echo.
-echo    Recent local logs:
-powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-  "$files=@('!BACKEND_ERR_LOG!','!BACKEND_OUT_LOG!','!FRONTEND_ERR_LOG!','!FRONTEND_OUT_LOG!') | Where-Object { Test-Path $_ };" ^
-  "if (-not $files) { Write-Host '   No local log files found yet.'; exit 0 };" ^
-  "foreach($file in $files){ Write-Host ''; Write-Host ('--- ' + $file + ' ---'); Get-Content -Path $file -Tail 40 -ErrorAction SilentlyContinue }"
-exit /b 0
-
-:should_open_browser
-if /i "!SMART_TIRE_OPEN_BROWSER!"=="0" exit /b 1
-if /i "!SMART_TIRE_OPEN_BROWSER!"=="false" exit /b 1
-if /i "!SMART_TIRE_OPEN_BROWSER!"=="no" exit /b 1
-if /i "!SMART_TIRE_OPEN_BROWSER!"=="off" exit /b 1
-exit /b 0
-
-:fail
-echo.
-echo ============================================================
-echo    The launcher did not complete.
-echo.
-echo    Useful diagnostics:
-echo      run_services.bat status
-echo      run_services.bat logs
-echo.
-echo    Local log files:
-echo      !BACKEND_ERR_LOG!
-echo      !BACKEND_OUT_LOG!
-echo      !FRONTEND_ERR_LOG!
-echo      !FRONTEND_OUT_LOG!
-echo ============================================================
-if defined SMART_TIRE_NO_PAUSE (
-    endlocal
-    exit /b 1
-)
 pause
-exit /b 1
+goto MENU
 
-:done
+REM ============================================================================
+REM 3. DOCKER BACKEND ONLY
+REM ============================================================================
+:DOCKER_BACKEND
+cls
 echo.
-if defined SMART_TIRE_NO_PAUSE (
-    endlocal
-    exit /b 0
+echo  [1/2] Checking Docker Desktop...
+docker info >nul 2>&1
+if !ERRORLEVEL! NEQ 0 (
+    echo  [ERROR] Docker Desktop is not running!
+    pause
+    goto MENU
 )
+echo  [OK] Docker Desktop is running.
+
+echo.
+echo  [2/2] Starting backend container only...
+echo  [*] Frontend will run locally for fast iteration.
+echo.
+
+docker stop smart-tire-backend >nul 2>&1
+docker rm smart-tire-backend >nul 2>&1
+
+cd /d "%REPO_ROOT%"
+docker compose -f "%COMPOSE_FILE%" up --build -d backend redis
+if !ERRORLEVEL! EQU 0 (
+    echo  [OK] Backend container started on http://localhost:8000
+    echo.
+    echo  Starting local frontend...
+    start "SmartTire-Frontend" cmd /k "title Smart Tire - Frontend and Backend in Docker && echo. && echo  Frontend: http://127.0.0.1:3000 && echo  Backend:  http://localhost:8000 (Docker) && echo. && cd /d "%FRONTEND_DIR%" && npm run dev"
+) else (
+    echo  [ERROR] Failed to start backend container.
+)
+echo.
 pause
-endlocal
-exit /b 0
+goto MENU
+
+REM ============================================================================
+REM 4. KUBERNETES DEPLOYMENT
+REM ============================================================================
+:KUBERNETES
+cls
+echo.
+echo  ============================================================
+echo   KUBERNETES DEPLOYMENT
+echo  ============================================================
+echo.
+
+echo  [1/5] Checking kubectl...
+kubectl version --client >nul 2>&1
+if !ERRORLEVEL! NEQ 0 (
+    echo  [ERROR] kubectl is not installed or not in PATH.
+    echo  Install via: winget install Kubernetes.kubectl
+    pause
+    goto MENU
+)
+echo  [OK] kubectl found.
+
+echo.
+echo  [2/5] Checking Kubernetes cluster connection...
+kubectl cluster-info >nul 2>&1
+if !ERRORLEVEL! NEQ 0 (
+    echo  [ERROR] Cannot connect to a Kubernetes cluster.
+    echo  Enable Kubernetes in Docker Desktop settings, then retry.
+    pause
+    goto MENU
+)
+echo  [OK] Connected to K8s cluster.
+
+echo.
+echo  [3/5] Applying namespace and manifests...
+cd /d "%K8S_DIR%"
+kubectl apply -f "%K8S_DIR%\service.yaml" 2>&1
+if !ERRORLEVEL! NEQ 0 (
+    echo  [ERROR] Failed to apply service.yaml
+    pause
+    goto MENU
+)
+kubectl apply -f "%K8S_DIR%\deployment.yaml" 2>&1
+if !ERRORLEVEL! NEQ 0 (
+    echo  [ERROR] Failed to apply deployment.yaml
+    pause
+    goto MENU
+)
+kubectl apply -f "%K8S_DIR%\hpa.yaml" 2>&1
+if !ERRORLEVEL! NEQ 0 (
+    echo  [WARN] Failed to apply hpa.yaml (non-fatal, HPA optional)
+)
+echo  [OK] Manifests applied.
+
+echo.
+echo  [4/5] Waiting for rollout to complete...
+echo  [*] This may take a few minutes on first deploy...
+kubectl -n %K8S_NS% rollout status deployment/smart-tire-backend --timeout=300s
+if !ERRORLEVEL! NEQ 0 (
+    echo  [WARN] Rollout timed out. Pods may still be starting.
+)
+
+echo.
+echo  [5/5] Retrieving service endpoint...
+kubectl -n %K8S_NS% get svc smart-tire-backend-svc -o wide
+echo.
+echo  To access the API via port-forward, run:
+echo    kubectl -n %K8S_NS% port-forward svc/smart-tire-backend-svc 8000:80
+echo  Then open: http://localhost:8000/docs
+echo.
+echo  ============================================================
+echo   K8s deployment complete!
+echo  ============================================================
+echo.
+pause
+goto MENU
+
+REM ============================================================================
+REM 5. HEALTH CHECK
+REM ============================================================================
+:HEALTH
+cls
+echo.
+echo  ============================================================
+echo   SERVICE HEALTH CHECK
+echo  ============================================================
+echo.
+
+echo  [1] Backend API (http://localhost:8000/health)...
+curl -s -o nul -w "    Status: %%{http_code}\n" http://localhost:8000/health 2>nul
+if !ERRORLEVEL! NEQ 0 echo    Status: UNREACHABLE
+
+echo.
+echo  [2] Frontend (http://localhost:3000)...
+curl -s -o nul -w "    Status: %%{http_code}\n" http://localhost:3000 2>nul
+if !ERRORLEVEL! NEQ 0 echo    Status: UNREACHABLE
+
+echo.
+echo  [3] Nginx (http://localhost:80)...
+curl -s -o nul -w "    Status: %%{http_code}\n" http://localhost:80 2>nul
+if !ERRORLEVEL! NEQ 0 echo    Status: UNREACHABLE
+
+echo.
+echo  [4] Kubernetes pods (if deployed)...
+kubectl -n %K8S_NS% get pods -o wide 2>nul
+if !ERRORLEVEL! NEQ 0 echo    K8s: kubectl not available or cluster not running
+
+echo.
+echo  ============================================================
+echo.
+pause
+goto MENU
+
+REM ============================================================================
+REM 6. STOP ALL
+REM ============================================================================
+:STOP
+cls
+echo.
+echo  ============================================================
+echo   STOPPING ALL SERVICES
+echo  ============================================================
+echo.
+
+echo  [1/3] Stopping Docker Compose stack...
+cd /d "%REPO_ROOT%"
+docker compose -f "%COMPOSE_FILE%" down 2>nul
+if !ERRORLEVEL! EQU 0 (
+    echo  [OK] Docker Compose stack stopped.
+) else (
+    echo  [WARN] docker-compose down failed (stack may not be running).
+)
+
+echo.
+echo  [2/3] Removing stray containers...
+docker stop smart-tire-backend >nul 2>&1
+docker rm smart-tire-backend >nul 2>&1
+echo  [OK] Stray containers cleaned.
+
+echo.
+echo  [3/3] Deleting Kubernetes resources...
+kubectl -n %K8S_NS% delete hpa smart-tire-hpa --ignore-not-found 2>nul
+kubectl -n %K8S_NS% delete svc smart-tire-backend-svc --ignore-not-found 2>nul
+kubectl -n %K8S_NS% delete deployment smart-tire-backend --ignore-not-found 2>nul
+kubectl -n %K8S_NS% delete pvc smart-tire-model-pvc --ignore-not-found 2>nul
+kubectl delete namespace %K8S_NS% --ignore-not-found 2>nul
+echo  [OK] K8s resources deleted.
+
+echo.
+echo  ============================================================
+echo   All services stopped.
+echo  ============================================================
+echo.
+pause
+goto MENU

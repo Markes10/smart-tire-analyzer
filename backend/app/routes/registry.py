@@ -10,6 +10,8 @@ from pathlib import Path
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
 
+from app.services.legacy_model_catalog import get_legacy_diagnostics
+
 router = APIRouter()
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
@@ -25,4 +27,5 @@ async def get_model_registry():
         payload = json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
     except json.JSONDecodeError as exc:
         raise HTTPException(status_code=500, detail=f"Invalid model registry JSON: {exc}") from exc
+    payload.update(get_legacy_diagnostics(include_smoke=False))
     return JSONResponse(content=payload)

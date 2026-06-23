@@ -3,7 +3,7 @@
  * Allows users to flag wrong predictions and submit corrections.
  */
 
-import React, { useState } from "react";
+import React, { useReducer } from "react";
 import {
   Modal, View, Text, TextInput, TouchableOpacity,
   ScrollView, StyleSheet, ActivityIndicator, Alert,
@@ -23,7 +23,7 @@ const COLORS = {
 
 const WEAR_PATTERNS = [
   "center_wear", "edge_wear", "patchy_wear",
-  "uniform_wear", "one_side_wear", "cupping_wear",
+  "uniform_wear", "side_wall_wear", "one_side_wear", "cupping_wear",
 ];
 
 interface FeedbackModalProps {
@@ -33,35 +33,96 @@ interface FeedbackModalProps {
   originalPrediction: any;
 }
 
+type FeedbackType = "wrong" | "inaccurate" | "correct" | "partial";
+type TreadPositionKey = "tread_1" | "tread_2" | "tread_3" | "tread_4";
+type TreadPositions = Record<TreadPositionKey, string>;
+
+type FeedbackModalState = {
+  feedbackType: FeedbackType;
+  correctedTread: string;
+  treadPositions: TreadPositions;
+  correctedWear: string;
+  comment: string;
+  submitting: boolean;
+};
+
+type FeedbackModalAction =
+  | { type: "setFeedbackType"; value: FeedbackType }
+  | { type: "setCorrectedTread"; value: string }
+  | { type: "setTreadPosition"; key: TreadPositionKey; value: string }
+  | { type: "setCorrectedWear"; value: string }
+  | { type: "setComment"; value: string }
+  | { type: "submitStarted" }
+  | { type: "submitFinished" };
+
+const initialFeedbackModalState: FeedbackModalState = {
+  feedbackType: "wrong",
+  correctedTread: "",
+  treadPositions: {
+    tread_1: "",
+    tread_2: "",
+    tread_3: "",
+    tread_4: "",
+  },
+  correctedWear: "",
+  comment: "",
+  submitting: false,
+};
+
+function feedbackModalReducer(
+  state: FeedbackModalState,
+  action: FeedbackModalAction,
+): FeedbackModalState {
+  switch (action.type) {
+    case "setFeedbackType":
+      return { ...state, feedbackType: action.value };
+    case "setCorrectedTread":
+      return { ...state, correctedTread: action.value };
+    case "setTreadPosition":
+      return {
+        ...state,
+        treadPositions: { ...state.treadPositions, [action.key]: action.value },
+      };
+    case "setCorrectedWear":
+      return { ...state, correctedWear: action.value };
+    case "setComment":
+      return { ...state, comment: action.value };
+    case "submitStarted":
+      return { ...state, submitting: true };
+    case "submitFinished":
+      return { ...state, submitting: false };
+    default:
+      return state;
+  }
+}
+
 export function FeedbackModal({
   visible,
   onClose,
   sessionId,
   originalPrediction,
 }: FeedbackModalProps) {
-  const [feedbackType, setFeedbackType] = useState<"wrong" | "inaccurate" | "correct" | "partial">("wrong");
-  const [correctedTread, setCorrectedTread] = useState("");
-  const [treadPositions, setTreadPositions] = useState({
-    tread_1: "",
-    tread_2: "",
-    tread_3: "",
-    tread_4: "",
-  });
-  const [correctedWear, setCorrectedWear] = useState("");
-  const [comment, setComment] = useState("");
-  const [submitting, setSubmitting] = useState(false);
+  const [state, dispatch] = useReducer(feedbackModalReducer, initialFeedbackModalState);
+  const {
+    feedbackType,
+    correctedTread,
+    treadPositions,
+    correctedWear,
+    comment,
+    submitting,
+  } = state;
 
   const handleSubmit = async () => {
     if (!sessionId) {
       Alert.alert("Error", "No session to submit feedback for.");
       return;
     }
-    setSubmitting(true);
+    dispatch({ type: "submitStarted" });
     try {
       const correctedDepths = Object.fromEntries(
-        Object.entries(treadPositions)
-          .filter(([, value]) => value.trim() !== "")
-          .map(([key, value]) => [key, parseFloat(value)])
+        Object.entries(treadPositions).flatMap(([key, value]) => (
+          value.trim() !== "" ? [[key, parseFloat(value)]] : []
+        ))
       ) as Partial<Record<keyof typeof treadPositions, number>>;
       const depthValues = Object.values(correctedDepths).filter((value): value is number =>
         Number.isFinite(value)
@@ -89,7 +150,7 @@ export function FeedbackModal({
     } catch (err: any) {
       Alert.alert("Error", err.message || "Failed to submit feedback.");
     } finally {
-      setSubmitting(false);
+      dispatch({ type: "submitFinished" });
     }
   };
 
@@ -112,7 +173,7 @@ export function FeedbackModal({
                 <TouchableOpacity
                   key={t}
                   style={[styles.typeBtn, feedbackType === t && styles.typeBtnActive]}
-                  onPress={() => setFeedbackType(t)}
+                  onPress={() => dispatch({ type: "setFeedbackType", value: t })}
                 >
                   <Text style={[styles.typeTxt, feedbackType === t && styles.typeTxtActive]}>
                     {t.charAt(0).toUpperCase() + t.slice(1)}
@@ -126,7 +187,7 @@ export function FeedbackModal({
             <TextInput
               style={styles.input}
               value={correctedTread}
-              onChangeText={setCorrectedTread}
+              onChangeText={(value: string) => dispatch({ type: "setCorrectedTread", value })}
               keyboardType="decimal-pad"
               placeholder="e.g. 4.5"
               placeholderTextColor={COLORS.textSecondary}
@@ -140,7 +201,7 @@ export function FeedbackModal({
                   <TextInput
                     style={[styles.input, styles.depthInput]}
                     value={treadPositions[key]}
-                    onChangeText={(value: string) => setTreadPositions((current) => ({ ...current, [key]: value }))}
+                    onChangeText={(value: string) => dispatch({ type: "setTreadPosition", key, value })}
                     keyboardType="decimal-pad"
                     placeholder="mm"
                     placeholderTextColor={COLORS.textSecondary}
@@ -156,7 +217,7 @@ export function FeedbackModal({
                 <TouchableOpacity
                   key={p}
                   style={[styles.wearBtn, correctedWear === p && styles.wearBtnActive]}
-                  onPress={() => setCorrectedWear(correctedWear === p ? "" : p)}
+                  onPress={() => dispatch({ type: "setCorrectedWear", value: correctedWear === p ? "" : p })}
                 >
                   <Text style={[styles.wearTxt, correctedWear === p && styles.wearTxtActive]}>
                     {p.replace(/_/g, " ")}
@@ -170,7 +231,7 @@ export function FeedbackModal({
             <TextInput
               style={[styles.input, styles.textArea]}
               value={comment}
-              onChangeText={setComment}
+              onChangeText={(value: string) => dispatch({ type: "setComment", value })}
               placeholder="Describe what was wrong..."
               placeholderTextColor={COLORS.textSecondary}
               multiline

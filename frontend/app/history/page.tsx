@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useReducer } from "react"
 import Link from "next/link"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
@@ -40,22 +40,75 @@ function displayDate(value: string | null) {
   return new Date(value).toLocaleDateString()
 }
 
+type HistoryState = {
+  records: HistoryItem[]
+  total: number
+  page: number
+  searchQuery: string
+  sortBy: string
+  riskFilter: string
+  isLoading: boolean
+  error: string | null
+}
+
+type HistoryAction =
+  | { type: "loadStarted" }
+  | { type: "loadSucceeded"; results: HistoryItem[]; total: number }
+  | { type: "loadFailed"; message: string }
+  | { type: "setSearchQuery"; value: string }
+  | { type: "setSortBy"; value: string }
+  | { type: "setRiskFilter"; value: string }
+  | { type: "refresh" }
+  | { type: "nextPage" }
+
+const initialHistoryState: HistoryState = {
+  records: [],
+  total: 0,
+  page: 1,
+  searchQuery: "",
+  sortBy: "date",
+  riskFilter: "all",
+  isLoading: true,
+  error: null,
+}
+
+function historyReducer(state: HistoryState, action: HistoryAction): HistoryState {
+  switch (action.type) {
+    case "loadStarted":
+      return { ...state, isLoading: true, error: null }
+    case "loadSucceeded":
+      return {
+        ...state,
+        records: state.page === 1 ? action.results : [...state.records, ...action.results],
+        total: action.total,
+        isLoading: false,
+      }
+    case "loadFailed":
+      return { ...state, error: action.message, isLoading: false }
+    case "setSearchQuery":
+      return { ...state, searchQuery: action.value }
+    case "setSortBy":
+      return { ...state, sortBy: action.value }
+    case "setRiskFilter":
+      return { ...state, records: [], page: 1, riskFilter: action.value }
+    case "refresh":
+      return { ...state, records: [], page: 1 }
+    case "nextPage":
+      return { ...state, page: state.page + 1 }
+    default:
+      return state
+  }
+}
+
 export default function HistoryPage() {
-  const [records, setRecords] = useState<HistoryItem[]>([])
-  const [total, setTotal] = useState(0)
-  const [page, setPage] = useState(1)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [sortBy, setSortBy] = useState("date")
-  const [riskFilter, setRiskFilter] = useState("all")
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [state, dispatch] = useReducer(historyReducer, initialHistoryState)
+  const { records, total, page, searchQuery, sortBy, riskFilter, isLoading, error } = state
 
   useEffect(() => {
     let mounted = true
 
     async function loadHistory() {
-      setIsLoading(true)
-      setError(null)
+      dispatch({ type: "loadStarted" })
       try {
         const data = await getAnalysisHistory({
           page,
@@ -63,12 +116,14 @@ export default function HistoryPage() {
           riskLevel: riskFilter === "all" ? undefined : riskFilter,
         })
         if (!mounted) return
-        setRecords((current) => page === 1 ? data.results : [...current, ...data.results])
-        setTotal(data.total)
+        dispatch({ type: "loadSucceeded", results: data.results, total: data.total })
       } catch (err) {
-        if (mounted) setError(err instanceof Error ? err.message : "Could not load analysis history.")
-      } finally {
-        if (mounted) setIsLoading(false)
+        if (mounted) {
+          dispatch({
+            type: "loadFailed",
+            message: err instanceof Error ? err.message : "Could not load analysis history.",
+          })
+        }
       }
     }
 
@@ -89,7 +144,7 @@ export default function HistoryPage() {
       ].some((value) => String(value ?? "").toLowerCase().includes(query))
     })
 
-    return [...filtered].sort((a, b) => {
+    return filtered.toSorted((a, b) => {
       if (sortBy === "score") return (b.health_score ?? 0) - (a.health_score ?? 0)
       if (sortBy === "depth") return (b.avg_tread_mm ?? 0) - (a.avg_tread_mm ?? 0)
       return new Date(b.timestamp ?? 0).getTime() - new Date(a.timestamp ?? 0).getTime()
@@ -101,8 +156,7 @@ export default function HistoryPage() {
   const scoreDiff = latestScore - previousScore
 
   const refresh = () => {
-    setRecords([])
-    setPage(1)
+    dispatch({ type: "refresh" })
   }
 
   return (
@@ -171,9 +225,9 @@ export default function HistoryPage() {
             <div className="relative flex-1 sm:max-w-xs">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
-                placeholder="Search by ID, risk, or wear..."
+                placeholder="Search by ID, risk, or wear…"
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => dispatch({ type: "setSearchQuery", value: e.target.value })}
                 className="pl-9"
               />
             </div>
@@ -181,9 +235,7 @@ export default function HistoryPage() {
               <Select
                 value={riskFilter}
                 onValueChange={(value) => {
-                  setRecords([])
-                  setPage(1)
-                  setRiskFilter(value)
+                  dispatch({ type: "setRiskFilter", value })
                 }}
               >
                 <SelectTrigger className="w-35">
@@ -197,7 +249,7 @@ export default function HistoryPage() {
                   <SelectItem value="CRITICAL">Critical</SelectItem>
                 </SelectContent>
               </Select>
-              <Select value={sortBy} onValueChange={setSortBy}>
+              <Select value={sortBy} onValueChange={(value) => dispatch({ type: "setSortBy", value })}>
                 <SelectTrigger className="w-35">
                   <SelectValue placeholder="Sort by" />
                 </SelectTrigger>
@@ -295,12 +347,12 @@ export default function HistoryPage() {
           )}
 
           {isLoading && (
-            <div className="mt-8 text-center text-sm text-muted-foreground">Loading history...</div>
+            <div className="mt-8 text-center text-sm text-muted-foreground">Loading history&hellip;</div>
           )}
 
           {records.length < total && !isLoading && (
             <div className="mt-8 flex justify-center">
-              <Button variant="outline" onClick={() => setPage((current) => current + 1)}>
+              <Button variant="outline" onClick={() => dispatch({ type: "nextPage" })}>
                 Load More
               </Button>
             </div>

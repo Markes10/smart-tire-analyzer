@@ -40,7 +40,11 @@ export default function HomeScreen() {
   const navigation = useNavigation();
   const { latestAnalysis } = useAnalysisStore();
   const { history, loadHistory } = useHistoryStore();
-  const pulseAnim = React.useRef(new Animated.Value(1)).current;
+  const pulseAnimRef = React.useRef<any>(null);
+  if (pulseAnimRef.current === null) {
+    pulseAnimRef.current = new Animated.Value(1);
+  }
+  const pulseAnim = pulseAnimRef.current;
 
   useEffect(() => {
     loadHistory();
@@ -53,7 +57,7 @@ export default function HomeScreen() {
     );
     pulse.start();
     return () => pulse.stop();
-  }, []);
+  }, [loadHistory, pulseAnim]);
 
   const recentItems = history.slice(0, 3);
 
@@ -150,9 +154,9 @@ export default function HomeScreen() {
         {recentItems.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Recent Scans</Text>
-            {recentItems.map((item: any, idx: number) => (
+            {recentItems.map((item: any) => (
               <TouchableOpacity
-                key={idx}
+                key={item.session_id}
                 style={styles.recentItem}
                 onPress={() => navigation.navigate("Result", { sessionId: item.session_id })}
               >

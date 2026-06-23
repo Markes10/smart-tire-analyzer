@@ -47,6 +47,23 @@ def _normalize_content_type(content_type: str | None) -> ContentType:
     return "image/jpeg"
 
 
+def _detect_content_type_from_bytes(image_bytes: bytes, fallback: ContentType) -> ContentType:
+    """Best-effort sniffing of encoded bytes to keep metadata and payload aligned."""
+    try:
+        with Image.open(io.BytesIO(image_bytes)) as image:
+            format_name = (image.format or "").upper()
+    except Exception:
+        return fallback
+
+    if format_name == "PNG":
+        return "image/png"
+    if format_name in {"JPEG", "JPG"}:
+        return "image/jpeg"
+    if format_name == "WEBP":
+        return "image/webp"
+    return fallback
+
+
 def optimize_image_bytes(
     image_bytes: bytes,
     *,
@@ -64,8 +81,8 @@ def optimize_image_bytes(
     original_size = len(image_bytes)
     target_type = _normalize_content_type(content_type)
 
-    with Image.open(io.BytesIO(image_bytes)) as image:
-        image = ImageOps.exif_transpose(image)
+    with Image.open(io.BytesIO(image_bytes)) as opened_image:
+        image = ImageOps.exif_transpose(opened_image)
         if max(image.size) > max_dimension:
             image.thumbnail((max_dimension, max_dimension), Image.Resampling.LANCZOS)
 
@@ -94,7 +111,7 @@ def optimize_image_bytes(
     optimized = buffer.getvalue()
     if len(optimized) >= original_size:
         optimized = image_bytes
-        output_type = target_type
+        output_type = _detect_content_type_from_bytes(image_bytes, output_type)
 
     savings = 1.0 - (len(optimized) / original_size) if original_size else 0.0
     logger.debug(

@@ -22,13 +22,13 @@ function ResizablePanelGroup({
   )
 }
 
-function ResizablePanel({
+function resizablePanel({
   ...props
 }: React.ComponentProps<typeof ResizablePrimitive.Panel>) {
   return <ResizablePrimitive.Panel data-slot="resizable-panel" {...props} />
 }
 
-function ResizableHandle({
+function resizableHandle({
   withHandle,
   className,
   ...props
@@ -53,4 +53,4 @@ function ResizableHandle({
   )
 }
 
-export { ResizablePanelGroup, ResizablePanel, ResizableHandle }
+export { ResizablePanelGroup, resizablePanel as ResizablePanel, resizableHandle as ResizableHandle }

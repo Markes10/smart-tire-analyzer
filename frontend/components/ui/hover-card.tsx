@@ -11,7 +11,7 @@ function HoverCard({
   return <HoverCardPrimitive.Root data-slot="hover-card" {...props} />
 }
 
-function HoverCardTrigger({
+function hoverCardTrigger({
   ...props
 }: React.ComponentProps<typeof HoverCardPrimitive.Trigger>) {
   return (
@@ -19,7 +19,7 @@ function HoverCardTrigger({
   )
 }
 
-function HoverCardContent({
+function hoverCardContent({
   className,
   align = 'center',
   sideOffset = 4,
@@ -41,4 +41,4 @@ function HoverCardContent({
   )
 }
 
-export { HoverCard, HoverCardTrigger, HoverCardContent }
+export { HoverCard, hoverCardTrigger as HoverCardTrigger, hoverCardContent as HoverCardContent }

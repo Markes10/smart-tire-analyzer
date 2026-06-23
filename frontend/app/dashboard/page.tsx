@@ -1,6 +1,3 @@
-"use client"
-
-import { useEffect, useMemo, useState } from "react"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Badge } from "@/components/ui/badge"
@@ -49,29 +46,34 @@ function statusVariant(value: string) {
   return "outline"
 }
 
-export default function EnterpriseDashboardPage() {
-  const [data, setData] = useState<DashboardPayload | null>(null)
-  const [error, setError] = useState<string | null>(null)
+async function getDashboardPayload(): Promise<{
+  data: DashboardPayload | null
+  error: string | null
+}> {
+  try {
+    const response = await fetch(`${getApiBaseUrl()}/enterprise/dashboard`, {
+      cache: "no-store",
+    })
 
-  useEffect(() => {
-    let mounted = true
-    fetch(`${getApiBaseUrl()}/enterprise/dashboard`)
-      .then(async (response) => {
-        if (!response.ok) throw new Error(`Dashboard request failed: ${response.status}`)
-        return response.json()
-      })
-      .then((payload) => {
-        if (mounted) setData(payload)
-      })
-      .catch((err) => {
-        if (mounted) setError(err instanceof Error ? err.message : "Dashboard unavailable")
-      })
-    return () => {
-      mounted = false
+    if (!response.ok) {
+      throw new Error(`Dashboard request failed: ${response.status}`)
     }
-  }, [])
 
-  const modules = useMemo(() => data?.architecture?.modules ?? [], [data])
+    return {
+      data: await response.json(),
+      error: null,
+    }
+  } catch (err) {
+    return {
+      data: null,
+      error: err instanceof Error ? err.message : "Dashboard unavailable",
+    }
+  }
+}
+
+export default async function EnterpriseDashboardPage() {
+  const { data, error } = await getDashboardPayload()
+  const modules = data?.architecture?.modules ?? []
   const implemented = modules.length
   const maturity = modules.length ? Math.round((implemented / 15) * 100) : 0
 
@@ -117,10 +119,6 @@ export default function EnterpriseDashboardPage() {
               <Card className="mb-8 border-destructive/50 bg-destructive/5">
                 <CardContent className="py-4 text-sm text-destructive">{error}</CardContent>
               </Card>
-            )}
-
-            {!data && !error && (
-              <div className="py-20 text-center text-sm text-muted-foreground">Loading dashboard...</div>
             )}
 
             {data && (

@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Menu, Gauge } from "lucide-react"
 import { useState } from "react"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -62,6 +62,9 @@ export function Header() {
             </Button>
           </SheetTrigger>
           <SheetContent side="right" className="w-[300px] bg-background">
+            <SheetHeader className="sr-only">
+              <SheetTitle>Mobile navigation</SheetTitle>
+            </SheetHeader>
             <div className="flex flex-col gap-6 pt-6">
               {navigation.map((item) => (
                 <Link

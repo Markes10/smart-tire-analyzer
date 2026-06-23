@@ -21,7 +21,7 @@ function Avatar({
   )
 }
 
-function AvatarImage({
+function avatarImage({
   className,
   ...props
 }: React.ComponentProps<typeof AvatarPrimitive.Image>) {
@@ -34,7 +34,7 @@ function AvatarImage({
   )
 }
 
-function AvatarFallback({
+function avatarFallback({
   className,
   ...props
 }: React.ComponentProps<typeof AvatarPrimitive.Fallback>) {
@@ -50,4 +50,4 @@ function AvatarFallback({
   )
 }
 
-export { Avatar, AvatarImage, AvatarFallback }
+export { Avatar, avatarImage as AvatarImage, avatarFallback as AvatarFallback }

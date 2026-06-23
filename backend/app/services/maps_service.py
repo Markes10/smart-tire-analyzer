@@ -34,16 +34,31 @@ Coord = Tuple[float, float]
 
 
 class MapsService:
-    def __init__(self):
-        rot = get_maps_rotator()
-        if not rot:
-            keys = settings.get_maps_keys()
-            rot = APIKeyRotator("maps", keys, daily_quota=settings.MAPS_DAILY_QUOTA) if keys else None
+    def __init__(self, runtime_keys: dict | None = None):
+        """
+        Initialize the Maps service.
+        
+        Args:
+            runtime_keys: Optional dict with "mapillary" key for user-provided Mapillary token.
+        """
+        runtime_maps_key = None
+        if runtime_keys and isinstance(runtime_keys, dict):
+            runtime_maps_key = runtime_keys.get("mapillary") or runtime_keys.get("GOOGLE_MAPS_API_KEY") or None
 
-        self.rotator = rot
-        self.enabled = bool(self.rotator and self.rotator.available_keys)
-        if not self.enabled:
-            logger.warning("No Maps API keys configured - using mock road context")
+        if runtime_maps_key:
+            logger.info("MapsService initialized with runtime API key")
+            self.rotator = APIKeyRotator("maps", [runtime_maps_key], daily_quota=9999)
+            self.enabled = True
+        else:
+            rot = get_maps_rotator()
+            if not rot:
+                keys = settings.get_maps_keys()
+                rot = APIKeyRotator("maps", keys, daily_quota=settings.MAPS_DAILY_QUOTA) if keys else None
+
+            self.rotator = rot
+            self.enabled = bool(self.rotator and self.rotator.available_keys)
+            if not self.enabled:
+                logger.warning("No Maps API keys configured - using mock road context")
 
     async def get_road_context(self, lat: float, lon: float) -> Dict[str, Any]:
         """
@@ -72,14 +87,19 @@ class MapsService:
                 "visual": visual_summary,
             }
             road_condition, road_basis = self._estimate_route_road_condition([sample], terrain_type)
+            legacy_context = self._legacy_road_context(
+                lat,
+                lon,
+                terrain_type,
+                road_condition,
+                elevation_m,
+            )
 
             return {
                 "terrain_type": terrain_type,
                 "road_condition": road_condition,
                 "road_condition_basis": road_basis,
-                "traffic_density": "moderate",
                 "elevation_m": elevation_m,
-                "road_wear_multiplier": self._road_wear_mult(terrain_type, road_condition),
                 "latitude": lat,
                 "longitude": lon,
                 "street_view_available": street_view_meta.get("status") == "OK",
@@ -88,6 +108,7 @@ class MapsService:
                 "street_view_visual_summary": self._build_street_view_summary([sample]),
                 "street_view_samples": self._public_samples([sample]),
                 "route_analysis_source": "single_point",
+                **legacy_context,
             }
         except Exception as e:
             logger.warning("Maps API error: %s - using mock", e)
@@ -134,13 +155,19 @@ class MapsService:
             road_condition, road_basis = self._estimate_route_road_condition(samples, terrain_type)
 
             midpoint = sampled_points[len(sampled_points) // 2]
+            elevation_avg = round(sum(elevations) / len(elevations), 2) if elevations else None
+            legacy_context = self._legacy_road_context(
+                midpoint[0],
+                midpoint[1],
+                terrain_type,
+                road_condition,
+                elevation_avg,
+            )
             return {
                 "terrain_type": terrain_type,
                 "road_condition": road_condition,
                 "road_condition_basis": road_basis,
-                "traffic_density": "moderate",
-                "elevation_m": round(sum(elevations) / len(elevations), 2) if elevations else None,
-                "road_wear_multiplier": self._road_wear_mult(terrain_type, road_condition),
+                "elevation_m": elevation_avg,
                 "latitude": midpoint[0],
                 "longitude": midpoint[1],
                 "route_source_latitude": source_lat,
@@ -159,6 +186,7 @@ class MapsService:
                 ),
                 "street_view_visual_summary": self._build_street_view_summary(samples),
                 "street_view_samples": self._public_samples(samples),
+                **legacy_context,
             }
         except Exception as e:
             logger.warning("Route Maps API error: %s - using mock route context", e)
@@ -500,14 +528,71 @@ class MapsService:
         }.get(road_cond, 1.0)
         return round(terrain_mult * road_mult, 3)
 
+    def _legacy_road_context(
+        self,
+        lat: float,
+        lon: float,
+        terrain_type: str,
+        road_condition: str,
+        elevation_m: float | None,
+    ) -> Dict[str, Any]:
+        """Reuse legacy traffic and terrain helpers as optional multipliers."""
+        base_road_multiplier = self._road_wear_mult(terrain_type, road_condition)
+        try:
+            from api_integrations.google_maps.traffic_fetcher import (
+                combined_road_wear_multiplier,
+                estimate_traffic_density,
+            )
+
+            traffic = estimate_traffic_density(lat, lon)
+            raw_density = str(traffic.get("traffic_density", "moderate"))
+            traffic_density = "light" if raw_density == "low" else raw_density
+            traffic_multiplier = float(traffic.get("traffic_multiplier", 1.0))
+            combined_multiplier = combined_road_wear_multiplier(
+                base_road_multiplier,
+                1.0,
+                traffic_multiplier,
+            )
+            traffic_status = {
+                "traffic_density": traffic_density,
+                "legacy_traffic_density": raw_density,
+                "traffic_multiplier": traffic_multiplier,
+                "traffic_method": traffic.get("traffic_method"),
+                "is_peak_hour": traffic.get("is_peak_hour", False),
+            }
+        except Exception as exc:
+            combined_multiplier = base_road_multiplier
+            traffic_status = {
+                "traffic_density": "moderate",
+                "traffic_multiplier": 1.0,
+                "traffic_method": "legacy_unavailable",
+                "legacy_traffic_error": str(exc),
+                "is_peak_hour": False,
+            }
+
+        try:
+            from api_integrations.google_maps.terrain_analyzer import _classify_terrain
+
+            legacy_terrain_type, terrain_multiplier = _classify_terrain(elevation_m)
+        except Exception as exc:
+            legacy_terrain_type, terrain_multiplier = "unknown", 1.0
+            traffic_status["legacy_terrain_error"] = str(exc)
+
+        return {
+            **traffic_status,
+            "base_road_wear_multiplier": base_road_multiplier,
+            "road_wear_multiplier": round(float(combined_multiplier), 3),
+            "terrain_wear_multiplier": round(float(terrain_multiplier), 3),
+            "legacy_terrain_type": legacy_terrain_type,
+        }
+
     def _mock_context(self, lat: float, lon: float) -> Dict[str, Any]:
+        legacy_context = self._legacy_road_context(lat, lon, "flat_urban", "good", None)
         return {
             "terrain_type": "flat_urban",
             "road_condition": "good",
             "road_condition_basis": "No Maps key configured; using neutral road-condition default.",
-            "traffic_density": "moderate",
             "elevation_m": None,
-            "road_wear_multiplier": 1.0,
             "latitude": lat,
             "longitude": lon,
             "street_view_available": False,
@@ -516,6 +601,7 @@ class MapsService:
             "street_view_visual_summary": "Street View analysis unavailable without a Google Maps API key.",
             "street_view_samples": [],
             "route_analysis_source": "mock",
+            **legacy_context,
         }
 
     def _mock_route_context(

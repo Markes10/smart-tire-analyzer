@@ -1,6 +1,4 @@
-"use client"
-
-import { useEffect, useMemo, useState } from "react"
+import Link from "next/link"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Badge } from "@/components/ui/badge"
@@ -25,32 +23,32 @@ type RegistryPayload = {
   >
 }
 
-export default function ModelRegistryPage() {
-  const [data, setData] = useState<RegistryPayload | null>(null)
-  const [error, setError] = useState<string | null>(null)
-  const [loading, setLoading] = useState(true)
+async function loadRegistry() {
+  try {
+    const response = await fetch(`${getApiBaseUrl()}/registry`, {
+      cache: "no-store",
+    })
 
-  const loadRegistry = () => {
-    setLoading(true)
-    setError(null)
-    fetch(`${getApiBaseUrl()}/registry`)
-      .then(async (response) => {
-        if (!response.ok) {
-          const text = await response.text()
-          throw new Error(text || `Registry request failed: ${response.status}`)
-        }
-        return response.json()
-      })
-      .then((payload: RegistryPayload) => setData(payload))
-      .catch((err) => setError(err instanceof Error ? err.message : "Registry unavailable"))
-      .finally(() => setLoading(false))
+    if (!response.ok) {
+      const text = await response.text()
+      throw new Error(text || `Registry request failed: ${response.status}`)
+    }
+
+    return {
+      data: await response.json() as RegistryPayload,
+      error: null,
+    }
+  } catch (err) {
+    return {
+      data: null,
+      error: err instanceof Error ? err.message : "Registry unavailable",
+    }
   }
+}
 
-  useEffect(() => {
-    loadRegistry()
-  }, [])
-
-  const modelEntries = useMemo(() => Object.entries(data?.models ?? {}), [data])
+export default async function ModelRegistryPage() {
+  const { data, error } = await loadRegistry()
+  const modelEntries = Object.entries(data?.models ?? {})
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -68,14 +66,13 @@ export default function ModelRegistryPage() {
                 Browse promoted hybrid checkpoints and validation metrics from the backend registry.
               </p>
             </div>
-            <button
-              type="button"
-              onClick={loadRegistry}
+            <Link
+              href="/model-registry"
               className="inline-flex items-center gap-2 rounded-md border px-3 py-2 text-sm hover:bg-background"
             >
-              <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
+              <RefreshCw className="h-4 w-4" />
               Refresh
-            </button>
+            </Link>
           </div>
 
           {error && (
@@ -87,7 +84,7 @@ export default function ModelRegistryPage() {
             </Card>
           )}
 
-          {!error && data && (
+          {data && (
             <div className="space-y-6">
               <Card>
                 <CardHeader>

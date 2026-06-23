@@ -15,6 +15,7 @@ interface WearPatternCardProps {
 const WEAR_INFO: Record<string, { icon: string; desc: string; fix: string }> = {
   center_wear:   { icon: "⬛", desc: "Center tread worn faster than edges", fix: "Reduce tire inflation pressure" },
   edge_wear:     { icon: "◀▶", desc: "Edges worn faster than center tread", fix: "Increase tire inflation pressure" },
+  side_wall_wear:{ icon: "SW", desc: "Outer shoulder wear concentrated on the tire edge", fix: "Inspect wheel alignment, camber, and outer shoulder condition" },
   patchy_wear:   { icon: "🔲", desc: "Irregular patches of heavy wear", fix: "Wheel balance and alignment check required" },
   uniform_wear:  { icon: "✅", desc: "Even tread wear across the tire", fix: "Normal wear — maintain regular inspections" },
   one_side_wear: { icon: "◀", desc: "One shoulder significantly more worn", fix: "Camber angle alignment adjustment needed" },

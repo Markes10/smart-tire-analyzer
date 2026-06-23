@@ -45,10 +45,10 @@ const values = [
 ]
 
 const team = [
-  { name: "Dweepan Gain", image: "public/team/dweepan-gain.png" },
-  { name: "Shivam R. Bandekar", image: "public/team/shivam-r-bandekar.png" },
-  { name: "Viren", image: "public/team/viren.png" },
-  { name: "Shubham S. Chodankar", image: "public/team/shubham-s-chodankar.png" },
+  { name: "Dweepan Gain", image: "/team/dweepan-gain.png" },
+  { name: "Shivam R. Bandekar", image: "/team/shivam-r-bandekar.png" },
+  { name: "Viren", image: "/team/viren.png" },
+  { name: "Shubham S. Chodankar", image: "/team/shubham-s-chodankar.png" },
 ]
 
 export default function AboutPage() {

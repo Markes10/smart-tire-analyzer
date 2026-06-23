@@ -97,7 +97,7 @@ export function Footer() {
 
         <div className="mt-12 border-t border-border/50 pt-8">
           <p className="text-center text-sm text-muted-foreground">
-            {new Date().getFullYear()} Smart Tire Analyzer. All rights reserved.
+            2026 Smart Tire Analyzer. All rights reserved.
           </p>
         </div>
       </div>

@@ -11,10 +11,19 @@ export interface AnalyzeParams {
   sidewallImage?: File | string | null;
   latitude?: number;
   longitude?: number;
+  sourceLatitude?: number;
+  sourceLongitude?: number;
+  destinationLatitude?: number;
+  destinationLongitude?: number;
   tireBrand?: string;
   tireModel?: string;
   tireSize?: string;
   mileageKm?: number;
+  tirePressurePsi?: number;
+  temperatureC?: number;
+  vibrationG?: number;
+  speedKmph?: number;
+  context?: Record<string, any>;
 }
 
 export interface AnalysisResult {
@@ -62,18 +71,84 @@ export async function analyzeImage(params: AnalyzeParams): Promise<AnalysisResul
   const fileToUpload = await _fileFromInput(params.imageUri, "tire_scan.jpg");
   const formData = new FormData();
   formData.append("image", fileToUpload, fileToUpload.name);
+  const contextPayload: Record<string, any> = { ...(params.context ?? {}) };
+
+  // Include user's runtime API keys from localStorage
+  try {
+    const raw = typeof window !== "undefined" ? localStorage.getItem("smart_tire_api_keys") : null;
+    if (raw) {
+      const runtimeKeys = JSON.parse(raw);
+      const configured: Record<string, string> = {};
+      for (const [key, value] of Object.entries(runtimeKeys)) {
+        if (value) configured[key] = value as string;
+      }
+      if (Object.keys(configured).length > 0) {
+        contextPayload.runtime_api_keys = configured;
+      }
+    }
+  } catch {
+    // localStorage unavailable or corrupt — skip
+  }
+
+  function setContextValue(key: string, value: unknown) {
+    if (value != null) contextPayload[key] = value;
+  }
 
   if (params.sidewallImage) {
     const sidewallFile = await _fileFromInput(params.sidewallImage, "sidewall_scan.jpg");
     formData.append("sidewall_image", sidewallFile, sidewallFile.name);
   }
 
-  if (params.latitude != null) formData.append("latitude", String(params.latitude));
-  if (params.longitude != null) formData.append("longitude", String(params.longitude));
+  if (params.latitude != null) {
+    formData.append("latitude", String(params.latitude));
+    setContextValue("latitude", params.latitude);
+  }
+  if (params.longitude != null) {
+    formData.append("longitude", String(params.longitude));
+    setContextValue("longitude", params.longitude);
+  }
+  if (params.sourceLatitude != null) {
+    formData.append("source_latitude", String(params.sourceLatitude));
+    setContextValue("source_latitude", params.sourceLatitude);
+  }
+  if (params.sourceLongitude != null) {
+    formData.append("source_longitude", String(params.sourceLongitude));
+    setContextValue("source_longitude", params.sourceLongitude);
+  }
+  if (params.destinationLatitude != null) {
+    formData.append("destination_latitude", String(params.destinationLatitude));
+    setContextValue("destination_latitude", params.destinationLatitude);
+  }
+  if (params.destinationLongitude != null) {
+    formData.append("destination_longitude", String(params.destinationLongitude));
+    setContextValue("destination_longitude", params.destinationLongitude);
+  }
   if (params.tireBrand) formData.append("tire_brand", params.tireBrand);
   if (params.tireModel) formData.append("tire_model", params.tireModel);
   if (params.tireSize) formData.append("tire_size", params.tireSize);
-  if (params.mileageKm != null) formData.append("mileage_km", String(params.mileageKm));
+  if (params.mileageKm != null) {
+    formData.append("mileage_km", String(params.mileageKm));
+    setContextValue("mileage_km", params.mileageKm);
+  }
+  if (params.tirePressurePsi != null) {
+    formData.append("tire_pressure_psi", String(params.tirePressurePsi));
+    setContextValue("tire_pressure_psi", params.tirePressurePsi);
+  }
+  if (params.temperatureC != null) {
+    formData.append("temperature_c", String(params.temperatureC));
+    setContextValue("temperature_c", params.temperatureC);
+  }
+  if (params.vibrationG != null) {
+    formData.append("vibration_g", String(params.vibrationG));
+    setContextValue("vibration_g", params.vibrationG);
+  }
+  if (params.speedKmph != null) {
+    formData.append("speed_kmph", String(params.speedKmph));
+    setContextValue("speed_kmph", params.speedKmph);
+  }
+  if (Object.keys(contextPayload).length > 0) {
+    formData.append("context", JSON.stringify(contextPayload));
+  }
 
   const res = await fetch(`${API_BASE_URL}/analyze`, {
     method: "POST",

@@ -49,6 +49,7 @@ logs/
 *.db
 *.sqlite
 *.sqlite3
+/data/
 
 # IDE
 .idea/
@@ -88,3 +89,15 @@ continuous_learning/retraining/runs/
 # TensorFlow
 tensorflow_datasets/
 node_modules
+
+# Build artifacts
+tsconfig.tsbuildinfo
+
+# Root debug / temp files
+debug_root.bat
+git_status.txt
+*.err.log
+*.out.log
+
+# Root package-lock.json (deps live in frontend/)
+package-lock.json

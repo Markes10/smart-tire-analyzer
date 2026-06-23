@@ -6,12 +6,14 @@ import numpy as np
 import pytest
 import torch
 
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
 
 def test_hybrid_dataset_reads_existing_split():
     from ai_model.hybrid_torch.constants import WEAR_LABELS
     from ai_model.hybrid_torch.dataset import HybridTireDataset
 
-    dataset = HybridTireDataset("dataset/splits/train")
+    dataset = HybridTireDataset(PROJECT_ROOT / "dataset" / "splits" / "train")
     inputs, targets = dataset[0]
 
     assert inputs["image"].shape == (3, 224, 224)

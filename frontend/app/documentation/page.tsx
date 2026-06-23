@@ -257,10 +257,10 @@ export default function DocumentationPage() {
                                                             </CardHeader>
                                                             <CardContent>
                                                                 <div className="space-y-2">
-                                                                    {(matchingArticles.length > 0 ? matchingArticles : category.articles).map((article, idx) => (
+                                                                    {(matchingArticles.length > 0 ? matchingArticles : category.articles).map((article) => (
                                                                         <a
-                                                                            key={idx}
-                                                                            href="#"
+                                                                            key={article.title}
+                                                                            href={`/documentation#${category.id}-${article.title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
                                                                             className="flex items-center justify-between rounded-lg p-3 transition-colors hover:bg-muted/50"
                                                                         >
                                                                             <span className="font-medium text-foreground">{article.title}</span>
@@ -302,10 +302,10 @@ export default function DocumentationPage() {
                                                         </div>
 
                                                         <div className="grid gap-3">
-                                                            {category.articles.map((article, idx) => (
+                                                            {category.articles.map((article) => (
                                                                 <a
-                                                                    key={idx}
-                                                                    href="#"
+                                                                    key={article.title}
+                                                                    href={`/documentation#${category.id}-${article.title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
                                                                     className="group flex items-center justify-between rounded-lg border border-border/50 bg-card/50 p-4 transition-colors hover:bg-muted/50"
                                                                 >
                                                                     <div className="flex items-center gap-3">
@@ -337,10 +337,10 @@ export default function DocumentationPage() {
                                             </CardHeader>
                                             <CardContent>
                                                 <div className="grid gap-3 sm:grid-cols-2">
-                                                    {popularArticles.map((article, idx) => (
+                                                    {popularArticles.map((article) => (
                                                         <a
-                                                            key={idx}
-                                                            href="#"
+                                                            key={article.title}
+                                                            href={`/documentation#popular-${article.title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
                                                             className="flex flex-col rounded-lg border border-border/50 bg-background p-3 transition-colors hover:bg-muted/50"
                                                         >
                                                             <span className="font-medium text-foreground">{article.title}</span>

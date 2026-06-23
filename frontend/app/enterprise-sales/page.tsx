@@ -329,8 +329,8 @@ export default function EnterpriseSalesPage() {
                                 {/* Testimonials */}
                                 <div className="space-y-4">
                                     <h3 className="font-semibold text-foreground">Trusted by Industry Leaders</h3>
-                                    {testimonials.map((testimonial, index) => (
-                                        <Card key={index} className="border-border/50 bg-card/50">
+                                    {testimonials.map((testimonial) => (
+                                        <Card key={testimonial.company} className="border-border/50 bg-card/50">
                                             <CardContent className="pt-6">
                                                 <p className="text-muted-foreground">&ldquo;{testimonial.quote}&rdquo;</p>
                                                 <div className="mt-4 flex items-center justify-between">
