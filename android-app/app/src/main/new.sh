@@ -1,0 +1,1 @@
+./gradlew :app:assembleDebug --gradle-user-home="D:/New folder/.gradle_home"

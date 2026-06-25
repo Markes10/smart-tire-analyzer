@@ -1,0 +1,30 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Outer bold green tire tread block track -->
+    <path
+        android:strokeColor="#28B482"
+        android:strokeWidth="8"
+        android:fillColor="#00000000"
+        android:pathData="M54,54 m-34,0 a34,34 0 1,1 68,0 a34,34 0 1,1 -68,0" />
+
+    <!-- Outer fine rim seal ring -->
+    <path
+        android:strokeColor="#58A6FF"
+        android:strokeWidth="2.2"
+        android:fillColor="#00000000"
+        android:pathData="M54,54 m-26,0 a26,26 0 1,1 52,0 a26,26 0 1,1 -52,0" />
+
+    <!-- Chrome wheel lock central hub -->
+    <path
+        android:fillColor="#58A6FF"
+        android:pathData="M54,54 m-9,0 a9,9 0 1,1 18,0 a9,9 0 1,1 -18,0" />
+
+    <!-- Multi-spoke alloy rim spokes radiating outward -->
+    <path
+        android:strokeColor="#58A6FF"
+        android:strokeWidth="3"
+        android:pathData="M54,45 L54,28 M54,63 L54,80 M45,54 L28,54 M63,54 L80,54 M47.6,47.6 L34,34 M60.4,60.4 L74,74 M47.6,60.4 L34,74 M60.4,47.6 L74,34" />
+</vector>

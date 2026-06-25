@@ -1,0 +1,50 @@
+{
+  "standard_fp32": {
+    "model": "model_latest.tflite",
+    "size_mb": 8.48,
+    "batch_size": 1,
+    "n_runs": 50,
+    "latency_mean_ms": 9.67,
+    "latency_p50_ms": 9.42,
+    "latency_p95_ms": 12.88,
+    "latency_p99_ms": 13.57,
+    "latency_min_ms": 7.98,
+    "latency_max_ms": 13.77,
+    "latency_std_ms": 1.44,
+    "throughput_fps": 103.4,
+    "n_inputs": 1,
+    "n_outputs": 3
+  },
+  "fp16": {
+    "model": "model_fp16.tflite",
+    "size_mb": 4.27,
+    "batch_size": 1,
+    "n_runs": 50,
+    "latency_mean_ms": 10.39,
+    "latency_p50_ms": 9.99,
+    "latency_p95_ms": 14.43,
+    "latency_p99_ms": 14.93,
+    "latency_min_ms": 7.97,
+    "latency_max_ms": 15.22,
+    "latency_std_ms": 1.96,
+    "throughput_fps": 96.2,
+    "n_inputs": 1,
+    "n_outputs": 3
+  },
+  "int8": {
+    "model": "model_int8.tflite",
+    "size_mb": 2.59,
+    "batch_size": 1,
+    "n_runs": 50,
+    "latency_mean_ms": 12.65,
+    "latency_p50_ms": 12.3,
+    "latency_p95_ms": 14.65,
+    "latency_p99_ms": 15.45,
+    "latency_min_ms": 11.26,
+    "latency_max_ms": 15.91,
+    "latency_std_ms": 1.11,
+    "throughput_fps": 79.1,
+    "n_inputs": 1,
+    "n_outputs": 3
+  }
+}

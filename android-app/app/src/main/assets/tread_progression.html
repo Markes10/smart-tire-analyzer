@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body { margin: 0; background-color: #1E222C; font-family: monospace; color: white; overflow: hidden; }
+        .line { fill: none; stroke: #58A6FF; stroke-width: 3; }
+        .area { fill: rgba(88, 166, 255, 0.2); }
+        .grid line { stroke: rgba(255, 255, 255, 0.05); }
+        .axis path, .axis line { stroke: none; }
+        .axis text { fill: #8A9BA8; font-size: 10px; }
+        .dot { fill: white; }
+    </style>
+</head>
+<body>
+    <div id="chart"></div>
+    <script>
+        const data = [
+            {miles: 0, depth: 8.0},
+            {miles: 50, depth: 7.8},
+            {miles: 120, depth: 7.5},
+            {miles: 200, depth: 7.2},
+            {miles: 310, depth: 6.8},
+            {miles: 420, depth: 6.2},
+            {miles: 500, depth: 5.8}
+        ];
+
+        const margin = {top: 20, right: 30, bottom: 30, left: 40},
+            width = window.innerWidth - margin.left - margin.right,
+            height = window.innerHeight - margin.top - margin.bottom;
+
+        const svg = d3.select("#chart").append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+
+        const x = d3.scaleLinear().domain([0, 500]).range([0, width]);
+        const y = d3.scaleLinear().domain([0, 10]).range([height, 0]);
+
+        svg.append("g").attr("class", "grid")
+            .call(d3.axisLeft(y).ticks(5).tickSize(-width).tickFormat(""));
+
+        const area = d3.area()
+            .x(d => x(d.miles))
+            .y0(height)
+            .y1(d => y(d.depth))
+            .curve(d3.curveMonotoneX);
+
+        const line = d3.line()
+            .x(d => x(d.miles))
+            .y(d => y(d.depth))
+            .curve(d3.curveMonotoneX);
+
+        svg.append("path").datum(data).attr("class", "area").attr("d", area);
+        svg.append("path").datum(data).attr("class", "line").attr("d", line);
+
+        svg.selectAll(".dot")
+            .data(data)
+            .enter().append("circle")
+            .attr("class", "dot")
+            .attr("cx", d => x(d.miles))
+            .attr("cy", d => y(d.depth))
+            .attr("r", 3);
+
+        svg.append("g")
+            .attr("transform", `translate(0,${height})`)
+            .attr("class", "axis")
+            .call(d3.axisBottom(x).ticks(5));
+
+        svg.append("g")
+            .attr("class", "axis")
+            .call(d3.axisLeft(y).ticks(5));
+
+        function updateData(newPoints) {
+            // Logic to update chart in real-time
+        }
+    </script>
+</body>
+</html>

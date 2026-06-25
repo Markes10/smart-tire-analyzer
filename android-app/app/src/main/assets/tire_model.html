@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>3D Tire Model</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body { margin: 0; background-color: #0D1117; overflow: hidden; }
+        canvas { width: 100%; height: 100%; }
+    </style>
+</head>
+<body>
+    <script>
+        let scene, camera, renderer, tire, material;
+        let targetTemperature = 38;
+        let currentTemperature = 38;
+
+        function init() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+
+            const geometry = new THREE.TorusGeometry(10, 3, 16, 100);
+            material = new THREE.MeshPhongMaterial({
+                color: 0x28B482,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.8
+            });
+            tire = new THREE.Mesh(geometry, material);
+            scene.add(tire);
+
+            const light = new THREE.PointLight(0xffffff, 1, 100);
+            light.position.set(10, 10, 10);
+            scene.add(light);
+            scene.add(new THREE.AmbientLight(0x404040));
+
+            camera.position.z = 25;
+
+            animate();
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            tire.rotation.y += 0.01;
+
+            // Smooth transition for temperature color
+            currentTemperature += (targetTemperature - currentTemperature) * 0.05;
+            updateColor(currentTemperature);
+
+            renderer.render(scene, camera);
+        }
+
+        function updateColor(temp) {
+            const ratio = (temp - 15) / 95;
+            const color = new THREE.Color();
+            if (ratio < 0.5) {
+                color.setHSL(0.4 - ratio * 0.4, 1, 0.5); // Green to Yellow
+            } else {
+                color.setHSL(0.1 - (ratio - 0.5) * 0.2, 1, 0.5); // Yellow to Red
+            }
+            material.color = color;
+        }
+
+        window.setTemperature = function(temp) {
+            targetTemperature = temp;
+        }
+
+        init();
+    </script>
+</body>
+</html>

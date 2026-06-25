@@ -1,0 +1,6 @@
+{
+  "name": "Tire Digital Twin 3D",
+  "description": "3D digital twin tire simulation visualizer driven by IoT telemetry, presenting real-time wear analysis, thermal profile modeling, and AI-reasoning degradation predictions.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
