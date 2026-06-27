@@ -33,7 +33,8 @@ smart_tire_models*.zip
 smart_tire_saved_models*.zip
 
 # Dataset images (too large for Git)
-dataset/images/*.jpg
+dataset/raw/
+dataset/images/
 dataset/images/*.png
 dataset/images/*.jpeg
 dataset/images/**
