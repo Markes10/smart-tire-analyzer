@@ -23,9 +23,6 @@ android {
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
 
-  packageAlignment {
-    alignmentLevel = 16
-  }
 
   signingConfigs {
     create("release") {
@@ -63,13 +60,15 @@ android {
   }
   packaging {
     jniLibs {
-      useLegacyPackaging = false
+      useLegacyPackaging = true
     }
   }
   testOptions { unitTests { isIncludeAndroidResources = true } }
-    kotlinOptions {
-        jvmTarget = "11"
+  kotlin {
+    compilerOptions {
+      jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
     }
+  }
 }
 
 // Configure the Secrets Gradle Plugin to use .env and .env.example files
@@ -114,8 +113,8 @@ dependencies {
   implementation(libs.okhttp)
   // implementation(libs.play.services.location)
   implementation(libs.retrofit)
-  implementation(libs.litert)
-  implementation(libs.litert.support)
+  implementation(libs.tensorflow.lite)
+  implementation(libs.tensorflow.lite.support)
   testImplementation(libs.androidx.compose.ui.test.junit4)
   testImplementation(libs.androidx.core)
   testImplementation(libs.androidx.junit)

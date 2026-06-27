@@ -13,7 +13,7 @@ import { Sun, Moon, Monitor, Check, Palette, ArrowLeft, RotateCcw } from "lucide
 import { cn } from "@/lib/utils"
 import Link from "next/link"
 import { ApiKeysForm } from "@/components/api-keys-form"
-import { getApiKeys, saveApiKeys } from "@/lib/api-keys"
+import { getApiKeyPreferences, saveApiKeyPreferences } from "@/lib/api-keys"
 
 const colorPresets = [
   { name: "Teal", hue: "160", color: "#10b981" },
@@ -134,9 +134,9 @@ export default function SettingsPage() {
           {/* API Keys Configuration */}
           <ApiKeysForm
             key={apiKeysRefresh}
-            initialKeys={getApiKeys()}
-            onSave={(keys) => {
-              saveApiKeys(keys)
+            initialPrefs={getApiKeyPreferences()}
+            onSave={(prefs) => {
+              saveApiKeyPreferences(prefs)
               setApiKeysRefresh((n) => n + 1)
             }}
           />

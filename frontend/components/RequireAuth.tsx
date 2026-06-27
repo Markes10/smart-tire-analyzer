@@ -3,26 +3,8 @@
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
 
-// Pages that don't require authentication
-const PUBLIC_PATHS = [
-  "/",
-  "/login",
-  "/signup",
-  "/about",
-  "/blog",
-  "/contact",
-  "/documentation",
-  "/technical-support",
-  "/terms",
-  "/cookies",
-  "/api-docs",
-  "/analyze",
-  "/feedback",
-  "/dashboard",
-  "/history",
-  "/settings",
-  "/fleet",
-];
+// Only login and signup are public — all other pages require auth
+const PUBLIC_PATHS = ["/login", "/signup"];
 
 export default function RequireAuth({ children }: { children: React.ReactNode }) {
   const { data: session, status } = useSession();

@@ -1,69 +1,58 @@
 /**
- * api-keys.ts — Browser-side storage for user-provided API keys.
+ * api-keys.ts — User API key preferences (which services to use).
  *
- * Keys are persisted in localStorage so they survive page reloads.
- * The user enters these during sign-up and can update them in Settings.
+ * SECURITY: Actual API key values are NEVER stored in the browser.
+ * Keys are sent securely to the backend where they are kept in-memory
+ * for the duration of a session and encrypted at rest if persisted.
+ *
+ * The frontend only stores boolean flags indicating which services
+ * the user wants to use their own keys for.
  */
 
-const STORAGE_KEY = "smart_tire_api_keys";
-
-export interface UserApiKeys {
-  gemini: string;
-  mapillary: string;
-  openweather: string;
-  googleClientId: string;
-  googleClientSecret: string;
+export interface UserApiKeyPreferences {
+  useOwnGemini: boolean;
+  useOwnMapillary: boolean;
+  useOwnOpenweather: boolean;
 }
 
-const emptyKeys: UserApiKeys = {
-  gemini: "",
-  mapillary: "",
-  openweather: "",
-  googleClientId: "",
-  googleClientSecret: "",
+const STORAGE_KEY = "smart_tire_api_key_prefs";
+
+const defaultPrefs: UserApiKeyPreferences = {
+  useOwnGemini: false,
+  useOwnMapillary: false,
+  useOwnOpenweather: false,
 };
 
-export function getApiKeys(): UserApiKeys {
-  if (typeof window === "undefined") return emptyKeys;
+/**
+ * Get the user's API key preferences (which services they want to use their own keys for).
+ */
+export function getApiKeyPreferences(): UserApiKeyPreferences {
+  if (typeof window === "undefined") return defaultPrefs;
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return emptyKeys;
+    if (!raw) return defaultPrefs;
     const parsed = JSON.parse(raw);
-    return { ...emptyKeys, ...parsed };
+    return { ...defaultPrefs, ...parsed };
   } catch {
-    return emptyKeys;
+    return defaultPrefs;
   }
 }
 
-export function saveApiKeys(keys: Partial<UserApiKeys>): UserApiKeys {
-  if (typeof window === "undefined") return emptyKeys;
-  const current = getApiKeys();
-  const updated = { ...current, ...keys };
+/**
+ * Save the user's API key preferences.
+ */
+export function saveApiKeyPreferences(prefs: Partial<UserApiKeyPreferences>): UserApiKeyPreferences {
+  if (typeof window === "undefined") return defaultPrefs;
+  const current = getApiKeyPreferences();
+  const updated = { ...current, ...prefs };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
   return updated;
 }
 
-export function hasApiKeys(): boolean {
-  const keys = getApiKeys();
-  return !!(
-    keys.gemini ||
-    keys.mapillary ||
-    keys.openweather ||
-    keys.googleClientId
-  );
-}
-
 /**
- * Returns only the keys that are actually configured (non-empty).
- * Useful for sending to the backend when making analysis requests.
+ * Check if the user has configured any API key preferences.
  */
-export function getConfiguredApiKeys(): Partial<UserApiKeys> {
-  const keys = getApiKeys();
-  const configured: Partial<UserApiKeys> = {};
-  for (const [key, value] of Object.entries(keys)) {
-    if (value) {
-      (configured as any)[key] = value;
-    }
-  }
-  return configured;
+export function hasApiKeyPreferences(): boolean {
+  const prefs = getApiKeyPreferences();
+  return prefs.useOwnGemini || prefs.useOwnMapillary || prefs.useOwnOpenweather;
 }

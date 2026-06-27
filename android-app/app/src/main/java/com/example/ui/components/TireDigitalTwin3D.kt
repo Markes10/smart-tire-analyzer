@@ -40,6 +40,10 @@ import android.graphics.RectF
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
+import com.example.ui.theme.StatusCritical
+import com.example.ui.theme.StatusInfo
+import com.example.ui.theme.StatusSuccess
+import com.example.ui.theme.StatusWarning
 
 // Representation of a 3D point in space
 data class Point3D(val x: Float, val y: Float, val z: Float) {
@@ -229,7 +233,7 @@ fun TireDigitalTwin3D(
         ) {
             Text(
                 text = "IOT TELEMETRY HUD",
-                color = Color(0x58, 0xA6, 0xFF),
+                color = StatusInfo,
                 fontSize = 9.sp,
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold,
@@ -243,7 +247,7 @@ fun TireDigitalTwin3D(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = "SPEED", color = Color(0x8A, 0x9B, 0xA8), fontSize = 8.sp, fontFamily = FontFamily.Monospace)
+                    Text(text = "SPEED", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 8.sp, fontFamily = FontFamily.Monospace)
                     Text(
                         text = if (useMetric) "${speed.toInt()} km/h" else "${(speed * 0.621f).toInt()} mph",
                         color = Color.White,
@@ -264,16 +268,16 @@ fun TireDigitalTwin3D(
                         modifier = Modifier
                             .fillMaxWidth(fraction = (speed / 120f).coerceIn(0f, 1f))
                             .fillMaxHeight()
-                            .background(Color(0x58, 0xA6, 0xFF))
+                            .background(StatusInfo)
                     )
                 }
             }
 
             // Pressure item
             val pColor = when {
-                pressure < 22f || pressure > 38f -> Color(0xFF, 0x4B, 0x4B)
-                pressure < 27.5f || pressure > 35.5f -> Color(0xFF, 0xD4, 0x3F)
-                else -> Color(0x28, 0xB4, 0x82)
+                pressure < 22f || pressure > 38f -> StatusCritical
+                pressure < 27.5f || pressure > 35.5f -> StatusWarning
+                else -> StatusSuccess
             }
             Column {
                 Row(
@@ -281,7 +285,7 @@ fun TireDigitalTwin3D(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = "PRESSURE", color = Color(0x8A, 0x9B, 0xA8), fontSize = 8.sp, fontFamily = FontFamily.Monospace)
+                    Text(text = "PRESSURE", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 8.sp, fontFamily = FontFamily.Monospace)
                     Text(
                         text = if (useMetric) "${(pressure * 0.0689f).toInt()} bar" else "${pressure.toInt()} psi",
                         color = pColor,
@@ -309,9 +313,9 @@ fun TireDigitalTwin3D(
 
             // Temp item
             val tColor = when {
-                temperature > 80f -> Color(0xFF, 0x4B, 0x4B)
-                temperature > 50f -> Color(0xFF, 0x5E, 0x36)
-                else -> Color(0x58, 0xA6, 0xFF)
+                temperature > 80f -> StatusCritical
+                temperature > 50f -> StatusWarning
+                else -> StatusInfo
             }
             Column {
                 Row(
@@ -319,7 +323,7 @@ fun TireDigitalTwin3D(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = "SYS TEMP", color = Color(0x8A, 0x9B, 0xA8), fontSize = 8.sp, fontFamily = FontFamily.Monospace)
+                    Text(text = "SYS TEMP", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 8.sp, fontFamily = FontFamily.Monospace)
                     Text(
                         text = if (useMetric) "${temperature.toInt()} °C" else "${(temperature * 9 / 5 + 32).toInt()} °F",
                         color = tColor,
@@ -360,7 +364,7 @@ fun TireDigitalTwin3D(
         ) {
             Text(
                 text = "TWIN SYSTEM STATUS",
-                color = Color(0x50, 0xFA, 0x7B),
+                color = StatusSuccess,
                 fontSize = 9.sp,
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold,
@@ -369,11 +373,11 @@ fun TireDigitalTwin3D(
 
             // Dynamic anomaly summary alert badge
             val (alertText, alertColor) = when {
-                pressure < 22f -> "CRIT UNDER-INFLATION" to Color(0xFF, 0x4B, 0x4B)
-                pressure > 38f -> "CRIT OVER-INFLATION" to Color(0xFF, 0x4B, 0x4B)
-                temperature > 80f -> "CRIT OVERHEAT" to Color(0xFF, 0x4B, 0x4B)
-                speed > 100f -> "HIGH SPIN RATE" to Color(0xFF, 0x5E, 0x36)
-                else -> "NOMINAL STATE - OK" to Color(0x28, 0xB4, 0x82)
+                pressure < 22f -> "CRIT UNDER-INFLATION" to StatusCritical
+                pressure > 38f -> "CRIT OVER-INFLATION" to StatusCritical
+                temperature > 80f -> "CRIT OVERHEAT" to StatusCritical
+                speed > 100f -> "HIGH SPIN RATE" to StatusWarning
+                else -> "NOMINAL STATE - OK" to StatusSuccess
             }
 
             Box(
@@ -399,23 +403,23 @@ fun TireDigitalTwin3D(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(text = "RENDER:", color = Color(0x8A, 0x9B, 0xA8), fontSize = 8.sp, fontFamily = FontFamily.Monospace)
-                    Text(text = if (isThermalMode) "THERMAL" else "VECTOR GL", color = if (isThermalMode) Color(0xFF, 0x5E, 0x36) else Color(0x58, 0xA6, 0xFF), fontSize = 8.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
+                    Text(text = "RENDER:", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 8.sp, fontFamily = FontFamily.Monospace)
+                    Text(text = if (isThermalMode) "THERMAL" else "VECTOR GL", color = if (isThermalMode) StatusWarning else StatusInfo, fontSize = 8.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
                 }
                 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(text = "PROFILE:", color = Color(0x8A, 0x9B, 0xA8), fontSize = 8.sp, fontFamily = FontFamily.Monospace)
-                    Text(text = wearPattern.uppercase(), color = if (wearPattern == "Normal") Color(0x28, 0xB4, 0x82) else Color(0xFF, 0xD4, 0x3F), fontSize = 8.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
+                    Text(text = "PROFILE:", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 8.sp, fontFamily = FontFamily.Monospace)
+                    Text(text = wearPattern.uppercase(), color = if (wearPattern == "Normal") StatusSuccess else StatusWarning, fontSize = 8.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
                 }
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(text = "YAW / PITCH:", color = Color(0x8A, 0x9B, 0xA8), fontSize = 8.sp, fontFamily = FontFamily.Monospace)
+                    Text(text = "YAW / PITCH:", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 8.sp, fontFamily = FontFamily.Monospace)
                     Text(text = "${yaw.toInt()}° / ${pitch.toInt()}°", color = Color.White, fontSize = 8.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
                 }
 
@@ -423,8 +427,8 @@ fun TireDigitalTwin3D(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(text = "EXPLODED:", color = Color(0x8A, 0x9B, 0xA8), fontSize = 8.sp, fontFamily = FontFamily.Monospace)
-                    Text(text = if (isExplodedView) "ACTIVE" else "OFF", color = if (isExplodedView) Color(0xFF, 0xD4, 0x3F) else Color(0x8A, 0x9B, 0xA8), fontSize = 8.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
+                    Text(text = "EXPLODED:", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 8.sp, fontFamily = FontFamily.Monospace)
+                    Text(text = if (isExplodedView) "ACTIVE" else "OFF", color = if (isExplodedView) StatusWarning else MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 8.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
                 }
             }
         }
@@ -438,7 +442,7 @@ fun TireDigitalTwin3D(
             TextButton(onClick = { useWebEngine = !useWebEngine }) {
                 Text(
                     text = if (useWebEngine) "SWITCH TO NATIVE ENGINE" else "SWITCH TO THREE.JS ENGINE",
-                    color = Color(0x58, 0xA6, 0xFF),
+                    color = StatusInfo,
                     fontSize = 10.sp,
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Bold
@@ -574,12 +578,12 @@ fun TireDigitalTwin3D(
                         vColor = when (wearPattern) {
                             "Center Wear" -> {
                                 if (j in listOf(3, 4)) {
-                                    Color(0xFF, 0x4B, 0x4B) // Critical worn orange-red center
+                                    StatusCritical // Critical worn orange-red center
                                 } else Color(0x40, 0x51, 0x61) // Tread baseline
                             }
                             "Edge Wear" -> {
                                 if (j in listOf(1, 5)) {
-                                    Color(0xFF, 0x5E, 0x36) // Shoulder alert zones
+                                    StatusWarning // Shoulder alert zones
                                 } else Color(0x40, 0x51, 0x61)
                             }
                             "Camber Wear" -> {
@@ -591,14 +595,14 @@ fun TireDigitalTwin3D(
                                 // Scalloped patches around circumference
                                 val patchFreq = 7
                                 val isPatch = (i % patchFreq < 2) && j in listOf(1, 5)
-                                if (isPatch) Color(0xFF, 0xD4, 0x3F) else Color(0x40, 0x51, 0x61)
+                                if (isPatch) StatusWarning else Color(0x40, 0x51, 0x61)
                             }
                             else -> {
                                 // Safe optimal cyan/teal aesthetic highlights
                                 if (j in listOf(0, stepsWidth - 1)) {
                                     Color(0x3A, 0x3D, 0x50) // Darker rubber sidewalls
                                 } else {
-                                    Color(0x28, 0xB4, 0x82) // Healthy vibrant cyber green blocks
+                                    StatusSuccess // Healthy vibrant cyber green blocks
                                 }
                             }
                         }
@@ -642,7 +646,7 @@ fun TireDigitalTwin3D(
                     val rotatedTheta = theta + spinRad
 
                     vertices.add(Point3D(xVal, r * sin(rotatedTheta), r * cos(rotatedTheta)))
-                    vertexColors.add(Color(0x58, 0xA6, 0xFF)) // Chromium tech blue rim shade
+                    vertexColors.add(StatusInfo) // Chromium tech blue rim shade
                 }
             }
 
@@ -730,7 +734,7 @@ fun TireDigitalTwin3D(
                     val nextIdx = layerBaseIdx + (i + 1) % rimStepsTheta
 
                     // Rim circle outline
-                    segments.add(Segment3D(currentIdx, nextIdx, Color(0x58, 0xA6, 0xFF).copy(alpha = 0.6f), thickness = 2f, isSpoke = true))
+                    segments.add(Segment3D(currentIdx, nextIdx, StatusInfo.copy(alpha = 0.6f), thickness = 2f, isSpoke = true))
 
                     // Cross support barrels connecting side rims
                     if (layer == 0) {
@@ -794,7 +798,7 @@ fun TireDigitalTwin3D(
                 // Pinpoint 4 distinctive points around circumference in 3D
                 val markersAngle = listOf(-30f, 60f, 150f, 240f)
                 val markerLabels = listOf("T1: Tread 1.8mm (Crit)", "T2: Tread 4.1mm (Good)", "T3: Center 1.2mm (Crit)", "T4: Flange Align ok")
-                val markerColors = listOf(Color(0xFF, 0x4B, 0x4B), Color(0x28, 0xB4, 0x82), Color(0xFF, 0x4B, 0x4B), Color(0x58, 0xA6, 0xFF))
+                val markerColors = listOf(StatusCritical, StatusSuccess, StatusCritical, StatusInfo)
 
                 markersAngle.forEachIndexed { markerIdx, angle ->
                     val angleRad = (angle + rollAngle) * (Math.PI / 180).toFloat()
@@ -869,7 +873,7 @@ fun TireDigitalTwin3D(
                 // Render highlighting ring if Speed Channel is active
                 if (activeChannel == "SPEED") {
                     drawRoundRect(
-                        color = Color(0x58, 0xA6, 0xFF).copy(alpha = 0.85f),
+                        color = StatusInfo.copy(alpha = 0.85f),
                         topLeft = Offset(plateX - 3f, plateY - 3f),
                         size = androidx.compose.ui.geometry.Size(144f, 46f),
                         cornerRadius = androidx.compose.ui.geometry.CornerRadius(6.dp.toPx(), 6.dp.toPx()),
@@ -883,8 +887,8 @@ fun TireDigitalTwin3D(
                     lineTo(speedScreenPos.x - 20f, speedScreenPos.y - 15f)
                     lineTo(if (speedScreenPos.x > cx) plateX + 138f else plateX, plateY + 15f)
                 }
-                drawPath(path, Color(0x58, 0xA6, 0xFF).copy(alpha = 0.5f), style = Stroke(width = 1.dp.toPx()))
-                drawCircle(Color(0x58, 0xA6, 0xFF).copy(alpha = 0.8f), radius = 3.dp.toPx(), center = speedScreenPos)
+                drawPath(path, StatusInfo.copy(alpha = 0.5f), style = Stroke(width = 1.dp.toPx()))
+                drawCircle(StatusInfo.copy(alpha = 0.8f), radius = 3.dp.toPx(), center = speedScreenPos)
 
                 // 2. HUD Plate background (Glassmorphic look)
                 drawRoundRect(
@@ -894,7 +898,7 @@ fun TireDigitalTwin3D(
                     cornerRadius = androidx.compose.ui.geometry.CornerRadius(4.dp.toPx(), 4.dp.toPx())
                 )
                 drawRoundRect(
-                    color = Color(0x58, 0xA6, 0xFF).copy(alpha = if (isDarkTheme) 0.3f else 0.5f),
+                    color = StatusInfo.copy(alpha = if (isDarkTheme) 0.3f else 0.5f),
                     topLeft = Offset(plateX, plateY),
                     size = androidx.compose.ui.geometry.Size(138f, 40f),
                     cornerRadius = androidx.compose.ui.geometry.CornerRadius(4.dp.toPx(), 4.dp.toPx()),
@@ -909,7 +913,7 @@ fun TireDigitalTwin3D(
                     size = androidx.compose.ui.geometry.Size(gaugeWidth, 2.5f.dp.toPx())
                 )
                 drawRect(
-                    color = Color(0x58, 0xA6, 0xFF),
+                    color = StatusInfo,
                     topLeft = Offset(plateX + 10f, plateY + 28f),
                     size = androidx.compose.ui.geometry.Size(gaugeWidth * (localSpeed / 120f).coerceIn(0f, 1f), 2.5f.dp.toPx())
                 )
@@ -947,9 +951,9 @@ fun TireDigitalTwin3D(
                 plateBounds.pressureBounds.set(plateX, plateY, plateX + 138f, plateY + 40f)
 
                 val pColor = when {
-                    localPressure < 22f || localPressure > 38f -> Color(0xFF, 0x4B, 0x4B)
-                    localPressure < 27.5f || localPressure > 35.5f -> Color(0xFF, 0xD4, 0x3F)
-                    else -> Color(0x28, 0xB4, 0x82)
+                    localPressure < 22f || localPressure > 38f -> StatusCritical
+                    localPressure < 27.5f || localPressure > 35.5f -> StatusWarning
+                    else -> StatusSuccess
                 }
 
                 // Render highlighting ring if Pressure Channel is active
@@ -1044,9 +1048,9 @@ fun TireDigitalTwin3D(
                 plateBounds.temperatureBounds.set(plateX, plateY, plateX + 138f, plateY + 40f)
 
                 val tColor = when {
-                    localTemperature > 80f -> Color(0xFF, 0x4B, 0x4B)
-                    localTemperature > 50f -> Color(0xFF, 0x5E, 0x36)
-                    else -> Color(0x58, 0xA6, 0xFF)
+                    localTemperature > 80f -> StatusCritical
+                    localTemperature > 50f -> StatusWarning
+                    else -> StatusInfo
                 }
 
                 // Render highlighting ring if Temperature Channel is active
@@ -1131,7 +1135,7 @@ fun TireDigitalTwin3D(
                 strokeWidth = 10.dp.toPx()
             )
             drawLine(
-                color = Color(0x50, 0xFA, 0x7B),
+                color = StatusSuccess,
                 start = Offset(0f, scanY),
                 end = Offset(size.width, scanY),
                 strokeWidth = 2.dp.toPx()
@@ -1141,7 +1145,7 @@ fun TireDigitalTwin3D(
             activeTouchPoints.forEach { pt ->
                 // Outer rotating/pulsating glow orbit ring
                 drawCircle(
-                    color = Color(0x58, 0xA6, 0xFF).copy(alpha = 0.35f), // Neon Slate Blue Glow
+                    color = StatusInfo.copy(alpha = 0.35f), // Neon Slate Blue Glow
                     radius = 20.dp.toPx(),
                     center = pt,
                     style = Stroke(width = 1.dp.toPx())
@@ -1149,7 +1153,7 @@ fun TireDigitalTwin3D(
                 
                 // Very subtle wider halo
                 drawCircle(
-                    color = Color(0x58, 0xA6, 0xFF).copy(alpha = 0.12f),
+                    color = StatusInfo.copy(alpha = 0.12f),
                     radius = 30.dp.toPx(),
                     center = pt
                 )
@@ -1209,13 +1213,13 @@ fun TireDigitalTwin3D(
         ) {
             Card(
                 shape = RoundedCornerShape(12.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFF, 0xFF, 0xFF).copy(alpha = 0.08f)),
+                colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.08f)),
                 border = BorderStroke(
                     1.dp,
                     when (activeChannel) {
-                        "SPEED" -> Color(0x58, 0xA6, 0xFF)
-                        "PRESSURE" -> Color(0x28, 0xB4, 0x82)
-                        else -> Color(0xFF, 0x5E, 0x36)
+                        "SPEED" -> StatusInfo
+                        "PRESSURE" -> StatusSuccess
+                        else -> StatusWarning
                     }.copy(alpha = 0.6f)
                 ),
                 modifier = Modifier
@@ -1241,9 +1245,9 @@ fun TireDigitalTwin3D(
                                 else -> Icons.Default.Thermostat
                             }
                             val channelColor = when (activeChannel) {
-                                "SPEED" -> Color(0x58, 0xA6, 0xFF)
-                                "PRESSURE" -> Color(0x28, 0xB4, 0x82)
-                                else -> Color(0xFF, 0x5E, 0x36)
+                                "SPEED" -> StatusInfo
+                                "PRESSURE" -> StatusSuccess
+                                else -> StatusWarning
                             }
                             Icon(
                                 imageVector = channelIcon,
@@ -1272,7 +1276,7 @@ fun TireDigitalTwin3D(
                             Icon(
                                 imageVector = Icons.Default.Close,
                                 contentDescription = "Close",
-                                tint = Color(0x8A, 0x9B, 0xA8),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.size(14.dp)
                             )
                         }
@@ -1284,7 +1288,7 @@ fun TireDigitalTwin3D(
                         "SPEED" -> {
                             Text(
                                 text = "Experience real-time rotational telemetry. Drag the slider to accelerate or stall the digital twin speed to test structural integrity at velocity.",
-                                color = Color(0x8A, 0x9B, 0xA8),
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 fontSize = 10.sp,
                                 fontFamily = FontFamily.Monospace,
                                 lineHeight = 13.sp
@@ -1295,7 +1299,7 @@ fun TireDigitalTwin3D(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(10.dp)
                             ) {
-                                Icon(Icons.Default.PlayArrow, contentDescription = null, tint = Color(0x58, 0xA6, 0xFF), modifier = Modifier.size(14.dp))
+                                Icon(Icons.Default.PlayArrow, contentDescription = null, tint = StatusInfo, modifier = Modifier.size(14.dp))
                                 Spacer(modifier = Modifier.width(2.dp))
                                 Slider(
                                     value = localSpeed,
@@ -1303,8 +1307,8 @@ fun TireDigitalTwin3D(
                                     valueRange = 0f..150f,
                                     modifier = Modifier.weight(1f),
                                     colors = SliderDefaults.colors(
-                                        thumbColor = Color(0x58, 0xA6, 0xFF),
-                                        activeTrackColor = Color(0x58, 0xA6, 0xFF),
+                                        thumbColor = StatusInfo,
+                                        activeTrackColor = StatusInfo,
                                         inactiveTrackColor = Color(0x1F, 0x24, 0x2C)
                                     )
                                 )
@@ -1321,7 +1325,7 @@ fun TireDigitalTwin3D(
                         "PRESSURE" -> {
                             Text(
                                 text = "Adjust active chamber pressure. Low pressure sags sidewalls (increasing rolling resistance); high pressure swells tread (causing localized wear).",
-                                color = Color(0x8A, 0x9B, 0xA8),
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 fontSize = 10.sp,
                                 fontFamily = FontFamily.Monospace,
                                 lineHeight = 13.sp
@@ -1332,7 +1336,7 @@ fun TireDigitalTwin3D(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(10.dp)
                             ) {
-                                Icon(Icons.Default.Build, contentDescription = null, tint = Color(0x28, 0xB4, 0x82), modifier = Modifier.size(14.dp))
+                                Icon(Icons.Default.Build, contentDescription = null, tint = StatusSuccess, modifier = Modifier.size(14.dp))
                                 Spacer(modifier = Modifier.width(2.dp))
                                 Slider(
                                     value = localPressure,
@@ -1340,8 +1344,8 @@ fun TireDigitalTwin3D(
                                     valueRange = 15f..45f,
                                     modifier = Modifier.weight(1f),
                                     colors = SliderDefaults.colors(
-                                        thumbColor = Color(0x28, 0xB4, 0x82),
-                                        activeTrackColor = Color(0x28, 0xB4, 0x82),
+                                        thumbColor = StatusSuccess,
+                                        activeTrackColor = StatusSuccess,
                                         inactiveTrackColor = Color(0x1F, 0x24, 0x2C)
                                     )
                                 )
@@ -1358,7 +1362,7 @@ fun TireDigitalTwin3D(
                         "TEMPERATURE" -> {
                             Text(
                                 text = "Tweak thermodynamic energy signatures inside the tire structure. Increased temperature creates high friction thermal signatures across the crown mesh.",
-                                color = Color(0x8A, 0x9B, 0xA8),
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 fontSize = 10.sp,
                                 fontFamily = FontFamily.Monospace,
                                 lineHeight = 13.sp
@@ -1369,7 +1373,7 @@ fun TireDigitalTwin3D(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(10.dp)
                             ) {
-                                Icon(Icons.Default.Thermostat, contentDescription = null, tint = Color(0xFF, 0x5E, 0x36), modifier = Modifier.size(14.dp))
+                                Icon(Icons.Default.Thermostat, contentDescription = null, tint = StatusWarning, modifier = Modifier.size(14.dp))
                                 Spacer(modifier = Modifier.width(2.dp))
                                 Slider(
                                     value = localTemperature,
@@ -1377,8 +1381,8 @@ fun TireDigitalTwin3D(
                                     valueRange = 15f..110f,
                                     modifier = Modifier.weight(1f),
                                     colors = SliderDefaults.colors(
-                                        thumbColor = Color(0xFF, 0x5E, 0x36),
-                                        activeTrackColor = Color(0xFF, 0x5E, 0x36),
+                                        thumbColor = StatusWarning,
+                                        activeTrackColor = StatusWarning,
                                         inactiveTrackColor = Color(0x1F, 0x24, 0x2C)
                                     )
                                 )
@@ -1397,7 +1401,7 @@ fun TireDigitalTwin3D(
                             Button(
                                 onClick = { localThermalMode = !localThermalMode },
                                 colors = ButtonDefaults.buttonColors(
-                                    containerColor = if (localThermalMode) Color(0xFF, 0x5E, 0x36) else Color(0x21, 0x26, 0x2D),
+                                    containerColor = if (localThermalMode) StatusWarning else Color(0x21, 0x26, 0x2D),
                                     contentColor = Color.White
                                 ),
                                 modifier = Modifier.fillMaxWidth(),

@@ -24,6 +24,8 @@ export const metadata: Metadata = {
     ],
     apple: '/apple-icon.png',
   },
+  // Note: Content-Security-Policy is set via HTTP headers in next.config.mjs
+  // (meta http-equiv CSP does not support all directives like frame-ancestors)
 }
 
 export default function RootLayout({

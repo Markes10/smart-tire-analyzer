@@ -5,6 +5,7 @@ driving advice, and replacement recommendations.
 Falls back to rule-based system when API is unavailable.
 """
 
+import hashlib
 import os
 import json
 import logging
@@ -14,6 +15,7 @@ from typing import Dict, Optional, Any
 
 from app.config import settings
 from app.services.api_key_rotator import get_gemini_rotator, APIKeyRotator
+from app.services.cache_service import get_cache
 
 logger = logging.getLogger(__name__)
 
@@ -126,6 +128,15 @@ class GeminiService:
 
         prompt = self._build_prompt(predictions, context)
 
+        # Try cache before making API call
+        prompt_hash = hashlib.sha256(prompt.encode()).hexdigest()
+        cache = get_cache()
+        cache_key = f"gemini:{prompt_hash}"
+        cached = await cache.get(cache_key)
+        if cached is not None:
+            logger.info("Cache hit for Gemini reasoning")
+            return cached
+
         # Try each configured key once (rotate on quota/forbidden/timeouts)
         if not self.enabled:
             return self._rule_based_fallback(predictions)
@@ -142,6 +153,7 @@ class GeminiService:
                 except Exception:
                     pass
                 result["source"] = "gemini"
+                await cache.set(cache_key, result, ttl=86400)
                 return result
             except aiohttp.ClientResponseError as e:
                 status = getattr(e, "status", None)

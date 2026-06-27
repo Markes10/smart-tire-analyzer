@@ -294,4 +294,6 @@ if __name__ == "__main__":
     model.summary()
     dummy = cast(tf.Tensor, TF.random.normal((2, 224, 224, 4)))
     out = cast(tf.Tensor, model(dummy, training=False))
-    print(f"ViT output shape: {out.shape}")
+    import logging
+    logger = logging.getLogger(__name__)
+    logger.debug("ViT output shape: %s", out.shape)

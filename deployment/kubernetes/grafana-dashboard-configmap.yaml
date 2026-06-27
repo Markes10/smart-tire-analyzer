@@ -1,0 +1,400 @@
+# ── Smart Tire Analyzer — Grafana Dashboard: TLS & cert-manager Monitoring ──
+# Tracks certificate expiry, cert-manager health, ACME renewal status, and
+# application health metrics.
+#
+# Import methods:
+#   1. K8s: kubectl apply -f deployment/kubernetes/grafana-dashboard-configmap.yaml
+#   2. Manual: kubectl get configmap grafana-dashboard-tls-monitoring \
+#                -n smart-tire -o jsonpath='{.data.tls-monitoring\.json}' | \
+#                curl -X POST -H "Content-Type: application/json" \
+#                -d @- http://localhost:3000/api/dashboards/import
+#
+# Prerequisites:
+#   - Prometheus data source configured in Grafana as "Prometheus" (UID: prometheus)
+#     If your datasource uses a different UID, search/replace "prometheus" in the JSON
+#   - cert-manager metrics being scraped (via the PodMonitor in prometheus-rules.yaml)
+#   - kube-state-metrics installed (for Pod Status panel)
+# ──────────────────────────────────────────────────────────────────────────
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-tls-monitoring
+  namespace: smart-tire
+  labels:
+    app: smart-tire-monitoring
+    grafana_dashboard: "1"
+data:
+  tls-monitoring.json: |
+    {
+      "title": "Smart Tire Analyzer - TLS & cert-manager",
+      "description": "Monitors TLS certificate expiry, cert-manager health, ACME renewal status, and app health",
+      "tags": ["tls", "cert-manager", "smart-tire"],
+      "schemaVersion": 38,
+      "version": 1,
+      "uid": "smart-tire-tls",
+      "timezone": "browser",
+      "editable": true,
+      "refresh": "30s",
+      "time": { "from": "now-6h", "to": "now" },
+      "panels": [
+        {
+          "title": "Certificate Expiry Countdown",
+          "type": "stat",
+          "gridPos": { "h": 6, "w": 6, "x": 0, "y": 0 },
+          "id": 1,
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "dtd",
+              "color": { "mode": "thresholds" },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  { "color": "red", "value": null },
+                  { "color": "red", "value": 3 },
+                  { "color": "orange", "value": 7 },
+                  { "color": "yellow", "value": 21 },
+                  { "color": "green", "value": 30 }
+                ]
+              },
+              "mappings": [
+                { "type": 1, "options": { "0": { "text": "EXPIRED" } } }
+              ]
+            }
+          },
+          "options": {
+            "colorMode": "background",
+            "graphMode": "area",
+            "reduceOptions": { "calcs": ["min"], "fields": "", "values": false },
+            "textMode": "auto"
+          },
+          "targets": [
+            {
+              "expr": "min(certmanager_certificate_expiration_timestamp_seconds - time()) / 86400",
+              "legendFormat": "Min days to expiry",
+              "refId": "A"
+            }
+          ],
+          "description": "Days until the soonest certificate expires. Red=<3d, Orange=<7d, Yellow=<21d, Green=OK"
+        },
+        {
+          "title": "Certificates by Expiry",
+          "type": "table",
+          "gridPos": { "h": 6, "w": 12, "x": 6, "y": 0 },
+          "id": 2,
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "thresholds" },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  { "color": "red", "value": null },
+                  { "color": "red", "value": 259200 },
+                  { "color": "orange", "value": 604800 },
+                  { "color": "yellow", "value": 1814400 },
+                  { "color": "green", "value": 2592000 }
+                ]
+              },
+              "unit": "s"
+            }
+          },
+          "options": {
+            "sortBy": [
+              { "displayName": "Value", "desc": false }
+            ]
+          },
+          "targets": [
+            {
+              "expr": "certmanager_certificate_expiration_timestamp_seconds - time()",
+              "format": "table",
+              "instant": true,
+              "refId": "A"
+            }
+          ],
+          "transformations": [
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": { "Time": true, "__name__": true, "instance": true, "job": true },
+                "renameByName": { "name": "Certificate", "namespace": "Namespace", "Value": "Seconds Left" }
+              }
+            }
+          ],
+          "description": "All managed certificates with seconds remaining before expiry"
+        },
+        {
+          "title": "Certificate Ready Status",
+          "type": "stat",
+          "gridPos": { "h": 6, "w": 4, "x": 0, "y": 6 },
+          "id": 3,
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "thresholds" },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  { "color": "red", "value": null },
+                  { "color": "red", "value": 0.5 },
+                  { "color": "green", "value": 0.9 }
+                ]
+              },
+              "mappings": [
+                { "type": 1, "options": { "0": { "text": "NOT READY" }, "1": { "text": "All Ready" } } }
+              ]
+            }
+          },
+          "options": {
+            "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }
+          },
+          "targets": [
+            {
+              "expr": "count(certmanager_certificate_ready_status{condition=\"True\"} == 1) or vector(0)",
+              "legendFormat": "Ready certificates",
+              "refId": "A"
+            }
+          ],
+          "description": "Count of certificates in Ready=True state"
+        },
+        {
+          "title": "Non-Ready Certificates",
+          "type": "table",
+          "gridPos": { "h": 6, "w": 8, "x": 4, "y": 6 },
+          "id": 4,
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "thresholds" },
+              "thresholds": { "mode": "absolute", "steps": [ { "color": "green", "value": null } ] }
+            }
+          },
+          "options": {},
+          "targets": [
+            {
+              "expr": "certmanager_certificate_ready_status{condition!=\"True\"} == 1",
+              "format": "table",
+              "instant": true,
+              "refId": "A"
+            }
+          ],
+          "transformations": [
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": { "Time": true, "__name__": true, "instance": true, "job": true, "Value": true },
+                "renameByName": { "name": "Certificate", "namespace": "Namespace", "condition": "Status" }
+              }
+            }
+          ],
+          "description": "Certificates that are not Ready. May indicate issuance or renewal failures."
+        },
+        {
+          "title": "Certificate Renewal Errors",
+          "type": "timeseries",
+          "gridPos": { "h": 6, "w": 8, "x": 12, "y": 6 },
+          "id": 5,
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "palette-classic" },
+              "custom": {
+                "drawStyle": "bars",
+                "fillOpacity": 70,
+                "gradientMode": "opacity",
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "showPoints": "never",
+                "spanNulls": false,
+                "stacking": { "group": "A", "mode": "normal" },
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "scaleDistribution": { "type": "linear" },
+                "hideFrom": { "legend": false, "tooltip": false, "viz": false },
+                "thresholdsStyle": { "mode": "off" }
+              },
+              "mappings": [],
+              "thresholds": { "mode": "absolute", "steps": [ { "color": "green", "value": null } ] },
+              "unit": "short"
+            }
+          },
+          "options": {
+            "legend": { "calcs": ["sum", "max"], "displayMode": "table", "placement": "bottom", "showLegend": true },
+            "tooltip": { "mode": "multi", "sort": "none" }
+          },
+          "targets": [
+            {
+              "expr": "sum by (name) (rate(certmanager_certificate_renewal_errors_total[5m]))",
+              "legendFormat": "{{ name }}",
+              "refId": "A"
+            }
+          ],
+          "description": "Rate of certificate renewal errors. Spikes indicate ACME/DNS issues."
+        },
+        {
+          "title": "cert-manager Controller Health",
+          "type": "stat",
+          "gridPos": { "h": 4, "w": 3, "x": 0, "y": 12 },
+          "id": 6,
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "thresholds" },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  { "color": "red", "value": null },
+                  { "color": "red", "value": 0.5 },
+                  { "color": "green", "value": 0.9 }
+                ]
+              },
+              "mappings": [
+                { "type": 1, "options": { "0": { "text": "DOWN" }, "1": { "text": "UP" } } }
+              ]
+            }
+          },
+          "options": {
+            "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }
+          },
+          "targets": [
+            {
+              "expr": "max(up{job=\"cert-manager\"})",
+              "legendFormat": "cert-manager",
+              "refId": "A"
+            }
+          ],
+          "description": "Is the cert-manager controller pod up and scraping?"
+        },
+        {
+          "title": "Smart Tire API Health",
+          "type": "stat",
+          "gridPos": { "h": 4, "w": 3, "x": 3, "y": 12 },
+          "id": 7,
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "thresholds" },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  { "color": "red", "value": null },
+                  { "color": "red", "value": 0.5 },
+                  { "color": "green", "value": 0.9 }
+                ]
+              },
+              "mappings": [
+                { "type": 1, "options": { "0": { "text": "DOWN" }, "1": { "text": "Healthy" } } }
+              ]
+            }
+          },
+          "options": {
+            "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }
+          },
+          "targets": [
+            {
+              "expr": "probe_success{instance=~\".*/health\"} or vector(0)",
+              "legendFormat": "API Health",
+              "refId": "A"
+            }
+          ],
+          "description": "Smart Tire Analyzer API health (matches any /health endpoint). Requires blackbox-exporter or similar."
+        },
+        {
+          "title": "Certificate Expiry Timeline",
+          "type": "timeline",
+          "gridPos": { "h": 8, "w": 12, "x": 6, "y": 12 },
+          "id": 8,
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "thresholds" },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  { "color": "red", "value": null },
+                  { "color": "red", "value": 259200 },
+                  { "color": "orange", "value": 604800 },
+                  { "color": "yellow", "value": 1814400 },
+                  { "color": "green", "value": 2592000 }
+                ]
+              },
+              "custom": {
+                "hideFrom": { "legend": false, "tooltip": false, "viz": false },
+                "lineInterpolation": 0,
+                "spanNulls": false
+              }
+            }
+          },
+          "options": {
+            "legend": { "displayMode": "table", "placement": "bottom", "showLegend": true },
+            "tooltip": { "mode": "multi", "sort": "none" },
+            "mergeValues": true,
+            "rowHeight": 0.5,
+            "showValue": "always",
+            "alignValue": "left"
+          },
+          "targets": [
+            {
+              "expr": "certmanager_certificate_expiration_timestamp_seconds - time()",
+              "legendFormat": "{{ name }} ({{ namespace }})",
+              "refId": "A"
+            }
+          ],
+          "description": "Timeline showing when each certificate will expire. Color-coded by urgency."
+        },
+        {
+          "title": "Pod Status (smart-tire namespace)",
+          "type": "table",
+          "gridPos": { "h": 6, "w": 6, "x": 0, "y": 20 },
+          "id": 9,
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "fieldConfig": {
+            "defaults": {
+              "color": { "mode": "thresholds" },
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  { "color": "red", "value": null },
+                  { "color": "green", "value": 0 }
+                ]
+              }
+            }
+          },
+          "options": {},
+          "targets": [
+            {
+              "expr": "kube_pod_status_phase{namespace=\"smart-tire\"}",
+              "format": "table",
+              "instant": true,
+              "refId": "A"
+            }
+          ],
+          "transformations": [
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": { "Time": true, "__name__": true, "instance": true, "job": true },
+                "renameByName": { "pod": "Pod", "namespace": "Namespace", "phase": "Phase" }
+              }
+            }
+          ],
+          "description": "Pod status for the smart-tire namespace. Requires kube-state-metrics."
+        },
+        {
+          "title": "TLS Deployment Checklist",
+          "type": "text",
+          "gridPos": { "h": 6, "w": 6, "x": 6, "y": 20 },
+          "id": 10,
+          "options": {
+            "content": "# TLS Deployment Complete\n\n## Deployment Steps:\n1. cert-manager installed\n2. ingress-nginx installed\n3. DNS A record configured\n4. ClusterIssuer applied (letsencrypt)\n5. Ingress with TLS applied\n6. Certificate issued\n\n## Auto-Renewal:\n- cert-manager renews certs 30 days before expiry\n- Monitor with panels above\n- Alerts in deployment/kubernetes/prometheus-rules.yaml\n\n## Quick Commands:\n```\nkubectl get certificate -n smart-tire\nkubectl describe certificate smart-tire-tls -n smart-tire\ncurl https://your-domain.com/api/health\n```\n\n## Prerequisites:\n- Prometheus datasource UID: prometheus\n  (change in panel queries if different)\n- kube-state-metrics (for Pod Status panel)\n- Blackbox exporter (for API Health panel)\n- cert-manager metrics scraped via PodMonitor",
+            "mode": "markdown"
+          },
+          "description": "Deployment checklist and quick reference"
+        }
+      ]
+    }

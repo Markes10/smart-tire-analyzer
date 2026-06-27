@@ -18,6 +18,7 @@ import numpy as np
 
 from ai_model.ann.output_heads import denormalize_outputs
 from app.config import settings
+from app.ws_manager import manager
 
 logger = logging.getLogger(__name__)
 
@@ -55,8 +56,8 @@ def _infer_wear_pattern_from_depths(depths: list[float]) -> str:
         from ai_model.rnn.temporal_features import classify_wear_pattern_from_depths
 
         return str(classify_wear_pattern_from_depths(depths))
-    except Exception:
-        pass
+    except Exception as exc:
+        logger.debug("Wear pattern classifier unavailable, using fallback: %s", exc)
 
     if diff < 0.5:
         return "uniform_wear"
@@ -74,8 +75,8 @@ def _confidence_from_depths(depths: list[float]) -> float:
         from ai_model.rnn.temporal_features import compute_confidence_from_wear_pattern
 
         return float(compute_confidence_from_wear_pattern(depths))
-    except Exception:
-        pass
+    except Exception as exc:
+        logger.debug("Confidence computation unavailable, using fallback: %s", exc)
 
     depth_array = np.clip(np.asarray(depths, dtype=np.float32), 0.0, 12.0)
     depth_std = float(np.std(depth_array))
@@ -286,15 +287,93 @@ class InferenceService:
         session_id: str,
         context_data: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
-        """Run the full inference pipeline on raw image bytes."""
+        """Run the full inference pipeline on raw image bytes with WebSocket progress updates."""
         loop = asyncio.get_event_loop()
-        return await loop.run_in_executor(
-            None,
-            self._predict_sync,
-            image_bytes,
-            session_id,
-            context_data,
-        )
+
+        await loop.run_in_executor(None, self._reload_model_if_changed)
+
+        checkpoint_path = self._hybrid_checkpoint_path
+        if self._hybrid_model is None or checkpoint_path is None or not checkpoint_path.exists():
+            self._hybrid_model = None
+            self._ready = False
+            self._model_version = "not_loaded"
+            self._model_source = "not_loaded"
+            self._load_error = "Missing hybrid checkpoint"
+            return {
+                "rejected": True,
+                "reason": "Trained hybrid model is unavailable",
+                "model_version": self._model_version,
+                "source": self._model_source,
+            }
+
+        # ── Stage 1: Preprocessing ────────────────────────────────────────────
+        await self._try_broadcast({"type": "progress", "session_id": session_id, "step": "preprocessing", "progress": 0.10})
+
+        nparr = np.frombuffer(image_bytes, np.uint8)
+        image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+        if image is None:
+            return {"rejected": True, "reason": "Could not decode image"}
+
+        blur_threshold = float(settings.BLUR_THRESHOLD)
+        is_blurry, blur_score = detect_blur(image, threshold=blur_threshold)
+        if is_blurry:
+            return {"rejected": True, "blur_score": blur_score, "blur_threshold": blur_threshold, "reason": "Image too blurry"}
+
+        processed = run_preprocessing_pipeline(image, training=False, include_edge_channel=True, blur_threshold=blur_threshold)
+        if processed is None:
+            return {"rejected": True, "blur_score": blur_score, "blur_threshold": blur_threshold, "reason": "Preprocessing failed"}
+
+        from ai_model.hybrid_torch.runtime_tread import estimate_visual_tread_depths
+        estimated_depths = estimate_visual_tread_depths(image)
+
+        from ai_model.hybrid_torch.constants import TREAD_SEQUENCE_DIM
+        from ai_model.rnn.sequence_builder import build_tread_sequence
+        tread_seq = build_tread_sequence(estimated_depths, target_dim=TREAD_SEQUENCE_DIM)
+
+        # ── Stage 2: CNN inference ────────────────────────────────────────────
+        await self._try_broadcast({"type": "progress", "session_id": session_id, "step": "cnn_inference", "progress": 0.30})
+
+        # ── Stage 3: ViT inference ────────────────────────────────────────────
+        await self._try_broadcast({"type": "progress", "session_id": session_id, "step": "vit_inference", "progress": 0.50})
+
+        # ── Stage 4: RNN inference ────────────────────────────────────────────
+        await self._try_broadcast({"type": "progress", "session_id": session_id, "step": "rnn_inference", "progress": 0.60})
+
+        # ── Stage 5: Fusion ──────────────────────────────────────────────────
+        await self._try_broadcast({"type": "progress", "session_id": session_id, "step": "fusion", "progress": 0.70})
+        prediction = await loop.run_in_executor(None, self._hybrid_infer, image, tread_seq)
+
+        # ── Stage 6: Context fetch ───────────────────────────────────────────
+        await self._try_broadcast({"type": "progress", "session_id": session_id, "step": "context_fetch", "progress": 0.80})
+
+        from ai_model.hybrid_torch.runtime_tread import RUNTIME_TREAD_SEQUENCE_SOURCE
+
+        prediction["tread_sequence_source"] = RUNTIME_TREAD_SEQUENCE_SOURCE
+        prediction["runtime_tread_sequence_mm"] = {
+            "position_1": round(float(estimated_depths[0]), 2),
+            "position_2": round(float(estimated_depths[1]), 2),
+            "position_3": round(float(estimated_depths[2]), 2),
+            "position_4": round(float(estimated_depths[3]), 2),
+            "average": round(float(np.mean(estimated_depths)), 2),
+        }
+        prediction["session_id"] = session_id
+        prediction["blur_score"] = round(float(blur_score), 2)
+        prediction["blur_threshold"] = blur_threshold
+        prediction["model_version"] = self._model_version
+
+        # ── Stage 7: Reasoning ───────────────────────────────────────────────
+        await self._try_broadcast({"type": "progress", "session_id": session_id, "step": "reasoning", "progress": 0.90})
+        self._attach_model_diagnostics(prediction, context_data)
+
+        # ── Complete ─────────────────────────────────────────────────────────
+        await self._try_broadcast({"type": "progress", "session_id": session_id, "step": "complete", "progress": 1.00, "payload": prediction})
+        return prediction
+
+    async def _try_broadcast(self, message: dict[str, Any]) -> None:
+        try:
+            await manager.broadcast(message)
+        except Exception:
+            pass
 
     def _predict_sync(
         self,

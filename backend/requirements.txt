@@ -13,9 +13,12 @@ sqlalchemy==2.0.30
 aiosqlite==0.20.0                # Async SQLite driver
 alembic==1.13.1                  # DB migrations
 
+# PostgreSQL — optional
+asyncpg>=0.29.0
+psycopg2-binary>=2.9.9
+
 # ── AI / ML ────────────────────────────────────────────────────────────────
-tensorflow==2.16.1               # Full TF for training
-tensorflow-hub==0.16.1
+# Core ML — required for inference
 torch==2.4.1                    # Runtime/training for fresh PyTorch hybrid model
 torchvision==0.19.1              # ViT-B/16 backbone and image transforms
 timm>=1.0.12,<2.0               # EfficientNetV2-B0 backbone
@@ -25,11 +28,20 @@ Pillow==12.2.0
 pillow-heif==1.3.0               # HEIC/HEIF training image support
 albumentations==1.4.6            # Image augmentation
 
+# TF packages — optional, only needed for training scripts and TFLite export
+# tensorflow==2.16.1
+# tensorflow-hub==0.16.1
+# tensorflow-model-optimization==0.8.0
+
 # ── Data ───────────────────────────────────────────────────────────────────
 pandas==2.2.2
 openpyxl==3.1.2
 scikit-learn==1.4.2
 threadpoolctl==3.5.0
+
+# ── Auth ───────────────────────────────────────────────────────────────────
+passlib[bcrypt]==1.7.4
+pyjwt==2.8.0
 
 # ── Validation ─────────────────────────────────────────────────────────────
 pydantic==2.7.1
@@ -40,12 +52,17 @@ python-dotenv==1.0.1
 structlog==24.1.0
 httpx==0.27.0                    # Sync HTTP for scripts
 tenacity==8.3.0                  # Retry logic
+cryptography==42.0.8             # AES-256-GCM Fernet encryption for API keys at rest
 
-# ── Optimization ───────────────────────────────────────────────────────────
-tensorflow-model-optimization==0.8.0   # Pruning + quantization
+# ── ONNX — optional model export ──────────────────────────────────────────
+onnx>=1.16.0
+onnxruntime>=1.18.0
 
 # ── Monitoring ─────────────────────────────────────────────────────────────
 prometheus-client==0.20.0
 pytest==8.2.0
 pytest-asyncio==0.23.6
 httpx==0.27.0                    # For TestClient
+
+# ── WebSockets ────────────────────────────────────────────────────────────
+websockets>=12.0

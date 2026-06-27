@@ -115,6 +115,9 @@ def build_attention_rnn(
 
 
 if __name__ == "__main__":
+    import logging
+    logging.basicConfig(level=logging.DEBUG)
+    logger = logging.getLogger(__name__)
     tf_module: Any = tf
 
     model: Any = build_lstm_tread_model()
@@ -122,10 +125,10 @@ if __name__ == "__main__":
 
     dummy_seq: Any = tf_module.random.normal((8, 4, 64))
     out: Any = model(dummy_seq, training=False)
-    print(f"LSTM output shape: {out.shape}")
+    logger.debug("LSTM output shape: %s", out.shape)
 
     attn_model: Any = build_attention_rnn()
     attn_model.summary()
 
     out2: Any = attn_model(dummy_seq, training=False)
-    print(f"Attention-RNN output shape: {out2.shape}")
+    logger.debug("Attention-RNN output shape: %s", out2.shape)

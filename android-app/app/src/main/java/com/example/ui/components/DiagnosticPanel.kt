@@ -21,6 +21,10 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.ui.theme.StatusCritical
+import com.example.ui.theme.StatusInfo
+import com.example.ui.theme.StatusSuccess
+import com.example.ui.theme.StatusWarning
 
 @Composable
 fun DiagnosticPanel(
@@ -194,12 +198,12 @@ fun DiagnosticPanel(
                             Box(
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(4.dp))
-                                    .background(Color(0x28, 0xB4, 0x82).copy(alpha = 0.15f))
+                                    .background(StatusSuccess.copy(alpha = 0.15f))
                                     .padding(horizontal = 5.dp, vertical = 2.dp)
                             ) {
                                 Text(
                                     text = "AI SYNCED",
-                                    color = Color(0x28, 0xB4, 0x82),
+                                    color = StatusSuccess,
                                     fontSize = 7.5.sp,
                                     fontFamily = FontFamily.Monospace,
                                     fontWeight = FontWeight.Bold
@@ -441,9 +445,9 @@ private fun evaluateDiagnostics(
     val multiplierString = "${"%.1f".format(wearScore)}x"
 
     val (lvl, col) = when {
-        wearScore >= 3.0f || temperature > 80f || pressure < 22f -> "CRITICAL" to Color(0xFF, 0x4B, 0x4B)
-        wearScore >= 1.8f -> "ALERT" to Color(0xFF, 0xD4, 0x3F)
-        else -> "NOMINAL" to Color(0x28, 0xB4, 0x82)
+        wearScore >= 3.0f || temperature > 80f || pressure < 22f -> "CRITICAL" to StatusCritical
+        wearScore >= 1.8f -> "ALERT" to StatusWarning
+        else -> "NOMINAL" to StatusSuccess
     }
 
     return DiagnosticMetrics(

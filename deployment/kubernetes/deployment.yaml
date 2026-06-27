@@ -1,6 +1,30 @@
 # Kubernetes Deployment — Smart Tire Analyzer Backend
-# Production-grade deployment with rolling updates and probes.
+# Production-grade deployment with Secrets, rolling updates, and security context.
 
+apiVersion: v1
+kind: Secret
+metadata:
+  name: smart-tire-backend-secrets
+  namespace: smart-tire
+  labels:
+    app: smart-tire-backend
+type: Opaque
+stringData:
+  # ⚠️  Replace with actual values in production (use kubectl create secret)
+  #     kubectl create secret generic smart-tire-backend-secrets \
+  #       --namespace smart-tire \
+  #       --from-literal=GEMINI_API_KEYS="" \
+  #       --from-literal=GOOGLE_MAPS_API_KEYS="" \
+  #       --from-literal=OPENWEATHER_API_KEYS="" \
+  #       --from-literal=MAPILLARY_API_KEYS="" \
+  #       --from-literal=JWT_SECRET="$(python -c 'import secrets; print(secrets.token_urlsafe(48))')" \
+  #       --from-literal=NEXTAUTH_SECRET="$(python -c 'import secrets; print(secrets.token_urlsafe(32))')"
+  GEMINI_API_KEYS: ""
+  GOOGLE_MAPS_API_KEYS: ""
+  OPENWEATHER_API_KEYS: ""
+  MAPILLARY_API_KEYS: ""
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -10,7 +34,7 @@ metadata:
     app: smart-tire-backend
     version: "1.0.0"
 spec:
-  replicas: 1                      # Start with 1 replica (PVC uses ReadWriteOnce)
+  replicas: 1
   selector:
     matchLabels:
       app: smart-tire-backend
@@ -18,13 +42,21 @@ spec:
     type: RollingUpdate
     rollingUpdate:
       maxSurge: 1
-      maxUnavailable: 0            # Zero-downtime deployments
+      maxUnavailable: 0
   template:
     metadata:
       labels:
         app: smart-tire-backend
         version: "1.0.0"
     spec:
+      # Pod-level security context
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: backend
           image: smart-tire-analyzer-backend:latest
@@ -33,28 +65,56 @@ spec:
             - containerPort: 8000
               name: http
           env:
-            - name: GEMINI_API_KEYS
-              value: ""
-            - name: GOOGLE_MAPS_API_KEYS
-              value: ""
-            - name: OPENWEATHER_API_KEYS
-              value: ""
-            - name: MAPILLARY_API_KEYS
-              value: ""
             - name: DATABASE_URL
               value: "sqlite+aiosqlite:///./data/smart_tire.db"
             - name: BACKEND_CORS_ORIGINS
-              value: "http://localhost:3000,http://localhost:8081"
+              value: "https://YOUR_DOMAIN.com,http://localhost:3000,http://localhost:8081"
             - name: AUTH_ENABLED
-              value: "false"
+              value: "true"
             - name: AUTO_RETRAIN
               value: "false"
+            - name: GEMINI_API_KEYS
+              valueFrom:
+                secretKeyRef:
+                  name: smart-tire-backend-secrets
+                  key: GEMINI_API_KEYS
+            - name: GOOGLE_MAPS_API_KEYS
+              valueFrom:
+                secretKeyRef:
+                  name: smart-tire-backend-secrets
+                  key: GOOGLE_MAPS_API_KEYS
+            - name: OPENWEATHER_API_KEYS
+              valueFrom:
+                secretKeyRef:
+                  name: smart-tire-backend-secrets
+                  key: OPENWEATHER_API_KEYS
+            - name: MAPILLARY_API_KEYS
+              valueFrom:
+                secretKeyRef:
+                  name: smart-tire-backend-secrets
+                  key: MAPILLARY_API_KEYS
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: smart-tire-backend-secrets
+                  key: JWT_SECRET
+          # Container-level security context
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+            runAsNonRoot: true
+            runAsUser: 1000
           volumeMounts:
             - name: model-storage
               mountPath: /app/ai_model/saved_models
               readOnly: true
             - name: data-storage
               mountPath: /app/data
+            - name: tmp
+              mountPath: /tmp
           command: ["uvicorn", "backend.app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]
           resources:
             requests:
@@ -83,6 +143,5 @@ spec:
             claimName: smart-tire-model-pvc
         - name: data-storage
           emptyDir: {}
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
+        - name: tmp
+          emptyDir: {}

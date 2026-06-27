@@ -1,0 +1,163 @@
+# ── Smart Tire Analyzer — PrometheusRules for cert-manager Alerts ──────────
+# Monitors TLS certificate expiry, issuance failures, and cert-manager health.
+#
+# Prerequisites:
+#   1. cert-manager installed (exposes metrics on port 9402)
+#   2. Prometheus Operator installed in the cluster
+#   3. A PodMonitor or ServiceMonitor scraping the cert-manager metrics
+#      (one is included at the bottom of this file)
+#
+# Apply with:
+#   kubectl apply -f deployment/kubernetes/prometheus-rules.yaml
+#
+# Verify:
+#   kubectl get prometheusrule -n smart-tire
+#   kubectl describe prometheusrule cert-manager-alerts -n smart-tire
+#
+# Alert severity levels:
+#   critical — Immediate action required (hours to expiry)
+#   warning  — Action needed within days
+#   info     — Informational, non-urgent
+# ──────────────────────────────────────────────────────────────────────────
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: cert-manager-alerts
+  namespace: smart-tire
+  labels:
+    app: smart-tire-monitoring
+    prometheus: kube-prometheus
+    role: alert-rules
+spec:
+  groups:
+    - name: cert-manager
+      interval: 30s
+      rules:
+        # ── Certificate Expiry: Warning (21 days) ──────────────────────────
+        # Alerts when a managed certificate is within 21 days of expiry.
+        # Gives time to troubleshoot DNS/ACME issues before it becomes critical.
+        - alert: CertManagerCertExpirySoon
+          expr: |
+            (certmanager_certificate_expiration_timestamp_seconds - time()) < (21 * 24 * 3600)
+          for: 10m
+          labels:
+            severity: warning
+            team: platform
+          annotations:
+            summary: "TLS certificate {{ $labels.name }} expires in {{ $value | humanizeDuration }}"
+            description: |
+              Certificate {{ $labels.name }} in namespace {{ $labels.namespace }}
+              will expire in less than 21 days.
+              Check cert-manager logs and verify the renewal process.
+
+        # ── Certificate Expiry: Critical (3 days) ──────────────────────────
+        # Imminent expiry — high priority. Could cause production outage.
+        - alert: CertManagerCertExpiresInDays
+          expr: |
+            (certmanager_certificate_expiration_timestamp_seconds - time()) < (3 * 24 * 3600)
+          for: 5m
+          labels:
+            severity: critical
+            team: platform
+          annotations:
+            summary: "🚨 TLS certificate {{ $labels.name }} expires in {{ $value | humanizeDuration }}"
+            description: |
+              CRITICAL: Certificate {{ $labels.name }} in namespace {{ $labels.namespace }}
+              expires in less than 3 days.
+              Immediate action required to prevent service outage.
+
+        # ── Certificate Not Ready ─────────────────────────────────────────
+        # Certificate issuance or renewal has failed.
+        # Check cert-manager logs and the Certificate resource status.
+        - alert: CertManagerCertNotReady
+          expr: |
+            max by (name, namespace, condition) (
+              certmanager_certificate_ready_status{condition!="True"}
+            ) == 1
+          for: 15m
+          labels:
+            severity: critical
+            team: platform
+          annotations:
+            summary: "Certificate {{ $labels.name }} is not ready"
+            description: |
+              Certificate {{ $labels.name }} in namespace {{ $labels.namespace }}
+              has been in non-ready state for 15 minutes.
+              Run: kubectl describe certificate {{ $labels.name }} -n {{ $labels.namespace }}
+
+        # ── cert-manager Controller Down ──────────────────────────────────
+        # The cert-manager controller pod is not reachable.
+        # No certificates can be issued or renewed until it recovers.
+        - alert: CertManagerAbsent
+          expr: |
+            absent(up{job="cert-manager"} == 1)
+          for: 5m
+          labels:
+            severity: critical
+            team: platform
+          annotations:
+            summary: "cert-manager controller is down"
+            description: |
+              cert-manager controller has been unreachable for 5 minutes.
+              Certificate issuance and renewal are disabled.
+              Check: kubectl get pods -n cert-manager
+
+        # ── Certificate Renewal Failure ───────────────────────────────────
+        # Tracks repeated failures in the renewal process.
+        # Uses the most stable metric across cert-manager versions.
+        - alert: CertManagerRenewalFailure
+          expr: |
+            increase(certmanager_certificate_renewal_errors_total[1h]) > 0
+          for: 5m
+          labels:
+            severity: warning
+            team: platform
+          annotations:
+            summary: "Certificate renewal failure detected for {{ $labels.name }}"
+            description: |
+              cert-manager has experienced renewal errors in the last hour
+              for certificate {{ $labels.name }} in {{ $labels.namespace }}.
+              Check: kubectl describe certificaterequest -n {{ $labels.namespace }}
+
+---
+
+# ── PodMonitor for scraping cert-manager metrics ───────────────────────────
+# This requires the Prometheus Operator to be installed.
+# Scrapes cert-manager controller metrics for the alerts above.
+#
+# The label selector matches both:
+#   - Helm chart install: app.kubernetes.io/name=cert-manager
+#   - Static manifest install: app=cert-manager
+#
+# Apply with: kubectl apply -f deployment/kubernetes/prometheus-rules.yaml
+
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: cert-manager
+  namespace: smart-tire
+  labels:
+    app: smart-tire-monitoring
+    prometheus: kube-prometheus
+spec:
+  selector:
+    matchExpressions:
+      - key: app
+        operator: In
+        values:
+          - cert-manager
+          - cert-manager-controller
+      - key: app.kubernetes.io/name
+        operator: In
+        values:
+          - cert-manager
+          - cert-manager-controller
+  namespaceSelector:
+    matchNames:
+      - cert-manager
+  podMetricsEndpoints:
+    - port: http-metrics
+      interval: 30s
+      scrapeTimeout: 10s

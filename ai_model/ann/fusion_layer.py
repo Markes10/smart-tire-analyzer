@@ -174,4 +174,5 @@ if __name__ == "__main__":
         "ctx": tf.random.normal((4, 64)),
     }
     out = model([dummy["cnn"], dummy["vit"], dummy["rnn"], dummy["ctx"]], training=False)
-    print(f"Fusion output: {out.shape}")
+    import logging
+    logging.getLogger(__name__).debug("Fusion output: %s", out.shape)

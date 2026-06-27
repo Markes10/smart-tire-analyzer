@@ -4,76 +4,88 @@ import { useState } from "react"
 import { signIn } from "next-auth/react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
-import { Gauge, ArrowLeft, AlertCircle, CheckCircle2 } from "lucide-react"
+import { Gauge, ArrowLeft, AlertCircle, CheckCircle2, Eye, EyeOff, ExternalLink } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { ApiKeysForm } from "@/components/api-keys-form"
-import { saveApiKeys } from "@/lib/api-keys"
-import type { UserApiKeys } from "@/lib/api-keys"
+import { saveApiKeyPreferences } from "@/lib/api-keys"
+import { signupSchema, type SignupInput } from "@/lib/validation"
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000"
 
 export default function SignUpPage() {
   const { push } = useRouter()
-  const [step, setStep] = useState<"account" | "keys">("account")
-  const [firstName, setFirstName] = useState("")
-  const [lastName, setLastName] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const [showSecrets, setShowSecrets] = useState<Record<string, boolean>>({})
   const [isLoading, setIsLoading] = useState(false)
-  const [savingKeys, setSavingKeys] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
 
-  const handleAccountSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignupInput>({
+    resolver: zodResolver(signupSchema),
+  })
+
+  const toggleVisible = (field: string) => {
+    setShowSecrets((prev) => ({ ...prev, [field]: !prev[field] }))
+  }
+
+  const onSubmit = async (data: SignupInput) => {
     setIsLoading(true)
     setError(null)
 
-    if (password.length < 4) {
-      setError("Password must be at least 4 characters.")
-      setIsLoading(false)
-      return
-    }
-
-    // Create session with credentials
     try {
-      const result = await signIn("credentials", {
-        email,
-        password,
-        redirect: false,
+      const res = await fetch(`${API_BASE_URL}/auth/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          first_name: data.firstName,
+          last_name: data.lastName,
+          email: data.email,
+          password: data.password,
+          gemini_key: data.geminiKey || null,
+          mapillary_token: data.mapillaryToken || null,
+          openweather_key: data.openweatherKey || null,
+        }),
       })
 
-      if (result?.error) {
-        setError("Could not create account. Please try again.")
+      if (!res.ok) {
+        const resData = await res.json().catch(() => ({}))
+        setError(resData.detail || "Registration failed. Please try again.")
         setIsLoading(false)
         return
       }
 
-      if (result?.ok) {
-        // Move to API keys step
-        setStep("keys")
-        setIsLoading(false)
+      saveApiKeyPreferences({
+        useOwnGemini: !!data.geminiKey,
+        useOwnMapillary: !!data.mapillaryToken,
+        useOwnOpenweather: !!data.openweatherKey,
+      })
+
+      const result = await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        redirect: false,
+      })
+
+      if (result?.error) {
+        setSuccess(true)
+        setTimeout(() => push("/analyze"), 1500)
+        return
       }
-    } catch {
-      setError("An unexpected error occurred.")
-      setIsLoading(false)
-    }
-  }
 
-  const handleKeysSave = async (keys: Partial<UserApiKeys>) => {
-    setSavingKeys(true)
-    setError(null)
-
-    try {
-      saveApiKeys(keys)
       setSuccess(true)
       setTimeout(() => push("/analyze"), 1500)
     } catch {
-      setError("Failed to save API keys. Please try again.")
-      setSavingKeys(false)
+      setError("An unexpected error occurred. Please try again.")
+      setIsLoading(false)
     }
   }
 
@@ -97,7 +109,6 @@ export default function SignUpPage() {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center px-4 py-12">
-      {/* Background */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
           <div className="h-125 w-125 rounded-full bg-primary/10 blur-[100px]" />
@@ -111,140 +122,199 @@ export default function SignUpPage() {
         </Link>
       </Button>
 
-      {step === "account" && (
-        <Card className="w-full max-w-md border-border/50 bg-card/80 backdrop-blur-xl">
-          <CardHeader className="space-y-1 text-center">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-primary">
-              <Gauge className="h-6 w-6 text-primary-foreground" />
-            </div>
-            <CardTitle className="text-2xl">Create your account</CardTitle>
-            <CardDescription>
-              Sign up to start analyzing tire health with AI
-            </CardDescription>
-          </CardHeader>
+      <Card className="w-full max-w-md border-border/50 bg-card/80 backdrop-blur-xl">
+        <CardHeader className="space-y-1 text-center">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-primary">
+            <Gauge className="h-6 w-6 text-primary-foreground" />
+          </div>
+          <CardTitle className="text-2xl">Create your account</CardTitle>
+          <CardDescription>
+            Sign up to start analyzing tire health with AI
+          </CardDescription>
+        </CardHeader>
 
-          {error && (
-            <div className="px-6 pb-2">
-              <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            </div>
-          )}
+        {error && (
+          <div className="px-6 pb-2">
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          </div>
+        )}
 
-          <form onSubmit={handleAccountSubmit}>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="firstName">First Name</Label>
-                  <Input
-                    id="firstName"
-                    placeholder="John"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                    required
-                    disabled={isLoading}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="lastName">Last Name</Label>
-                  <Input
-                    id="lastName"
-                    placeholder="Doe"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                    required
-                    disabled={isLoading}
-                  />
-                </div>
-              </div>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="firstName">First Name</Label>
                 <Input
-                  id="email"
-                  type="email"
-                  placeholder="name@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
+                  id="firstName"
+                  placeholder="John"
+                  {...register("firstName")}
                   disabled={isLoading}
                 />
+                {errors.firstName && (
+                  <p className="text-sm text-destructive">{errors.firstName.message}</p>
+                )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="lastName">Last Name</Label>
                 <Input
-                  id="password"
-                  type="password"
-                  placeholder="At least 4 characters"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  minLength={4}
+                  id="lastName"
+                  placeholder="Doe"
+                  {...register("lastName")}
                   disabled={isLoading}
                 />
+                {errors.lastName && (
+                  <p className="text-sm text-destructive">{errors.lastName.message}</p>
+                )}
               </div>
-            </CardContent>
-            <CardFooter className="flex flex-col gap-4">
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Creating account…" : "Create Account"}
-              </Button>
+            </div>
 
-              <div className="relative w-full">
-                <Separator />
-                <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card px-2 text-xs text-muted-foreground">
-                  next step
-                </span>
-              </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="name@example.com"
+                {...register("email")}
+                disabled={isLoading}
+              />
+              {errors.email && (
+                <p className="text-sm text-destructive">{errors.email.message}</p>
+              )}
+            </div>
 
-              <p className="text-center text-sm text-muted-foreground">
-                {"Already have an account? "}
-                <Link href="/login" className="font-medium text-foreground hover:underline">
-                  Sign in
-                </Link>
-              </p>
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="At least 8 characters"
+                {...register("password")}
+                disabled={isLoading}
+              />
+              {errors.password && (
+                <p className="text-sm text-destructive">{errors.password.message}</p>
+              )}
+            </div>
 
-              <p className="text-center text-xs text-muted-foreground/60">
-                After creating your account, you&apos;ll configure your API keys
-              </p>
-            </CardFooter>
-          </form>
-        </Card>
-      )}
-
-      {step === "keys" && (
-        <div className="w-full max-w-lg">
-          <div className="mb-6 text-center">
-            <h2 className="text-xl font-semibold text-foreground">Configure Your API Keys</h2>
-            <p className="text-sm text-muted-foreground mt-1">
-              Enter your own API keys to unlock all features. You can skip or change these later in Settings.
+            <Separator />
+            <p className="text-xs text-muted-foreground text-center">
+              Optional — add your API keys now or configure later in Settings
             </p>
-          </div>
 
-          {error && (
-            <div className="mb-4">
-              <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="gemini" className="font-medium">
+                  Gemini API Key
+                </Label>
+                <a
+                  href="https://aistudio.google.com/apikey"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-primary hover:underline inline-flex items-center gap-1"
+                >
+                  Get key <ExternalLink className="h-3 w-3" />
+                </a>
+              </div>
+              <div className="relative">
+                <Input
+                  id="gemini"
+                  type={showSecrets.gemini ? "text" : "password"}
+                  placeholder="AIzaSy..."
+                  {...register("geminiKey")}
+                  disabled={isLoading}
+                />
+                <button
+                  type="button"
+                  onClick={() => toggleVisible("gemini")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  {showSecrets.gemini ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
             </div>
-          )}
 
-          <ApiKeysForm onSave={handleKeysSave} saving={savingKeys} />
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="mapillary" className="font-medium">
+                  Mapillary Access Token
+                </Label>
+                <a
+                  href="https://www.mapillary.com/dashboard/developers"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-primary hover:underline inline-flex items-center gap-1"
+                >
+                  Get token <ExternalLink className="h-3 w-3" />
+                </a>
+              </div>
+              <div className="relative">
+                <Input
+                  id="mapillary"
+                  type={showSecrets.mapillary ? "text" : "password"}
+                  placeholder="MLY|..."
+                  {...register("mapillaryToken")}
+                  disabled={isLoading}
+                />
+                <button
+                  type="button"
+                  onClick={() => toggleVisible("mapillary")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  {showSecrets.mapillary ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+            </div>
 
-          <div className="mt-4 text-center">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => {
-                saveApiKeys({})
-                push("/analyze")
-              }}
-            >
-              Skip for now &mdash; I&apos;ll add keys later
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="openweather" className="font-medium">
+                  OpenWeather API Key
+                </Label>
+                <a
+                  href="https://home.openweathermap.org/users/sign_up"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-primary hover:underline inline-flex items-center gap-1"
+                >
+                  Get key <ExternalLink className="h-3 w-3" />
+                </a>
+              </div>
+              <div className="relative">
+                <Input
+                  id="openweather"
+                  type={showSecrets.openweather ? "text" : "password"}
+                  placeholder="abc123..."
+                  {...register("openweatherKey")}
+                  disabled={isLoading}
+                />
+                <button
+                  type="button"
+                  onClick={() => toggleVisible("openweather")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  {showSecrets.openweather ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+            </div>
+          </CardContent>
+
+          <CardFooter className="flex flex-col gap-4">
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? "Creating account…" : "Create Account"}
             </Button>
-          </div>
-        </div>
-      )}
+
+            <p className="text-center text-sm text-muted-foreground">
+              {"Already have an account? "}
+              <Link href="/login" className="font-medium text-foreground hover:underline">
+                Sign in
+              </Link>
+            </p>
+          </CardFooter>
+        </form>
+      </Card>
     </div>
   )
 }

@@ -31,6 +31,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.ui.input.pointer.pointerInput
+import com.example.ui.theme.StatusCritical
+import com.example.ui.theme.StatusSuccess
+import com.example.ui.theme.StatusWarning
 import com.example.ui.components.TireDigitalTwin3D
 import com.example.ui.components.TelemetryTooltipDialog
 import com.example.util.PdfGenerator
@@ -211,9 +214,9 @@ fun ResultScreen(
                                         .fillMaxWidth(iotBattery / 100f)
                                         .background(
                                             when {
-                                                iotBattery > 50f -> MaterialTheme.colorScheme.tertiary
-                                                iotBattery > 20f -> Color(0xFF, 0xD4, 0x3F)
-                                                else -> Color(0xFF, 0x4B, 0x4B)
+                                                iotBattery > 50f -> StatusSuccess
+                                                iotBattery > 20f -> StatusWarning
+                                                else -> StatusCritical
                                             },
                                             RoundedCornerShape(0.4.dp)
                                         )
@@ -246,8 +249,8 @@ fun ResultScreen(
                 ) {
                     Box(
                         modifier = Modifier
-                            .background(Color(0xFF, 0x5E, 0x36).copy(alpha = 0.15f), RoundedCornerShape(4.dp))
-                            .border(1.dp, Color(0xFF, 0x5E, 0x36).copy(alpha = 0.4f), RoundedCornerShape(4.dp))
+                            .background(StatusWarning.copy(alpha = 0.15f), RoundedCornerShape(4.dp))
+                            .border(1.dp, StatusWarning.copy(alpha = 0.4f), RoundedCornerShape(4.dp))
                             .padding(horizontal = 8.dp, vertical = 4.dp)
                     ) {
                         Text(
@@ -255,7 +258,7 @@ fun ResultScreen(
                             fontSize = 9.sp,
                             fontFamily = FontFamily.Monospace,
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFF, 0xFF, 0xFF)
+                            color = Color.White
                         )
                     }
 
@@ -285,7 +288,7 @@ fun ResultScreen(
                     IconButton(
                         onClick = { viewModel.isThermalMode.value = !isThermalMode },
                         modifier = Modifier
-                            .background(if (isThermalMode) Color(0xFF, 0x5E, 0x36) else Color(0x1F, 0x24, 0x2C).copy(alpha = 0.8f), CircleShape)
+                            .background(if (isThermalMode) StatusWarning else Color(0x1F, 0x24, 0x2C).copy(alpha = 0.8f), CircleShape)
                             .size(36.dp)
                     ) {
                         Icon(
@@ -545,7 +548,7 @@ fun ResultScreen(
                                 )
 
                                 // 2. Safety Critical Risk Assessment Card
-                                val riskColor = if (healthScore < 50) Color(0xFF, 0x4B, 0x4B) else Color(0xFF, 0xAB, 0x24)
+                                val riskColor = if (healthScore < 50) StatusCritical else StatusWarning
                                 DiagnosticBlock(
                                     title = "CRITICAL RISK VALUATION",
                                     body = analysis.safety,
@@ -843,9 +846,9 @@ fun SeasonalThermalComparisonView(
                 seasons.forEach { (code, label) ->
                     val isActive = selectedSeason == code
                     val seasonColor = when (code) {
-                        "SUMMER" -> Color(0xFF, 0x5E, 0x36)
-                        "WINTER" -> Color(0xFF, 0x81, 0xD4, 0xFA)
-                        else -> Color(0xFF, 0xD4, 0x3F)
+                        "SUMMER" -> Color(0xFFF97316)
+                        "WINTER" -> Color(0xFF60A5FA)
+                        else -> StatusWarning
                     }
                     Box(
                         modifier = Modifier
@@ -891,9 +894,9 @@ fun SeasonalThermalComparisonView(
                     }
                     // Seasonal Baseline Legend Label
                     val legendColor = when (selectedSeason) {
-                        "SUMMER" -> Color(0xFF, 0x4E, 0x4E)
-                        "WINTER" -> Color(0xFF, 0x81, 0xD4, 0xFA)
-                        else -> Color(0xFF, 0xB8, 0x6C)
+                        "SUMMER" -> Color(0xFFF97316)
+                        "WINTER" -> Color(0xFF60A5FA)
+                        else -> StatusWarning
                     }
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(5.dp)) {
                         Box(modifier = Modifier.size(6.dp).background(legendColor, CircleShape))
@@ -995,9 +998,9 @@ fun SeasonalThermalComparisonView(
                 val seasonCurvePoints = mutableListOf<Offset>()
                 val stepsCount = 12
                 val seasonalColor = when (selectedSeason) {
-                    "SUMMER" -> Color(0xFF, 0x4E, 0x4E)
-                    "WINTER" -> Color(0xFF, 0x81, 0xD4, 0xFA)
-                    else -> Color(0xFF, 0xB8, 0x6C)
+                    "SUMMER" -> Color(0xFFF97316)
+                    "WINTER" -> Color(0xFF60A5FA)
+                    else -> StatusWarning
                 }
 
                 for (i in 0..stepsCount) {

@@ -226,4 +226,5 @@ if __name__ == "__main__":
     dummy = tf.random.normal((4, 512))
     out = model(dummy, training=False)
     for k, v in out.items():
-        print(f"{k}: {v.shape}")
+        import logging
+        logging.getLogger(__name__).debug("%s shape: %s", k, v.shape)

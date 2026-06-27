@@ -41,6 +41,9 @@ def main():
     print(f"  Output: {args.output}")
     print("=" * 60)
 
+    import keras as keras_module
+    keras_module.config.enable_unsafe_deserialization()
+
     from ai_model.optimization.quantize import TurboQuantOptimizer
 
     optimizer = TurboQuantOptimizer(

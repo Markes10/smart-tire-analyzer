@@ -91,7 +91,18 @@ class AppSettings(BaseSettings):
     MAPS_DAILY_QUOTA: int = Field(default=50, ge=1)
     MAPILLARY_DAILY_QUOTA: int = Field(default=50, ge=1)
 
-    DATABASE_URL: str = "sqlite+aiosqlite:///./smart_tire.db"
+    # Database — SQLite (default) or PostgreSQL when DATABASE_URL contains "postgresql"
+    DATABASE_URL: str = f"sqlite+aiosqlite:///{Path(__file__).resolve().parents[1] / 'smart_tire.db'}"
+    POSTGRES_ENABLED: bool = False
+
+    @field_validator("POSTGRES_ENABLED", mode="before")
+    @classmethod
+    def _detect_postgres(cls, value: Any, info) -> bool:
+        raw_url = info.data.get("DATABASE_URL") or ""
+        return "postgresql" in raw_url
+
+    REDIS_URL: str = "redis://localhost:6379/0"
+
     API_HOST: str = "0.0.0.0"
     API_PORT: int = Field(default=8000, ge=1, le=65535)
     API_WORKERS: int = Field(default=1, ge=1)
@@ -99,10 +110,38 @@ class AppSettings(BaseSettings):
     DEBUG: bool = False
     LOG_LEVEL: str = "INFO"
 
+    # WARNING: Enable authentication and set a strong JWT_SECRET before deploying
+    #          to any production or internet-accessible environment.
     AUTH_ENABLED: bool = False
+
     API_KEY: str = ""
-    JWT_SECRET: str = "smart-tire-local-demo-secret"
+    JWT_SECRET: str = ""
     JWT_ISSUER: str = "smart-tire-analyzer"
+
+    @field_validator("AUTH_ENABLED", mode="before")
+    @classmethod
+    def _enforce_auth_secret(cls, value: Any, info) -> bool:
+        enabled = str(value).lower() in {"1", "true", "yes", "on"} if not isinstance(value, bool) else value
+        if enabled:
+            jwt_secret = info.data.get("JWT_SECRET") or ""
+            if len(jwt_secret) < 32:
+                raise ValueError(
+                    "AUTH_ENABLED=True requires JWT_SECRET to be at least 32 characters. "
+                    "Generate one with: python -c 'import secrets; print(secrets.token_urlsafe(48))'"
+                )
+        return enabled
+
+    @field_validator("JWT_SECRET", mode="before")
+    @classmethod
+    def _validate_jwt_secret(cls, value: Any) -> str:
+        raw = str(value or "")
+        if raw and len(raw) < 32:
+            logger.warning(
+                "JWT_SECRET is only %d characters — must be at least 32 for production. "
+                "Generate one with: python -c 'import secrets; print(secrets.token_urlsafe(48))'",
+                len(raw)
+            )
+        return raw
 
     MODEL_PATH: str = "ai_model/saved_models/model_latest.tflite"
     FALLBACK_MODEL_PATH: str = "ai_model/saved_models/model_v1.h5"
@@ -195,7 +234,10 @@ class AppSettings(BaseSettings):
 
     def get_cors_origins(self) -> List[str]:
         origins = _parse_keys(self.BACKEND_CORS_ORIGINS_RAW)
-        return origins or ["*"]
+        if origins:
+            return origins
+        logger.warning("BACKEND_CORS_ORIGINS not set — defaulting to [http://localhost:3000, http://localhost:8081]")
+        return ["http://localhost:3000", "http://localhost:8081"]
 
     def has_gemini(self) -> bool:
         return len(self.get_gemini_keys()) > 0
@@ -224,7 +266,8 @@ class AppSettings(BaseSettings):
     def log_startup_config(self) -> None:
         flags = self.get_feature_flags()
         logger.info("=== Smart Tire Analyzer Configuration ===")
-        logger.info("  Database:     %s", self.DATABASE_URL.split("://")[0])
+        logger.info("  Database:     %s (%s)", self.DATABASE_URL.split("://")[0], "PostgreSQL" if self.POSTGRES_ENABLED else "SQLite")
+        logger.info("  Cache:        %s", "Redis" if "redis://" in self.REDIS_URL else "disabled")
         logger.info("  Model path:   %s", self.MODEL_PATH)
         logger.info("  Blur thresh:  %s", self.BLUR_THRESHOLD)
         logger.info("  Conf thresh:  %s", self.CONFIDENCE_THRESHOLD)

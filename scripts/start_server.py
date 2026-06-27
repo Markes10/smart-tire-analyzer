@@ -2,6 +2,9 @@
 start_server.py — Cross-platform backend startup script.
 Works on Windows, Linux, macOS without any shell differences.
 Run: python scripts/start_server.py
+
+This script also checks for TLS certificates and offers to generate
+self-signed development certificates if missing.
 """
 
 import os
@@ -33,11 +36,6 @@ def check_requirements():
         runtimes.append("PyTorch + torchvision")
     except ImportError:
         pass
-    try:
-        import tensorflow  # noqa: F401
-        runtimes.append("TensorFlow")
-    except ImportError:
-        pass
 
     if runtimes:
         print(f"✅ Core packages found. ML runtime(s): {', '.join(runtimes)}")
@@ -55,6 +53,35 @@ def check_env():
             print("⚠️  Created .env from .env.example — please add your API keys!")
         else:
             print("⚠️  No .env file found — API integrations will use fallback mode.")
+
+def check_certs():
+    """Check for TLS certificates and offer to generate them if missing."""
+    certs_dir = PROJECT_ROOT / "certs"
+    certs_dir.mkdir(parents=True, exist_ok=True)
+    
+    server_crt = certs_dir / "server.crt"
+    server_key = certs_dir / "server.key"
+    
+    if server_crt.exists() and server_key.exists():
+        print("✅ TLS certificates found in certs/")
+        return
+    
+    # Check if we should generate (only if ENABLE_HTTPS is set or user wants to)
+    enable_https = os.getenv("ENABLE_HTTPS", "false").lower() in ("1", "true", "yes")
+    
+    if enable_https:
+        print("⚠️  ENABLE_HTTPS=true but no TLS certificates found in certs/")
+        print("   Run: bash scripts/generate_dev_certs.sh")
+        print("   Or run docker compose which auto-generates them.")
+    else:
+        print("ℹ️  No TLS certificates found (HTTPS not enabled). Running on HTTP.")
+        print("   To enable HTTPS:")
+        print("     1. bash scripts/generate_dev_certs.sh")
+        print("     2. Set ENABLE_HTTPS=true in .env")
+        print("     3. Restart with nginx: docker compose -f deployment/docker/docker-compose.yml up nginx")
+    
+    print()
+
 
 def create_db_dirs():
     """Ensure data directories exist."""
@@ -94,5 +121,6 @@ if __name__ == "__main__":
     print("=" * 55)
     check_requirements()
     check_env()
+    check_certs()
     create_db_dirs()
     start_server()

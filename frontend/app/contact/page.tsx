@@ -1,6 +1,8 @@
 "use client"
 
 import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
@@ -11,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import Link from "next/link"
 import { Mail, Phone, MapPin, MessageSquare, Building2, Headphones, FileText } from "lucide-react"
+import { contactSchema, type ContactInput } from "@/lib/validation"
 
 const contactMethods = [
   {
@@ -71,8 +74,17 @@ export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    reset,
+  } = useForm<ContactInput>({
+    resolver: zodResolver(contactSchema),
+  })
+
+  const onSubmit = async (data: ContactInput) => {
     setIsSubmitting(true)
     await new Promise(resolve => setTimeout(resolve, 1000))
     setIsSubmitting(false)
@@ -83,7 +95,6 @@ export default function ContactPage() {
     <div className="flex min-h-screen flex-col">
       <Header />
       <main className="flex-1 pt-16">
-        {/* Hero Section */}
         <section className="relative overflow-hidden py-24">
           <div className="absolute inset-0 -z-10">
             <div className="absolute right-0 top-0">
@@ -104,7 +115,6 @@ export default function ContactPage() {
           </div>
         </section>
 
-        {/* Contact Methods */}
         <section className="border-b border-border/50 pb-16">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid gap-8 sm:grid-cols-3">
@@ -126,11 +136,9 @@ export default function ContactPage() {
           </div>
         </section>
 
-        {/* Contact Form & Support Options */}
         <section className="py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid gap-12 lg:grid-cols-2">
-              {/* Form */}
               <Card className="border-border/50 bg-card/50">
                 <CardHeader>
                   <CardTitle>Send us a message</CardTitle>
@@ -151,30 +159,33 @@ export default function ContactPage() {
                       <Button
                         variant="outline"
                         className="mt-6"
-                        onClick={() => setIsSubmitted(false)}
+                        onClick={() => {
+                          reset()
+                          setIsSubmitted(false)
+                        }}
                       >
                         Send another message
                       </Button>
                     </div>
                   ) : (
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                      <div className="grid gap-4 sm:grid-cols-2">
-                        <div className="space-y-2">
-                          <Label htmlFor="firstName">First name</Label>
-                          <Input id="firstName" placeholder="John" required />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="lastName">Last name</Label>
-                          <Input id="lastName" placeholder="Doe" required />
-                        </div>
+                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                      <div className="space-y-2">
+                        <Label htmlFor="name">Name</Label>
+                        <Input id="name" placeholder="John Doe" {...register("name")} />
+                        {errors.name && (
+                          <p className="text-sm text-destructive">{errors.name.message}</p>
+                        )}
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="email">Email</Label>
-                        <Input id="email" type="email" placeholder="john@example.com" required />
+                        <Input id="email" type="email" placeholder="john@example.com" {...register("email")} />
+                        {errors.email && (
+                          <p className="text-sm text-destructive">{errors.email.message}</p>
+                        )}
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="subject">Subject</Label>
-                        <Select>
+                        <Select onValueChange={(value) => setValue("subject", value)}>
                           <SelectTrigger>
                             <SelectValue placeholder="Select a topic" />
                           </SelectTrigger>
@@ -186,6 +197,9 @@ export default function ContactPage() {
                             <SelectItem value="press">Press & Media</SelectItem>
                           </SelectContent>
                         </Select>
+                        {errors.subject && (
+                          <p className="text-sm text-destructive">{errors.subject.message}</p>
+                        )}
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="message">Message</Label>
@@ -193,8 +207,11 @@ export default function ContactPage() {
                           id="message"
                           placeholder="Tell us how we can help..."
                           rows={5}
-                          required
+                          {...register("message")}
                         />
+                        {errors.message && (
+                          <p className="text-sm text-destructive">{errors.message.message}</p>
+                        )}
                       </div>
                       <Button type="submit" className="w-full" disabled={isSubmitting}>
                         {isSubmitting ? "Sending..." : "Send Message"}
@@ -204,7 +221,6 @@ export default function ContactPage() {
                 </CardContent>
               </Card>
 
-              {/* Support Options */}
               <div className="space-y-6">
                 <div>
                   <h2 className="text-2xl font-bold text-foreground">Other ways to connect</h2>

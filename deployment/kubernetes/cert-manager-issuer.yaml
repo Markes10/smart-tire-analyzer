@@ -1,0 +1,60 @@
+# ── Smart Tire Analyzer — cert-manager ClusterIssuer ────────────────────────
+# Provides Let's Encrypt TLS certificates for the Ingress resources.
+#
+# Prerequisites:
+#   1. Install cert-manager in your cluster:
+#        kubectl apply -f https://github.com/cert-manager/cert-manager/releases/latest/download/cert-manager.yaml
+#   2. Update the email address below before applying.
+#   3. Ensure your domain's A/AAAA record points to the cluster's public IP.
+#
+# Apply with:
+#   kubectl apply -f deployment/kubernetes/cert-manager-issuer.yaml
+#
+# Verify:
+#   kubectl get clusterissuer -n smart-tire
+#   kubectl get certificate -n smart-tire
+
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-staging
+  namespace: smart-tire
+spec:
+  acme:
+    # Staging server — use for testing (unlimited certs, not trusted by browsers)
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    email: admin@your-domain.com  # ⚠️  Update to your email
+    privateKeySecretRef:
+      name: letsencrypt-staging-account-key
+    solvers:
+      - http01:
+          ingress:
+            class: nginx
+            # Pod template annotation for the solver pod
+            podTemplate:
+              metadata:
+                annotations:
+                  cluster-autoscaler.kubernetes.io/safe-to-evict: "true"
+
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+  namespace: smart-tire
+spec:
+  acme:
+    # Production server — trusted by browsers (rate limit: 50 certs/week)
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: admin@your-domain.com  # ⚠️  Update to your email
+    privateKeySecretRef:
+      name: letsencrypt-prod-account-key
+    solvers:
+      - http01:
+          ingress:
+            class: nginx
+            podTemplate:
+              metadata:
+                annotations:
+                  cluster-autoscaler.kubernetes.io/safe-to-evict: "true"

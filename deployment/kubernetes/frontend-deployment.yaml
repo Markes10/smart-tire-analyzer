@@ -1,4 +1,20 @@
 # Kubernetes Deployment — Smart Tire Analyzer Frontend
+apiVersion: v1
+kind: Secret
+metadata:
+  name: smart-tire-frontend-secrets
+  namespace: smart-tire
+  labels:
+    app: smart-tire-frontend
+type: Opaque
+stringData:
+  # ⚠️  Replace in production:
+  #   kubectl create secret generic smart-tire-frontend-secrets \
+  #     --namespace smart-tire \
+  #     --from-literal=NEXTAUTH_SECRET="$(python -c 'import secrets; print(secrets.token_urlsafe(32))')"
+  NEXTAUTH_SECRET: ""
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -18,6 +34,12 @@ spec:
         app: smart-tire-frontend
         version: "1.0.0"
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: frontend
           image: smart-tire-analyzer-frontend:latest
@@ -28,10 +50,21 @@ spec:
           env:
             - name: NEXT_PUBLIC_API_BASE_URL
               value: "http://smart-tire-backend-svc:8000"
-            - name: NEXTAUTH_SECRET
-              value: "smart-tire-k8s-secret-change-in-production"
             - name: NEXTAUTH_URL
-              value: "http://localhost:3000"
+              value: "https://YOUR_DOMAIN.com"
+            - name: NEXTAUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: smart-tire-frontend-secrets
+                  key: NEXTAUTH_SECRET
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+            runAsNonRoot: true
+            runAsUser: 1000
           resources:
             requests:
               memory: "256Mi"
@@ -53,9 +86,6 @@ spec:
             initialDelaySeconds: 15
             periodSeconds: 10
             failureThreshold: 3
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
 
 ---
 apiVersion: v1

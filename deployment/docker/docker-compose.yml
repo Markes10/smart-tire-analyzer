@@ -1,6 +1,87 @@
 name: smart-tire-analyzer
 
+# ── Secrets ─────────────────────────────────────────────────────────────────
+# Create a .secrets.env file (gitignored) with all sensitive variables.
+# NEVER commit secret values to version control.
+#
+# Example .secrets.env:
+#   GEMINI_API_KEYS=key1,key2
+#   GOOGLE_MAPS_API_KEYS=key1
+#   OPENWEATHER_API_KEYS=key1
+#   MAPILLARY_API_KEYS=key1
+#   JWT_SECRET=<generated-with-python -c 'import secrets; print(secrets.token_urlsafe(48))'>
+#   NEXTAUTH_SECRET=<generated-with-python -c 'import secrets; print(secrets.token_urlsafe(32))'>
+#   POSTGRES_PASSWORD=<strong-password>
+#
+# ── TLS / HTTPS ─────────────────────────────────────────────────────────────
+# By default, the stack runs on HTTP. To enable HTTPS:
+#   1. Generate development certificates:
+#        bash scripts/generate_dev_certs.sh
+#      Or for production, follow scripts/setup_production_certs.sh
+#   2. Set DOMAIN and ENABLE_HTTPS=true in your .env:
+#        DOMAIN=localhost              # or your-domain.com in production
+#        ENABLE_HTTPS=true
+#   3. Redeploy: docker compose up -d
+
+x-secrets: &secrets
+  GEMINI_API_KEYS: ${GEMINI_API_KEYS:-}
+  GEMINI_MODEL: ${GEMINI_MODEL:-gemini-2.5-flash}
+  GOOGLE_MAPS_API_KEYS: ${GOOGLE_MAPS_API_KEYS:-}
+  OPENWEATHER_API_KEYS: ${OPENWEATHER_API_KEYS:-}
+  MAPILLARY_API_KEYS: ${MAPILLARY_API_KEYS:-}
+  GEMINI_DAILY_QUOTA: ${GEMINI_DAILY_QUOTA:-50}
+  MAPS_DAILY_QUOTA: ${MAPS_DAILY_QUOTA:-50}
+  OPENWEATHER_DAILY_QUOTA: ${OPENWEATHER_DAILY_QUOTA:-50}
+  MAPILLARY_DAILY_QUOTA: ${MAPILLARY_DAILY_QUOTA:-50}
+  JWT_SECRET: ${JWT_SECRET:-}
+  AUTH_ENABLED: ${AUTH_ENABLED:-false}
+  NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-}
+  NEXTAUTH_URL: ${NEXTAUTH_URL:-http://localhost:8081}
+  GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+  GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+  LIVE_CHAT_PROVIDER: ${LIVE_CHAT_PROVIDER:-gemini}
+  LIVE_CHAT_MODEL: ${LIVE_CHAT_MODEL:-gemini-2.5-flash}
+  LIVE_CHAT_REQUEST_TIMEOUT_MS: ${LIVE_CHAT_REQUEST_TIMEOUT_MS:-45000}
+
 services:
+  # ── TLS Certificate Generator (dev mode, runs once) ───────────────────────
+  # Uses Alpine + OpenSSL to generate a self-signed CA + server certificate.
+  # The certs are stored in the ./certs/ volume which nginx also mounts.
+  # For production, use scripts/setup_production_certs.sh with Let's Encrypt.
+  cert-gen:
+    image: alpine:3.18
+    container_name: smart-tire-cert-gen
+    volumes:
+      - ../../certs:/certs:rw
+    entrypoint: >
+      sh -c "
+      if [ -f /certs/server.pem ] && [ -f /certs/server.crt ]; then
+        echo '✅ Certificates already exist — skipping generation';
+      else
+        echo '🔐 Generating development TLS certificates...';
+        apk add --no-cache openssl > /dev/null 2>&1;
+        openssl genrsa -out /certs/ca.key 4096 2>/dev/null;
+        openssl req -x509 -new -nodes -key /certs/ca.key -sha256 -days 3650 \
+          -out /certs/ca.crt \
+          -subj '/C=US/ST=California/L=San Francisco/O=Smart Tire Analyzer Dev/CN=Smart Tire Dev CA';
+        openssl genrsa -out /certs/server.key 2048 2>/dev/null;
+        openssl req -new -key /certs/server.key -out /tmp/server.csr \
+          -subj '/CN=localhost' \
+          -addext 'subjectAltName=DNS:localhost,DNS:*.localhost,DNS:backend,DNS:frontend,DNS:nginx,IP:127.0.0.1,IP:::1';
+        openssl x509 -req -in /tmp/server.csr \
+          -CA /certs/ca.crt -CAkey /certs/ca.key -CAcreateserial \
+          -out /certs/server.crt -days 3650 -sha256 \
+          -copy_extensions copy;
+        cat /certs/server.crt /certs/server.key > /certs/server.pem;
+        chmod 644 /certs/ca.crt /certs/server.crt;
+        chmod 600 /certs/server.key /certs/server.pem;
+        rm -f /tmp/server.csr;
+        echo '✅ Development TLS certificates generated!';
+      fi
+      "
+    networks:
+      - tire-net
+
   # ── FastAPI Backend ──────────────────────────────────────────────────────
   backend:
     build:
@@ -10,23 +91,17 @@ services:
     ports:
       - "8000:8000"
     environment:
-      # ── API Keys (loaded from .env file for rotation) ──────────────────
-      - GEMINI_API_KEYS=${GEMINI_API_KEYS:-}
-      - GEMINI_MODEL=${GEMINI_MODEL:-gemini-2.5-flash}
-      - GOOGLE_MAPS_API_KEYS=${GOOGLE_MAPS_API_KEYS:-}
-      - OPENWEATHER_API_KEYS=${OPENWEATHER_API_KEYS:-}
-      - MAPILLARY_API_KEYS=${MAPILLARY_API_KEYS:-}
-      # ── API Daily Quotas ─────────────────────────────────────────────
-      - GEMINI_DAILY_QUOTA=${GEMINI_DAILY_QUOTA:-50}
-      - MAPS_DAILY_QUOTA=${MAPS_DAILY_QUOTA:-50}
-      - OPENWEATHER_DAILY_QUOTA=${OPENWEATHER_DAILY_QUOTA:-50}
-      - MAPILLARY_DAILY_QUOTA=${MAPILLARY_DAILY_QUOTA:-50}
-      # ── Database & Server ───────────────────────────────────────────
+      <<: *secrets
+      # Database & Server (non-secret config)
       - DATABASE_URL=sqlite+aiosqlite:///./data/smart_tire.db
+      - POSTGRES_ENABLED=${POSTGRES_ENABLED:-false}
+      - REDIS_URL=redis://redis:6379/0
       - API_HOST=0.0.0.0
       - API_PORT=8000
       - API_WORKERS=${API_WORKERS:-1}
       - BACKEND_CORS_ORIGINS=${BACKEND_CORS_ORIGINS:-http://localhost:8081,http://localhost:3000}
+    env_file:
+      - ../../.secrets.env
     volumes:
       - ../../ai_model/saved_models:/app/ai_model/saved_models:ro
       - tire-data:/app/data
@@ -40,8 +115,11 @@ services:
     restart: unless-stopped
     networks:
       - tire-net
+    depends_on:
+      cert-gen:
+        condition: service_completed_successfully
 
-  # ── Redis cache (optional — for session caching) ─────────────────────────
+  # ── Frontend ─────────────────────────────────────────────────────────────
   frontend:
     build:
       context: ../..
@@ -52,24 +130,10 @@ services:
     ports:
       - "8081:3000"
     environment:
+      <<: *secrets
       - NEXT_PUBLIC_API_BASE_URL=${NEXT_PUBLIC_API_BASE_URL:-http://localhost:8000}
-      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET:-smart-tire-docker-secret-key-change-in-prod}
-      - NEXTAUTH_URL=${NEXTAUTH_URL:-http://localhost:8081}
-      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-}
-      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET:-}
-      - LIVE_CHAT_PROVIDER=${LIVE_CHAT_PROVIDER:-gemini}
-      - LIVE_CHAT_MODEL=${LIVE_CHAT_MODEL:-gemini-2.5-flash}
-      - LIVE_CHAT_REQUEST_TIMEOUT_MS=${LIVE_CHAT_REQUEST_TIMEOUT_MS:-45000}
-      - LIVE_CHAT_API_BASE_URL=${LIVE_CHAT_API_BASE_URL:-}
-      - LIVE_CHAT_API_KEY=${LIVE_CHAT_API_KEY:-}
-      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
-      - GEMINI_API_KEYS=${GEMINI_API_KEYS:-}
-      - GEMINI_MODEL=${GEMINI_MODEL:-gemini-2.5-flash}
-      - GROQ_API_KEY=${GROQ_API_KEY:-}
-      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}
-      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
-      - OPENAI_BASE_URL=${OPENAI_BASE_URL:-}
-      - OPENAI_API_BASE_URL=${OPENAI_API_BASE_URL:-}
+    env_file:
+      - ../../.secrets.env
     depends_on:
       backend:
         condition: service_healthy
@@ -77,6 +141,7 @@ services:
     networks:
       - tire-net
 
+  # ── Redis cache ───────────────────────────────────────────────────────────
   redis:
     image: redis:7-alpine
     container_name: smart-tire-redis
@@ -85,16 +150,21 @@ services:
     networks:
       - tire-net
     restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
 
-  # ── Nginx reverse proxy ──────────────────────────────────────────────────
+  # ── Nginx reverse proxy (TLS termination) ────────────────────────────────
   nginx:
     image: nginx:alpine
     container_name: smart-tire-nginx
     ports:
-      - "8080:80"
+      - "80:80"
+      - "443:443"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ../../certs:/etc/nginx/ssl:ro
     depends_on:
+      cert-gen:
+        condition: service_completed_successfully
       backend:
         condition: service_healthy
     networks:

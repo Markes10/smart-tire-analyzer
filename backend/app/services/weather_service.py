@@ -11,6 +11,7 @@ from typing import Dict
 
 from app.config import settings
 from app.services.api_key_rotator import get_weather_rotator, APIKeyRotator
+from app.services.cache_service import get_cache
 
 logger = logging.getLogger(__name__)
 OWM_BASE = "https://api.openweathermap.org/data/2.5/weather"
@@ -51,6 +52,12 @@ class WeatherService:
         if not self.enabled:
             return self._mock_weather()
 
+        cache = get_cache()
+        cache_key = f"weather:{round(lat, 4)}:{round(lon, 4)}"
+        cached = await cache.get(cache_key)
+        if cached is not None:
+            return cached
+
         attempts = 0
         max_attempts = max(1, len(self.rotator.available_keys))
         timeout = aiohttp.ClientTimeout(total=5)
@@ -74,7 +81,7 @@ class WeatherService:
                     except Exception:
                         pass
 
-                    return {
+                    result = {
                         "weather_condition": condition,
                         "temperature_c": round(temp_c, 1),
                         "humidity_pct": humidity_pct,
@@ -82,6 +89,8 @@ class WeatherService:
                         "rain_detected": rain_detected,
                         "weather_risk_multiplier": self._weather_risk_mult(condition, rain_detected, temp_c),
                     }
+                    await cache.set(cache_key, result, ttl=1800)
+                    return result
                 except aiohttp.ClientResponseError as e:
                     status = getattr(e, "status", None)
                     message = getattr(e, "message", "request failed")

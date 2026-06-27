@@ -18,6 +18,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import com.example.ui.theme.StatusCritical
+import com.example.ui.theme.StatusInfo
+import com.example.ui.theme.StatusSuccess
+import com.example.ui.theme.StatusWarning
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -172,7 +176,7 @@ fun TelemetryControlPanel(
                 )
                 Text(
                     text = if (isLiveSimulationActive) "LIVE IOT TRANSMITTER FEED ACTIVE" else "MANUAL CONTROL MODE",
-                    color = if (isLiveSimulationActive) Color(0x28, 0xB4, 0x82) else MaterialTheme.colorScheme.primary,
+                    color = if (isLiveSimulationActive) StatusSuccess else MaterialTheme.colorScheme.primary,
                     fontSize = 9.sp,
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Bold,
@@ -187,12 +191,12 @@ fun TelemetryControlPanel(
                 modifier = Modifier
                     .clip(RoundedCornerShape(8.dp))
                     .background(
-                        if (isLiveSimulationActive) Color(0x28, 0xB4, 0x82).copy(alpha = 0.12f)
+                        if (isLiveSimulationActive) StatusSuccess.copy(alpha = 0.12f)
                         else MaterialTheme.colorScheme.background
                     )
                     .border(
                         1.dp,
-                        if (isLiveSimulationActive) Color(0x28, 0xB4, 0x82).copy(alpha = 0.4f)
+                        if (isLiveSimulationActive) StatusSuccess.copy(alpha = 0.4f)
                         else MaterialTheme.colorScheme.outline.copy(alpha = 0.3f),
                         RoundedCornerShape(8.dp)
                     )
@@ -205,13 +209,13 @@ fun TelemetryControlPanel(
                         .size(6.dp)
                         .clip(CircleShape)
                         .background(
-                            if (isLiveSimulationActive) Color(0x28, 0xB4, 0x82)
+                            if (isLiveSimulationActive) StatusSuccess
                             else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                         )
                 )
                 Text(
                     text = "SIM FEED",
-                    color = if (isLiveSimulationActive) Color(0x28, 0xB4, 0x82) else MaterialTheme.colorScheme.onSurface,
+                    color = if (isLiveSimulationActive) StatusSuccess else MaterialTheme.colorScheme.onSurface,
                     fontSize = 9.sp,
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Bold
@@ -295,7 +299,7 @@ fun TelemetryControlPanel(
                     Icon(
                         imageVector = Icons.Default.Speed,
                         contentDescription = "Speed",
-                        tint = if (speed > 100f) Color(0xFF, 0x5E, 0x36) else MaterialTheme.colorScheme.onSurfaceVariant,
+                        tint = if (speed > 100f) StatusWarning else MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(15.dp)
                     )
                     Spacer(modifier = Modifier.width(6.dp))
@@ -311,13 +315,13 @@ fun TelemetryControlPanel(
                         Spacer(modifier = Modifier.width(6.dp))
                         Box(
                             modifier = Modifier
-                                .background(Color(0xFF, 0x5E, 0x36).copy(alpha = 0.15f), RoundedCornerShape(3.dp))
-                                .border(0.5.dp, Color(0xFF, 0x5E, 0x36).copy(alpha = 0.5f), RoundedCornerShape(3.dp))
+                                .background(StatusWarning.copy(alpha = 0.15f), RoundedCornerShape(3.dp))
+                                .border(0.5.dp, StatusWarning.copy(alpha = 0.5f), RoundedCornerShape(3.dp))
                                 .padding(horizontal = 4.dp, vertical = 1.dp)
                         ) {
                             Text(
                                 text = "HIGH SPIN",
-                                color = Color(0xFF, 0x5E, 0x36),
+                                color = StatusWarning,
                                 fontSize = 7.5.sp,
                                 fontFamily = FontFamily.Monospace,
                                 fontWeight = FontWeight.Bold
@@ -328,7 +332,7 @@ fun TelemetryControlPanel(
                 
                 Text(
                     text = if (useMetric) "${speed.toInt()} km/h" else "${(speed * 0.621f).toInt()} mph",
-                    color = if (speed > 100f) Color(0xFF, 0x5E, 0x36) else MaterialTheme.colorScheme.primary,
+                    color = if (speed > 100f) StatusWarning else MaterialTheme.colorScheme.primary,
                     fontSize = 12.5.sp,
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Bold
@@ -341,8 +345,8 @@ fun TelemetryControlPanel(
                 onValueChange = { onTelemetryChange(it, pressure, temperature) },
                 valueRange = 0f..120f,
                 colors = SliderDefaults.colors(
-                    thumbColor = if (speed > 100f) Color(0xFF, 0x5E, 0x36) else MaterialTheme.colorScheme.primary,
-                    activeTrackColor = if (speed > 100f) Color(0xFF, 0x5E, 0x36) else MaterialTheme.colorScheme.primary,
+                    thumbColor = if (speed > 100f) StatusWarning else MaterialTheme.colorScheme.primary,
+                    activeTrackColor = if (speed > 100f) StatusWarning else MaterialTheme.colorScheme.primary,
                     inactiveTrackColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.24f),
                     disabledThumbColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
                     disabledActiveTrackColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.2f),
@@ -381,7 +385,7 @@ fun TelemetryControlPanel(
                     Icon(
                         imageVector = Icons.Default.CompassCalibration,
                         contentDescription = "Pressure",
-                        tint = if (pressure < 22f || pressure > 38f) Color(0xFF, 0x4B, 0x4B) else MaterialTheme.colorScheme.onSurfaceVariant,
+                        tint = if (pressure < 22f || pressure > 38f) StatusCritical else MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(15.dp)
                     )
                     Spacer(modifier = Modifier.width(6.dp))
@@ -396,13 +400,13 @@ fun TelemetryControlPanel(
                         Spacer(modifier = Modifier.width(6.dp))
                         Box(
                             modifier = Modifier
-                                .background(Color(0xFF, 0x4B, 0x4B).copy(alpha = 0.15f), RoundedCornerShape(3.dp))
-                                .border(0.5.dp, Color(0xFF, 0x4B, 0x4B).copy(alpha = 0.5f), RoundedCornerShape(3.dp))
+                                .background(StatusCritical.copy(alpha = 0.15f), RoundedCornerShape(3.dp))
+                                .border(0.5.dp, StatusCritical.copy(alpha = 0.5f), RoundedCornerShape(3.dp))
                                 .padding(horizontal = 4.dp, vertical = 1.dp)
                         ) {
                             Text(
                                 text = "CRITICAL",
-                                color = Color(0xFF, 0x4B, 0x4B),
+                                color = StatusCritical,
                                 fontSize = 7.5.sp,
                                 fontFamily = FontFamily.Monospace,
                                 fontWeight = FontWeight.Bold
@@ -469,7 +473,7 @@ fun TelemetryControlPanel(
                     Icon(
                         imageVector = Icons.Default.DeviceThermostat,
                         contentDescription = "Temperature",
-                        tint = if (temperature > 80f) Color(0xFF, 0x4B, 0x4B) else MaterialTheme.colorScheme.onSurfaceVariant,
+                        tint = if (temperature > 80f) StatusCritical else MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(15.dp)
                     )
                     Spacer(modifier = Modifier.width(6.dp))
@@ -484,13 +488,13 @@ fun TelemetryControlPanel(
                         Spacer(modifier = Modifier.width(6.dp))
                         Box(
                             modifier = Modifier
-                                .background(Color(0xFF, 0x4B, 0x4B).copy(alpha = 0.15f), RoundedCornerShape(3.dp))
-                                .border(0.5.dp, Color(0xFF, 0x4B, 0x4B).copy(alpha = 0.5f), RoundedCornerShape(3.dp))
+                                .background(StatusCritical.copy(alpha = 0.15f), RoundedCornerShape(3.dp))
+                                .border(0.5.dp, StatusCritical.copy(alpha = 0.5f), RoundedCornerShape(3.dp))
                                 .padding(horizontal = 4.dp, vertical = 1.dp)
                         ) {
                             Text(
                                 text = "OVERHEAT",
-                                color = Color(0xFF, 0x4B, 0x4B),
+                                color = StatusCritical,
                                 fontSize = 7.5.sp,
                                 fontFamily = FontFamily.Monospace,
                                 fontWeight = FontWeight.Bold
@@ -548,13 +552,13 @@ private fun getPressureLabel(psi: Float): String = when {
 }
 
 private fun getPressureColor(psi: Float): Color = when {
-    psi < 27.5f -> Color(0xFF, 0x5E, 0x36)
-    psi > 36.5f -> Color(0xFF, 0xD4, 0x3F)
-    else -> Color(0x28, 0xB4, 0x82)
+    psi < 27.5f -> StatusWarning
+    psi > 36.5f -> StatusWarning
+    else -> StatusSuccess
 }
 
 private fun getTemperatureColor(temp: Float): Color = when {
-    temp > 80f -> Color(0xFF, 0x4B, 0x4B)
-    temp > 50f -> Color(0xFF, 0x5E, 0x36)
-    else -> Color(0x58, 0xA6, 0xFF)
+    temp > 80f -> StatusCritical
+    temp > 50f -> StatusWarning
+    else -> StatusInfo
 }

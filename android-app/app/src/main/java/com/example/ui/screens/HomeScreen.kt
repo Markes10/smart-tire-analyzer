@@ -33,6 +33,10 @@ import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.graphics.graphicsLayer
 import android.widget.Toast
+import com.example.ui.theme.StatusCritical
+import com.example.ui.theme.StatusInfo
+import com.example.ui.theme.StatusSuccess
+import com.example.ui.theme.StatusWarning
 import com.example.ui.components.TireDigitalTwin3D
 import com.example.ui.components.TelemetryControlPanel
 import com.example.ui.components.DiagnosticPanel
@@ -580,9 +584,9 @@ fun HomeScreen(
                                         .fillMaxWidth(iotBattery / 100f)
                                         .background(
                                             when {
-                                                iotBattery > 50f -> Color(0x50, 0xFA, 0x7B)
-                                                iotBattery > 20f -> Color(0xFF, 0xD4, 0x3F)
-                                                else -> Color(0xFF, 0x4B, 0x4B)
+                                                iotBattery > 50f -> StatusSuccess
+                                                iotBattery > 20f -> StatusWarning
+                                                else -> StatusCritical
                                             },
                                             RoundedCornerShape(0.4.dp)
                                         )
@@ -616,7 +620,7 @@ fun HomeScreen(
                     Button(
                         onClick = { viewModel.isThermalMode.value = !isThermalMode },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = if (isThermalMode) Color(0xFF, 0x5E, 0x36) else Color(0x1F, 0x24, 0x2C).copy(alpha = 0.85f),
+                            containerColor = if (isThermalMode) StatusWarning else Color(0x1F, 0x24, 0x2C).copy(alpha = 0.85f),
                             contentColor = Color.White
                         ),
                         contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp),
@@ -870,21 +874,21 @@ fun getPressureLabel(psi: Float): String = when {
 }
 
 fun getPressureColor(psi: Float): Color = when {
-    psi < 27.5f -> Color(0xFF, 0x5E, 0x36) // orange
-    psi > 36.5f -> Color(0xFF, 0xD4, 0x3F) // yellow
-    else -> Color(0xFF, 0xA0, 0x00) // warm amber instead of green
+    psi < 27.5f -> StatusWarning
+    psi > 36.5f -> StatusWarning
+    else -> StatusSuccess
 }
 
 fun getTemperatureColor(temp: Float): Color = when {
-    temp > 80f -> Color(0xFF, 0x4B, 0x4B) // red
-    temp > 50f -> Color(0xFF, 0x5E, 0x36) // orange
-    else -> Color(0xFF, 0xB7, 0x4D) // warm light orange instead of blue
+    temp > 80f -> StatusCritical
+    temp > 50f -> StatusWarning
+    else -> StatusInfo
 }
 
 fun evaluateHealthColor(score: Int): Color = when {
-    score >= 80 -> Color(0xFF, 0xB3, 0x00) // warm amber instead of green
-    score >= 50 -> Color(0xFF, 0xD4, 0x3F) // yellow
-    else -> Color(0xFF, 0x4B, 0x4B) // critical red
+    score >= 80 -> StatusSuccess
+    score >= 50 -> StatusWarning
+    else -> StatusCritical
 }
 
 // Icon helper function that avoids using R.drawable.xxx that may not compile
@@ -962,7 +966,7 @@ fun CalibrationWizardDialog(
     ) {
         Card(
             shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF, 0xFF, 0xFF).copy(alpha = 0.08f)),
+            colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.08f)),
             border = BorderStroke(1.dp, Color(0x30, 0x36, 0x3D).copy(alpha = 0.8f)),
             modifier = Modifier
                 .fillMaxWidth()

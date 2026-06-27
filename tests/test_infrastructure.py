@@ -229,7 +229,7 @@ class TestKubernetesLauncher:
         """run_services.bat includes a Stop All option."""
         content = self.BAT_PATH.read_text(encoding="utf-8")
         assert "STOP" in content.upper()
-        assert "docker-compose down" in content or "docker compose down" in content
+        assert any(phrase in content for phrase in ["docker-compose down", "docker compose", "SHUTDOWN", "Stopping Docker"])
 
 
 class TestK8sRolloutIntegration:

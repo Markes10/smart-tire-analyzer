@@ -13,35 +13,62 @@ import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme =
   darkColorScheme(
-    primary = LightWarmOrange,
-    secondary = LightWarmBrown,
-    tertiary = LightWarmAmber,
-    background = Color(0xFF1B1B1B),
-    surface = Color(0xFF242424),
-    onBackground = Color(0xFFE6E1E5),
-    onSurface = Color(0xFFE6E1E5),
-    surfaceVariant = Color(0xFF49454F),
-    onSurfaceVariant = Color(0xFFCAC4D0)
+    primary = DarkPrimary,
+    onPrimary = DarkPrimaryForeground,
+    primaryContainer = DarkPrimaryContainer,
+    onPrimaryContainer = DarkOnPrimaryContainer,
+    secondary = DarkSecondary,
+    onSecondary = DarkSecondaryForeground,
+    tertiary = DarkTertiary,
+    onTertiary = DarkOnTertiary,
+    tertiaryContainer = DarkTertiaryContainer,
+    onTertiaryContainer = DarkOnTertiaryContainer,
+    background = DarkBackground,
+    onBackground = DarkForeground,
+    surface = DarkSurface,
+    onSurface = DarkOnSurface,
+    surfaceVariant = DarkSurfaceVariant,
+    onSurfaceVariant = DarkOnSurfaceVariant,
+    outline = DarkOutline,
+    error = DarkError,
+    onError = DarkErrorForeground,
+    inverseSurface = Color(0xFFF2F2F2),
+    inverseOnSurface = Color(0xFF0D1117),
+    inversePrimary = LightPrimary,
+    surfaceTint = DarkPrimary
   )
 
 private val LightColorScheme =
   lightColorScheme(
-    primary = WarmOrange,
-    secondary = WarmBrown,
-    tertiary = WarmAmber,
-    background = Color(0xFFFFFBF0),
-    surface = Color(0xFFFFFFFF),
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    surfaceVariant = Color(0xFFE7E0EC),
-    onSurfaceVariant = Color(0xFF49454F)
+    primary = LightPrimary,
+    onPrimary = LightPrimaryForeground,
+    primaryContainer = LightPrimaryContainer,
+    onPrimaryContainer = LightOnPrimaryContainer,
+    secondary = LightSecondary,
+    onSecondary = LightSecondaryForeground,
+    tertiary = LightTertiary,
+    onTertiary = LightOnTertiary,
+    tertiaryContainer = LightTertiaryContainer,
+    onTertiaryContainer = LightOnTertiaryContainer,
+    background = LightBackground,
+    onBackground = LightForeground,
+    surface = LightSurface,
+    onSurface = LightOnSurface,
+    surfaceVariant = LightSurfaceVariant,
+    onSurfaceVariant = LightOnSurfaceVariant,
+    outline = LightOutline,
+    error = LightError,
+    onError = LightErrorForeground,
+    inverseSurface = Color(0xFF1F2937),
+    inverseOnSurface = Color(0xFFFCFCFC),
+    inversePrimary = DarkPrimary,
+    surfaceTint = LightPrimary
   )
 
 @Composable
 fun MyApplicationTheme(
   darkTheme: Boolean = isSystemInDarkTheme(),
-  // Dynamic color is available on Android 12+
-  dynamicColor: Boolean = true,
+  dynamicColor: Boolean = false,
   content: @Composable () -> Unit,
 ) {
   val colorScheme =

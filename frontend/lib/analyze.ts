@@ -2,7 +2,7 @@
  * Browser API helpers for the Smart Tire backend.
  */
 
-import { getConfiguredApiKeys } from "@/lib/api-keys";
+import { getApiKeyPreferences } from "@/lib/api-keys";
 
 export interface AnalyzeParams {
   imageUri: File | string;
@@ -142,10 +142,11 @@ export async function analyzeImage(params: AnalyzeParams): Promise<AnalysisResul
   formData.append("image", fileToUpload, fileToUpload.name);
   const contextPayload: Record<string, any> = { ...(params.context ?? {}) };
 
-  // Include user's runtime API keys from localStorage
-  const runtimeKeys = getConfiguredApiKeys();
-  if (Object.keys(runtimeKeys).length > 0) {
-    contextPayload.runtime_api_keys = runtimeKeys;
+  // Include user's API key preferences (booleans only — actual key values are
+  // stored server-side in the user's session, encrypted at rest in the DB)
+  const keyPrefs = getApiKeyPreferences();
+  if (keyPrefs.useOwnGemini || keyPrefs.useOwnMapillary || keyPrefs.useOwnOpenweather) {
+    contextPayload.api_key_preferences = keyPrefs;
   }
 
   function setContextValue(key: string, value: unknown) {

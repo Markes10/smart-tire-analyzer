@@ -1,0 +1,137 @@
+# ── Smart Tire Analyzer — Alertmanager Configuration ───────────────────────
+# Routes certificate expiry alerts to Slack (warnings) and Email (critical).
+#
+# Prerequisites:
+#   - kube-prometheus-stack installed (creates the alertmanager secret)
+#
+# Apply with:
+#   kubectl create secret generic alertmanager-kube-prometheus-stack-alertmanager \
+#     --namespace monitoring \
+#     --from-file=alertmanager.yaml=deployment/kubernetes/alertmanager-config.yaml \
+#     --dry-run=client -o yaml | kubectl apply -f -
+#
+#   Then restart Alertmanager to pick up the new config:
+#   kubectl rollout restart statefulset -n monitoring alertmanager-kube-prometheus-stack-alertmanager
+#
+# Verify:
+#   kubectl get secret -n monitoring alertmanager-kube-prometheus-stack-alertmanager
+#   kubectl logs -n monitoring statefulset/alertmanager-kube-prometheus-stack-alertmanager
+#
+# Check the alert routes are working:
+#   kubectl port-forward -n monitoring svc/kube-prometheus-stack-alertmanager 9093:9093
+#   # Then curl http://localhost:9093/#/status to see current config
+# ──────────────────────────────────────────────────────────────────────────
+
+global:
+  # How long to wait before sending a notification for a new alert
+  resolve_timeout: 5m
+  # How long to wait before re-sending an already-fired alert
+  repeat_interval: 12h
+
+  # ═════════════════════════════════════════════════════════════════════
+  # Slack configuration
+  # ═════════════════════════════════════════════════════════════════════
+  slack_api_url: 'https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK'  # ⚠️  Replace with your Slack webhook URL
+
+  # ═════════════════════════════════════════════════════════════════════
+  # Email (SMTP) configuration — Gmail / Google Workspace
+  # ═════════════════════════════════════════════════════════════════════
+  # For Gmail, you need an App Password (not your regular password):
+  #   Google Account → Security → 2-Step Verification → App Passwords
+  smtp_smarthost: 'smtp.gmail.com:587'
+  smtp_from: 'alerts@your-domain.com'          # ⚠️  Replace with your sender email
+  smtp_auth_username: 'alerts@your-domain.com' # ⚠️  Replace with your Gmail address
+  smtp_auth_password: 'YOUR_GMAIL_APP_PASSWORD' # ⚠️  Replace with Gmail App Password
+  smtp_require_tls: true
+
+# ── Notification routing tree ──────────────────────────────────────────
+# Routes are evaluated top-to-bottom. The first match wins.
+route:
+  # Default receiver for all un-matched alerts
+  receiver: 'default-null'
+  continue: false
+  group_by: ['alertname', 'severity', 'namespace']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 12h
+
+  # ── Child routes ────────────────────────────────────────────────────
+  routes:
+    # CRITICAL alerts (3-day expiry, not ready, controller down) → email + Slack
+    - receiver: 'email-admin-critical'
+      match:
+        severity: critical
+        team: platform
+      continue: true  # Continue to also match the Slack route
+
+    - receiver: 'slack-alerts'
+      match:
+        severity: critical
+        team: platform
+
+    # WARNING alerts (21-day expiry, renewal failures) → Slack only
+    - receiver: 'slack-alerts'
+      match:
+        severity: warning
+        team: platform
+
+# ── Notification receivers ─────────────────────────────────────────────
+receivers:
+  # Null receiver (unmatched alerts are silenced — prevents noise)
+  - name: 'default-null'
+    webhook_configs:
+      - url: http://localhost/not-configured
+
+  # Slack receiver
+  - name: 'slack-alerts'
+    slack_configs:
+      - channel: '#alerts'  # ⚠️  Change to your Slack channel name
+        title: '{{ .CommonLabels.alertname }} — {{ .CommonLabels.namespace }}/{{ .CommonLabels.name }}'
+        text: >-
+          {{ range .Alerts }}
+          *Alert:* {{ .Labels.alertname }}
+          *Severity:* {{ .Labels.severity }}
+          *Certificate:* {{ index .Labels "name" }}
+          *Namespace:* {{ index .Labels "namespace" }}
+          *Description:* {{ .Annotations.description }}
+          *Started:* {{ .StartsAt }}
+          {{ end }}
+        color: '{{ if eq .CommonLabels.severity "critical" }}danger{{ else }}warning{{ end }}'
+        username: 'Smart Tire Analyzer'
+        icon_emoji: ':warning:'
+        actions:
+          - type: button
+            text: 'View in Prometheus'
+            url: 'http://prometheus.monitoring:9090/alert'
+          - type: button
+            text: 'View Grafana Dashboard'
+            url: 'http://grafana.monitoring:3000/d/smart-tire-tls'
+        fallback: '{{ .CommonLabels.alertname }} — {{ .CommonLabels.namespace }}/{{ .CommonLabels.name }}'
+
+  # Email receiver (critical alerts only)
+  - name: 'email-admin-critical'
+    email_configs:
+      - to: 'admin@your-domain.com'  # ⚠️  Replace with recipient email
+        headers:
+          subject: '🚨 [CRITICAL] {{ .GroupLabels.alertname }} — {{ .CommonLabels.namespace }}/{{ .CommonLabels.name }}'
+        html: |
+          <h2>🚨 Critical Alert: {{ .GroupLabels.alertname }}</h2>
+          <table border="1" cellpadding="8" cellspacing="0" style="border-collapse:collapse;">
+            <tr><td><strong>Alert</strong></td><td>{{ .GroupLabels.alertname }}</td></tr>
+            <tr><td><strong>Severity</strong></td><td><span style="color:red;">CRITICAL</span></td></tr>
+            <tr><td><strong>Certificate</strong></td><td>{{ index .CommonLabels "name" }}</td></tr>
+            <tr><td><strong>Namespace</strong></td><td>{{ index .CommonLabels "namespace" }}</td></tr>
+            <tr><td><strong>Description</strong></td><td>{{ .CommonAnnotations.description }}</td></tr>
+            <tr><td><strong>Time</strong></td><td>{{ .StartsAt }}</td></tr>
+          </table>
+          <br/>
+          <b>Quick actions:</b>
+          <ul>
+            <li><a href="http://prometheus.monitoring:9090/alert">View in Prometheus</a></li>
+            <li><code>kubectl describe certificate {{ index .CommonLabels "name" }} -n {{ index .CommonLabels "namespace" }}</code></li>
+            <li><code>kubectl get certificaterequest -n {{ index .CommonLabels "namespace" }}</code></li>
+          </ul>
+
+# ── Notification templates ──────────────────────────────────────────────
+# Built-in Alertmanager templates are used for the Slack title/text fields.
+# No custom template files required.

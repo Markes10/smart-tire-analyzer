@@ -1,0 +1,127 @@
+# Kubernetes NetworkPolicy — Smart Tire Analyzer
+# Restricts pod-to-pod communication to only necessary flows.
+# Includes allow-rules for cert-manager HTTP-01 ACME challenges.
+#
+# Apply with: kubectl apply -f deployment/kubernetes/network-policy.yaml
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-all-ingress
+  namespace: smart-tire
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress: []  # No ingress by default
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-backend-ingress
+  namespace: smart-tire
+spec:
+  podSelector:
+    matchLabels:
+      app: smart-tire-backend
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        # Frontend pods need to call the backend API
+        - podSelector:
+            matchLabels:
+              app: smart-tire-frontend
+        # Ingress controller forwards external requests to the backend
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+        # Monitoring systems (Prometheus, etc.)
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+      ports:
+        - port: 8000
+          protocol: TCP
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-frontend-ingress
+  namespace: smart-tire
+spec:
+  podSelector:
+    matchLabels:
+      app: smart-tire-frontend
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        # Ingress controller forwards external requests to the frontend
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+      ports:
+        - port: 3000
+          protocol: TCP
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-redis-ingress
+  namespace: smart-tire
+spec:
+  podSelector:
+    matchLabels:
+      app: smart-tire-redis
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: smart-tire-backend
+      ports:
+        - port: 6379
+          protocol: TCP
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-all-egress
+  namespace: smart-tire
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    # Allow egress to the internet (for API calls + ACME challenges)
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except:
+              - 10.0.0.0/8
+              - 172.16.0.0/12
+              - 192.168.0.0/16
+      ports:
+        - port: 443
+          protocol: TCP
+        - port: 80
+          protocol: TCP
+        - port: 53
+          protocol: UDP
+    # Allow pod-to-pod communication within the namespace
+    - to:
+        - podSelector: {}
+      ports:
+        - port: 8000
+          protocol: TCP
+        - port: 3000
+          protocol: TCP
+        - port: 6379
+          protocol: TCP

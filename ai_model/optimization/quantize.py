@@ -68,7 +68,7 @@ class TurboQuantOptimizer:
     def _load_model_from_path(self, path: PathLike) -> KerasModel:
         """Load a Keras model from disk through a narrow untyped boundary."""
         tf_module: Any = tf
-        model: Any = tf_module.keras.models.load_model(str(Path(path)))
+        model: Any = tf_module.keras.models.load_model(str(Path(path)), compile=False)
         return model
 
     def _ensure_model_loaded(self) -> KerasModel:

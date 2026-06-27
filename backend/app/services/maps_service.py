@@ -21,6 +21,7 @@ from PIL import Image
 
 from app.config import settings
 from app.services.api_key_rotator import APIKeyRotator, get_maps_rotator
+from app.services.cache_service import get_cache
 
 logger = logging.getLogger(__name__)
 
@@ -67,6 +68,12 @@ class MapsService:
         if not self.enabled:
             return self._mock_context(lat, lon)
 
+        cache = get_cache()
+        cache_key = f"maps:road:{round(lat, 4)}:{round(lon, 4)}"
+        cached = await cache.get(cache_key)
+        if cached is not None:
+            return cached
+
         try:
             elevation_data, street_view_meta = await asyncio.gather(
                 self._fetch_elevation(lat, lon),
@@ -95,7 +102,7 @@ class MapsService:
                 elevation_m,
             )
 
-            return {
+            result = {
                 "terrain_type": terrain_type,
                 "road_condition": road_condition,
                 "road_condition_basis": road_basis,
@@ -110,6 +117,8 @@ class MapsService:
                 "route_analysis_source": "single_point",
                 **legacy_context,
             }
+            await cache.set(cache_key, result, ttl=604800)
+            return result
         except Exception as e:
             logger.warning("Maps API error: %s - using mock", e)
             return self._mock_context(lat, lon)
@@ -130,6 +139,12 @@ class MapsService:
         """
         if not self.enabled:
             return self._mock_route_context(source_lat, source_lon, destination_lat, destination_lon)
+
+        cache = get_cache()
+        cache_key = f"maps:route:{round(source_lat, 4)}:{round(source_lon, 4)}:{round(destination_lat, 4)}:{round(destination_lon, 4)}"
+        cached = await cache.get(cache_key)
+        if cached is not None:
+            return cached
 
         try:
             route_points, route_meta = await self._fetch_route_points(
@@ -163,7 +178,7 @@ class MapsService:
                 road_condition,
                 elevation_avg,
             )
-            return {
+            result = {
                 "terrain_type": terrain_type,
                 "road_condition": road_condition,
                 "road_condition_basis": road_basis,
@@ -188,6 +203,8 @@ class MapsService:
                 "street_view_samples": self._public_samples(samples),
                 **legacy_context,
             }
+            await cache.set(cache_key, result, ttl=604800)
+            return result
         except Exception as e:
             logger.warning("Route Maps API error: %s - using mock route context", e)
             return self._mock_route_context(source_lat, source_lon, destination_lat, destination_lon)

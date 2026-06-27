@@ -4,6 +4,8 @@ import { useState } from "react"
 import { signIn } from "next-auth/react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -11,30 +13,34 @@ import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { Gauge, ArrowLeft, Chrome, AlertCircle } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import { loginSchema, type LoginInput } from "@/lib/validation"
 
-// If NEXT_PUBLIC_GOOGLE_CLIENT_ID is set, use real Google OAuth redirect.
-// Otherwise, fall back to the dev-mode mock via credentials provider.
 const hasRealGoogleOAuth = !!process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
 
 export default function LoginForm() {
   const { push } = useRouter()
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get("callbackUrl") || "/analyze"
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [googleLoading, setGoogleLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginInput>({
+    resolver: zodResolver(loginSchema),
+  })
+
+  const onSubmit = async (data: LoginInput) => {
     setIsLoading(true)
     setError(null)
 
     try {
       const result = await signIn("credentials", {
-        email,
-        password,
+        email: data.email,
+        password: data.password,
         redirect: false,
       })
 
@@ -59,10 +65,8 @@ export default function LoginForm() {
 
     try {
       if (hasRealGoogleOAuth) {
-        // Real Google OAuth — redirect to Google consent screen
         await signIn("google", { callbackUrl })
       } else {
-        // Dev mode — mock Google sign-in
         const result = await signIn("credentials", {
           email: "user@gmail.com",
           password: "google-oauth",
@@ -88,7 +92,6 @@ export default function LoginForm() {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center px-4 py-12">
-      {/* Background */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
           <div className="h-125 w-125 rounded-full bg-primary/10 blur-[100px]" />
@@ -122,7 +125,7 @@ export default function LoginForm() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
@@ -130,11 +133,12 @@ export default function LoginForm() {
                 id="email"
                 type="email"
                 placeholder="name@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
+                {...register("email")}
                 disabled={isLoading}
               />
+              {errors.email && (
+                <p className="text-sm text-destructive">{errors.email.message}</p>
+              )}
             </div>
             <div className="space-y-2">
               <div className="flex items-center justify-between">
@@ -150,11 +154,12 @@ export default function LoginForm() {
                 id="password"
                 type="password"
                 placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
+                {...register("password")}
                 disabled={isLoading}
               />
+              {errors.password && (
+                <p className="text-sm text-destructive">{errors.password.message}</p>
+              )}
             </div>
           </CardContent>
           <CardFooter className="flex flex-col gap-4">
@@ -188,7 +193,7 @@ export default function LoginForm() {
             </p>
 
             <p className="text-center text-xs text-muted-foreground/60">
-              Dev mode: any email with password of 4+ characters works
+              Secured with bcrypt — your API keys are stored with your account
             </p>
           </CardFooter>
         </form>

@@ -1,6 +1,8 @@
 "use client"
 
 import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
@@ -24,6 +26,7 @@ import {
     Database,
     Shield
 } from "lucide-react"
+import { supportTicketSchema, type SupportTicketInput } from "@/lib/validation"
 
 const issueCategories = [
     { value: "image-upload", label: "Image Upload Issues", icon: Upload },
@@ -75,8 +78,17 @@ export default function TechnicalSupportPage() {
     const [isSubmitted, setIsSubmitted] = useState(false)
     const [ticketNumber, setTicketNumber] = useState<string | null>(null)
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        setValue,
+        reset,
+    } = useForm<SupportTicketInput>({
+        resolver: zodResolver(supportTicketSchema),
+    })
+
+    const onSubmit = async (data: SupportTicketInput) => {
         setIsSubmitting(true)
         await new Promise(resolve => setTimeout(resolve, 1500))
         setTicketNumber(`ST-${Math.floor(100000 + Math.random() * 900000)}`)
@@ -158,16 +170,17 @@ export default function TechnicalSupportPage() {
                                                     onClick={() => {
                                                         setTicketNumber(null)
                                                         setIsSubmitted(false)
+                                                        reset()
                                                     }}
                                                 >
                                                     Submit Another Ticket
                                                 </Button>
                                             </div>
                                         ) : (
-                                            <form onSubmit={handleSubmit} className="space-y-6">
+                                            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                                                 <div className="space-y-2">
                                                     <Label htmlFor="category">Issue Category</Label>
-                                                    <Select required>
+                                                    <Select onValueChange={(value) => setValue("category", value)}>
                                                         <SelectTrigger>
                                                             <SelectValue placeholder="Select issue type" />
                                                         </SelectTrigger>
@@ -182,16 +195,22 @@ export default function TechnicalSupportPage() {
                                                             ))}
                                                         </SelectContent>
                                                     </Select>
+                                                    {errors.category && (
+                                                        <p className="text-sm text-destructive">{errors.category.message}</p>
+                                                    )}
                                                 </div>
 
                                                 <div className="grid gap-4 sm:grid-cols-2">
                                                     <div className="space-y-2">
                                                         <Label htmlFor="email">Email Address</Label>
-                                                        <Input id="email" type="email" placeholder="you@example.com" required />
+                                                        <Input id="email" type="email" placeholder="you@example.com" {...register("email")} />
+                                                        {errors.email && (
+                                                            <p className="text-sm text-destructive">{errors.email.message}</p>
+                                                        )}
                                                     </div>
                                                     <div className="space-y-2">
                                                         <Label htmlFor="priority">Priority</Label>
-                                                        <Select>
+                                                        <Select onValueChange={(value) => setValue("priority", value as SupportTicketInput["priority"])}>
                                                             <SelectTrigger>
                                                                 <SelectValue placeholder="Select priority" />
                                                             </SelectTrigger>
@@ -199,15 +218,21 @@ export default function TechnicalSupportPage() {
                                                                 <SelectItem value="low">Low - General question</SelectItem>
                                                                 <SelectItem value="medium">Medium - Affecting workflow</SelectItem>
                                                                 <SelectItem value="high">High - Cannot use platform</SelectItem>
-                                                                <SelectItem value="critical">Critical - Data at risk</SelectItem>
+                                                                <SelectItem value="urgent">Urgent - Data at risk</SelectItem>
                                                             </SelectContent>
                                                         </Select>
+                                                        {errors.priority && (
+                                                            <p className="text-sm text-destructive">{errors.priority.message}</p>
+                                                        )}
                                                     </div>
                                                 </div>
 
                                                 <div className="space-y-2">
                                                     <Label htmlFor="subject">Subject</Label>
-                                                    <Input id="subject" placeholder="Brief description of the issue" required />
+                                                    <Input id="subject" placeholder="Brief description of the issue" {...register("subject")} />
+                                                    {errors.subject && (
+                                                        <p className="text-sm text-destructive">{errors.subject.message}</p>
+                                                    )}
                                                 </div>
 
                                                 <div className="space-y-2">
@@ -216,8 +241,11 @@ export default function TechnicalSupportPage() {
                                                         id="description"
                                                         placeholder="Please describe the issue in detail. Include steps to reproduce, expected behavior, and what actually happened..."
                                                         rows={5}
-                                                        required
+                                                        {...register("description")}
                                                     />
+                                                    {errors.description && (
+                                                        <p className="text-sm text-destructive">{errors.description.message}</p>
+                                                    )}
                                                 </div>
 
                                                 <div className="space-y-2">
@@ -225,7 +253,11 @@ export default function TechnicalSupportPage() {
                                                     <Input
                                                         id="environment"
                                                         placeholder="Browser, OS, device (e.g., Chrome 120, Windows 11, Desktop)"
+                                                        {...register("environment")}
                                                     />
+                                                    {errors.environment && (
+                                                        <p className="text-sm text-destructive">{errors.environment.message}</p>
+                                                    )}
                                                 </div>
 
                                                 <Button type="submit" className="w-full" disabled={isSubmitting}>

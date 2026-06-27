@@ -16,6 +16,8 @@ build/
 # Environment secrets
 .env
 *.env.local
+.secrets.env
+*.secrets.env
 
 # Model files (too large for Git — use DVC or cloud storage)
 ai_model/saved_models/*.h5
@@ -92,6 +94,11 @@ node_modules
 
 # Build artifacts
 tsconfig.tsbuildinfo
+
+# TLS certificates (auto-generated — never commit private keys)
+certs/server.key
+certs/server.pem
+certs/ca.key
 
 # Root debug / temp files
 debug_root.bat

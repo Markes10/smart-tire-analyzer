@@ -1,0 +1,107 @@
+# ── Smart Tire Analyzer — Ingress Resource with TLS ────────────────────────
+# Single Ingress exposing both backend and frontend.
+# Backend API is served under /api/ prefix, frontend catches everything else.
+# cert-manager automatically provisions Let's Encrypt TLS certificates.
+#
+# Prerequisites:
+#   1. Install cert-manager: kubectl apply -f https://github.com/cert-manager/cert-manager/releases/latest/download/cert-manager.yaml
+#   2. Install an Ingress Controller (e.g., ingress-nginx):
+#        kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml
+#   3. Apply cert-manager-issuer.yaml first
+#   4. Replace YOUR_DOMAIN.com with your actual domain throughout this file
+#   5. Ensure your domain's DNS points to the ingress controller's external IP
+#
+# Apply with:
+#   kubectl apply -f deployment/kubernetes/ingress.yaml
+#
+# Verify:
+#   kubectl get ingress -n smart-tire
+#   kubectl describe certificate -n smart-tire
+#   curl https://your-domain.com/health
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: smart-tire-ingress
+  namespace: smart-tire
+  labels:
+    app: smart-tire-ingress
+  annotations:
+    # ── Ingress controller class ─────────────────────────────────────────
+    ingressClassName: nginx
+    # (Deprecated annotation still supported for older clusters:)
+    # kubernetes.io/ingress.class: nginx
+
+    # ── TLS certificate issuer (cert-manager) ───────────────────────────
+    # Use staging issuer for testing, prod issuer for production:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    # cert-manager.io/cluster-issuer: "letsencrypt-staging"  # For testing
+
+    # ── HSTS and SSL redirect ───────────────────────────────────────────
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/hsts: "true"
+    nginx.ingress.kubernetes.io/hsts-max-age: "31536000"
+    nginx.ingress.kubernetes.io/hsts-include-subdomains: "true"
+    nginx.ingress.kubernetes.io/hsts-preload: "true"
+
+    # ── Security headers ───────────────────────────────────────────────
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "X-Frame-Options: DENY";
+      more_set_headers "X-Content-Type-Options: nosniff";
+      more_set_headers "Referrer-Policy: strict-origin-when-cross-origin";
+      more_set_headers "Permissions-Policy: camera=(self), microphone=(), geolocation=(self), payment=()";
+      more_set_headers "Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://maps.googleapis.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://maps.googleapis.com https://api.openweathermap.org https://generativelanguage.googleapis.com https://graph.mapillary.com; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';";
+
+    # ── Rewrite /api/ → / for the backend ──────────────────────────────
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
+
+    # ── Rate limiting ──────────────────────────────────────────────────
+    nginx.ingress.kubernetes.io/limit-rps: "10"
+    nginx.ingress.kubernetes.io/limit-burst-multiplier: "2"
+    nginx.ingress.kubernetes.io/limit-connections: "10"
+
+    # ── Timeouts ───────────────────────────────────────────────────────
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "10"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
+
+    # ── Body size ──────────────────────────────────────────────────────
+    nginx.ingress.kubernetes.io/proxy-body-size: "15m"
+
+    # ── WebSocket support ──────────────────────────────────────────────
+    nginx.ingress.kubernetes.io/proxy-buffering: "off"
+    nginx.ingress.kubernetes.io/proxy-http-version: "1.1"
+
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - YOUR_DOMAIN.com   # ⚠️  Replace with your actual domain
+      secretName: smart-tire-tls  # cert-manager creates this Secret
+
+  rules:
+    - host: YOUR_DOMAIN.com   # ⚠️  Replace with your actual domain
+      http:
+        paths:
+          # ── Backend API (under /api/ prefix) ────────────────────────────
+          # Requests to /api/health → backend /health
+          # Requests to /api/v1/predict → backend /v1/predict
+          - path: /api(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: smart-tire-backend-svc
+                port:
+                  number: 80
+
+          # ── Frontend (everything else) ──────────────────────────────────
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: smart-tire-frontend-svc
+                port:
+                  number: 3000

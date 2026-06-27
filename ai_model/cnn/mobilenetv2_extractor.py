@@ -131,7 +131,10 @@ def build_lite_cnn_extractor(
 
 
 if __name__ == "__main__":
+    import logging
+    logging.basicConfig(level=logging.DEBUG)
+    logger = logging.getLogger(__name__)
     model = build_mobilenetv2_extractor()
     model.summary()
-    print(f"\nOutput shape: {model.output_shape}")
-    print(f"Trainable params: {model.count_params():,}")
+    logger.debug("Output shape: %s", model.output_shape)
+    logger.debug("Trainable params: %s", f"{model.count_params():,}")

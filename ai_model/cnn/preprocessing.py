@@ -419,10 +419,12 @@ def run_preprocessing_pipeline(
 
 if __name__ == "__main__":
     # Quick smoke test
+    import logging
+    logging.basicConfig(level=logging.DEBUG)
     test_img = np.random.randint(0, 255, (640, 480, 3), dtype=np.uint8)
     result = run_preprocessing_pipeline(test_img, training=False)
     if result is not None:
-        print(f"Output shape: {result.shape}, dtype: {result.dtype}")
-        print(f"Value range: [{result.min():.3f}, {result.max():.3f}]")
+        logger.debug("Output shape: %s, dtype: %s", result.shape, result.dtype)
+        logger.debug("Value range: [%.3f, %.3f]", result.min(), result.max())
     else:
-        print("Image rejected (too blurry)")
+        logger.debug("Image rejected (too blurry)")

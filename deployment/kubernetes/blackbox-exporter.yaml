@@ -1,0 +1,197 @@
+# ── Smart Tire Analyzer — Prometheus Blackbox Exporter ─────────────────────
+# Monitors external HTTP(S) endpoints (API health, frontend availability).
+# Deploys the blackbox-exporter and creates a Probe CRD to check the
+# Smart Tire API health endpoint using the multi-target exporter pattern.
+#
+# Prerequisites:
+#   - Prometheus Operator installed (for the Probe and PodMonitor CRDs)
+#   - The smart-tire namespace must exist (apply service.yaml first)
+#
+# Apply with:
+#   kubectl apply -f deployment/kubernetes/blackbox-exporter.yaml
+#
+# Verify:
+#   kubectl get pods -n smart-tire -l app=blackbox-exporter
+#   kubectl get probe -n smart-tire
+#   kubectl get podmonitor -n smart-tire
+# ──────────────────────────────────────────────────────────────────────────
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: blackbox-exporter-config
+  namespace: smart-tire
+  labels:
+    app: blackbox-exporter
+data:
+  blackbox.yml: |
+    modules:
+      http_2xx:
+        prober: http
+        timeout: 5s
+        http:
+          valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+          valid_status_codes: [200, 201, 204]
+          method: GET
+          preferred_ip_protocol: "ip4"
+          tls_config:
+            insecure_skip_verify: false
+      http_health:
+        prober: http
+        timeout: 5s
+        http:
+          valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+          valid_status_codes: [200]
+          method: GET
+          preferred_ip_protocol: "ip4"
+          follow_redirects: true
+          tls_config:
+            insecure_skip_verify: false
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blackbox-exporter
+  namespace: smart-tire
+  labels:
+    app: blackbox-exporter
+    app.kubernetes.io/name: blackbox-exporter
+    app.kubernetes.io/component: exporter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: blackbox-exporter
+  template:
+    metadata:
+      labels:
+        app: blackbox-exporter
+        app.kubernetes.io/name: blackbox-exporter
+        app.kubernetes.io/component: exporter
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: blackbox-exporter
+          image: prom/blackbox-exporter:v0.25.0
+          imagePullPolicy: IfNotPresent
+          args:
+            - "--config.file=/config/blackbox.yml"
+            - "--web.listen-address=:9115"
+          ports:
+            - name: http
+              containerPort: 9115
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 9115
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 9115
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          volumeMounts:
+            - name: config
+              mountPath: /config
+              readOnly: true
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "128Mi"
+              cpu: "100m"
+      volumes:
+        - name: config
+          configMap:
+            name: blackbox-exporter-config
+            items:
+              - key: blackbox.yml
+                path: blackbox.yml
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: blackbox-exporter
+  namespace: smart-tire
+  labels:
+    app: blackbox-exporter
+    app.kubernetes.io/name: blackbox-exporter
+spec:
+  type: ClusterIP
+  selector:
+    app: blackbox-exporter
+  ports:
+    - name: http
+      port: 9115
+      targetPort: 9115
+      protocol: TCP
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: smart-tire-api-health
+  namespace: smart-tire
+  labels:
+    app: smart-tire-monitoring
+    prometheus: kube-prometheus
+spec:
+  prober:
+    url: blackbox-exporter.smart-tire.svc.cluster.local:9115
+    path: /probe
+    scheme: http
+  module: http_health
+  targets:
+    staticConfig:
+      static:
+        - https://YOUR_DOMAIN.com/api/health   # ⚠️  Replace YOUR_DOMAIN.com with your domain
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: smart-tire-frontend
+  namespace: smart-tire
+  labels:
+    app: smart-tire-monitoring
+    prometheus: kube-prometheus
+spec:
+  prober:
+    url: blackbox-exporter.smart-tire.svc.cluster.local:9115
+    path: /probe
+    scheme: http
+  module: http_2xx
+  targets:
+    staticConfig:
+      static:
+        - https://YOUR_DOMAIN.com/             # ⚠️  Replace YOUR_DOMAIN.com with your domain
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: blackbox-exporter
+  namespace: smart-tire
+  labels:
+    app: smart-tire-monitoring
+    prometheus: kube-prometheus
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: blackbox-exporter
+  podMetricsEndpoints:
+    - port: http
+      interval: 30s
+      scrapeTimeout: 10s

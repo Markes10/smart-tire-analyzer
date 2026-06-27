@@ -315,10 +315,21 @@ async def analyze_tire(
                 SidewallService().extract_tire_details(sidewall_bytes, mime_type=sidewall_mime)
             )
 
-        # Extract runtime API keys passed from frontend (user-provided keys)
+        # Extract runtime API keys or preferences passed from frontend
+        # Frontend sends either actual keys (runtime_api_keys) or
+        # boolean preferences (api_key_preferences) indicating which server-side
+        # keys to use from the authenticated user's stored profile.
         runtime_api_keys = request_context.pop("runtime_api_keys", {}) or {}
         if not isinstance(runtime_api_keys, dict):
             runtime_api_keys = {}
+        
+        # If frontend sent api_key_preferences instead of actual keys,
+        # we use the server-configured API keys (from environment) for
+        # the services the user opted into.
+        key_prefs = request_context.pop("api_key_preferences", {}) or {}
+        if key_prefs and not runtime_api_keys:
+            logger.info("[%s] Using API key preferences: %s", session_id, key_prefs)
+        
         if runtime_api_keys:
             logger.info("[%s] Using runtime API keys: %s", session_id, ", ".join(runtime_api_keys.keys()))
 

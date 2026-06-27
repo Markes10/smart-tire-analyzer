@@ -99,12 +99,18 @@ docker compose -f deployment/docker/docker-compose.yml up -d --build
 ```bash
 kubectl apply -f deployment/kubernetes/service.yaml  # Creates namespace
 
-kubectl create secret generic smart-tire-secrets \
+# Create secrets from .env file
+kubectl create secret generic smart-tire-backend-secrets \
   --namespace=smart-tire \
-  --from-literal=gemini-api-key=your_key \
-  --from-literal=maps-api-key=your_key \
-  --from-literal=weather-api-key=your_key \
-  --from-literal=database-url=postgresql+asyncpg://user:pass@host:5432/smart_tire
+  --from-literal=GEMINI_API_KEYS="your_key" \
+  --from-literal=GOOGLE_MAPS_API_KEYS="your_key" \
+  --from-literal=OPENWEATHER_API_KEYS="your_key" \
+  --from-literal=MAPILLARY_API_KEYS="your_key" \
+  --from-literal=JWT_SECRET="$(python -c 'import secrets; print(secrets.token_urlsafe(48))')"
+
+kubectl create secret generic smart-tire-frontend-secrets \
+  --namespace=smart-tire \
+  --from-literal=NEXTAUTH_SECRET="$(python -c 'import secrets; print(secrets.token_urlsafe(32))')"
 ```
 
 ### 2. Deploy model storage
@@ -128,6 +134,12 @@ kubectl logs -f deployment/smart-tire-backend -n smart-tire
 
 ```bash
 kubectl scale deployment smart-tire-backend --replicas=4 -n smart-tire
+```
+
+### 5. Apply Network Policies
+
+```bash
+kubectl apply -f deployment/kubernetes/network-policy.yaml
 ```
 
 ---
@@ -166,11 +178,205 @@ Set these in your GitHub repository → Settings → Secrets:
 
 ---
 
+---
+
+## TLS / HTTPS Setup
+
+### Docker Deployment (Development)
+
+Generate self-signed certificates for local HTTPS testing:
+
+```bash
+# Generate development certificates
+bash scripts/generate_dev_certs.sh
+
+# OR let docker-compose auto-generate them on first start
+docker compose -f deployment/docker/docker-compose.yml up -d
+# The 'cert-gen' service creates certificates in ./certs/
+
+# Trust the CA certificate in your browser (to avoid "Not Secure" warnings):
+#   Windows:   double-click certs/ca.crt → Install Certificate →
+#              Local Machine → Trusted Root Certification Authorities
+#   macOS:     sudo security add-trusted-cert -d -r trustRoot \
+#                -k /Library/Keychains/System.keychain certs/ca.crt
+#   Linux:     sudo cp certs/ca.crt /usr/local/share/ca-certificates/ \
+#                && sudo update-ca-certificates
+```
+
+After generating certs, the nginx container serves both:
+- **Port 80**: Plain HTTP (proxied to backend)
+- **Port 443**: HTTPS with TLS (auto-detects certs in `/etc/nginx/ssl/`)
+
+Set `ENABLE_HTTPS=true` in your `.env` file to have the port-80 server redirect HTTP → HTTPS.
+
+### Docker Deployment (Production — Let's Encrypt)
+
+For production with a real domain, use Certbot to obtain trusted certificates:
+
+```bash
+# 1. Run the production setup script
+bash scripts/setup_production_certs.sh your-domain.com
+
+# 2. This will:
+#    - Obtain Let's Encrypt certificates via ACME HTTP-01 challenge
+#    - Store certs in /etc/letsencrypt/live/your-domain.com/
+#    - Set up auto-renewal via systemd timer or cron
+
+# 3. Update nginx.conf:
+#    - Change server_name to your domain
+#    - Uncomment production certificate paths
+#    See deployment/docker/nginx.conf for instructions
+
+# 4. Update .env:
+#    DOMAIN=your-domain.com
+#    ENABLE_HTTPS=true
+
+# 5. Restart the stack:
+#    docker compose -f deployment/docker/docker-compose.yml up -d
+```
+
+### Kubernetes Deployment (cert-manager + Let's Encrypt)
+
+#### 1. Install cert-manager
+
+```bash
+# Install cert-manager into your cluster
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/latest/download/cert-manager.yaml
+
+# Verify installation
+kubectl get pods -n cert-manager
+```
+
+#### 2. Install Ingress Controller
+
+```bash
+# Install nginx ingress controller (pick the correct provider)
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml
+
+# Get the ingress controller's external IP
+kubectl get svc -n ingress-nginx
+```
+
+#### 3. Configure DNS
+
+Create an A record for your domain pointing to the ingress controller's external IP:
+
+```
+your-domain.com  A  <INGRESS_CONTROLLER_EXTERNAL_IP>
+```
+
+#### 4. Update issuer email and domain
+
+Edit these files to replace placeholder values:
+- `deployment/kubernetes/cert-manager-issuer.yaml` — set `email` address
+- `deployment/kubernetes/ingress.yaml` — replace `YOUR_DOMAIN.com` with your domain
+- `deployment/kubernetes/frontend-deployment.yaml` — set `NEXTAUTH_URL` to your HTTPS domain
+- `deployment/kubernetes/deployment.yaml` — update `BACKEND_CORS_ORIGINS` to include your domain
+
+#### 5. Apply TLS resources
+
+```bash
+# 1. Create the Let's Encrypt ClusterIssuer
+kubectl apply -f deployment/kubernetes/cert-manager-issuer.yaml
+
+# 2. Deploy the app (if not already deployed)
+kubectl apply -f deployment/kubernetes/deployment.yaml
+kubectl apply -f deployment/kubernetes/frontend-deployment.yaml
+
+# 3. Create the Ingress resources — triggers certificate issuance
+kubectl apply -f deployment/kubernetes/ingress.yaml
+```
+
+#### 6. Verify certificate issuance
+
+```bash
+# Check certificate status
+kubectl get certificate -n smart-tire
+kubectl describe certificate smart-tire-tls -n smart-tire
+
+# Check ingress
+kubectl get ingress -n smart-tire
+
+# Test HTTPS
+curl https://your-domain.com/health
+```
+
+### Testing with Staging Issuer
+
+Before switching to the production Let's Encrypt issuer (which has rate limits of 50 certificates per week per domain), test with the staging issuer:
+
+1. In `deployment/kubernetes/ingress.yaml`, change:
+   ```yaml
+   cert-manager.io/cluster-issuer: "letsencrypt-prod"
+   ```
+   to:
+   ```yaml
+   cert-manager.io/cluster-issuer: "letsencrypt-staging"
+   ```
+
+2. Reapply: `kubectl apply -f deployment/kubernetes/ingress.yaml`
+
+3. Verify the staging certificate is issued (`kubectl describe certificate`).
+
+4. Once staging works, switch back to `letsencrypt-prod` and reapply.
+
+### Certificate Auto-Renewal
+
+#### Docker (Certbot)
+
+Certbot installs a systemd timer that automatically renews certificates before they expire. To verify:
+
+```bash
+# Check the certbot timer
+sudo systemctl status certbot.timer
+
+# Test renewal process (dry run)
+sudo certbot renew --dry-run
+```
+
+If your system doesn't use systemd, the setup script installs a cron job that runs daily at 3 AM:
+
+```cron
+0 3 * * * root certbot renew --quiet --post-hook 'docker compose -f /path/to/docker-compose.yml restart nginx'
+```
+
+#### Kubernetes (cert-manager)
+
+cert-manager automatically monitors certificate expiry and renews certificates before they expire (typically 30 days before expiry). No manual intervention is needed.
+
+To verify auto-renewal is working:
+
+```bash
+# Check certificate expiry
+kubectl get certificate -n smart-tire -o wide
+
+# Check cert-manager logs
+kubectl logs -n cert-manager deployment/cert-manager --tail=50
+
+# Manually trigger renewal check
+kubectl cert-manager renew smart-tire-tls -n smart-tire
+```
+
+### Troubleshooting TLS
+
+| Symptom | Likely Cause | Fix |
+|---------|-------------|-----|
+| Chrome shows "NET::ERR_CERT_AUTHORITY_INVALID" | Self-signed cert not trusted | Install `ca.crt` in OS trust store (see above) |
+| `curl: (60) SSL certificate problem` | CA not trusted | Use `curl -k` for dev, or trust the CA |
+| Certificate not issued (K8s) | DNS not pointing to ingress IP | Verify A record |
+| Certificate stuck on "Issuing" | ACME challenge failed | `kubectl describe order -n smart-tire` |
+| "No valid challenges" | NetworkPolicy blocking ACME | Check `deny-all-egress` allows port 80/443 to internet |
+| HSTS preventing HTTP access | Browser cached HSTS | Clear HSTS: `chrome://net-internals/#hsts` → Delete domain |
+| cert-manager pod can't reach ingress | NetworkPolicy too strict | Check `allow-cert-manager-webhook` and `allow-ingress-controller` policies |
+
+---
+
 ## Health Monitoring
 
 ```bash
 # Check all component status
-curl http://localhost:8000/health | python -m json.tool
+curl https://localhost/health  # or http://localhost:8000 without TLS
+curl https://localhost/health | python -m json.tool
 
 # Expected response:
 {

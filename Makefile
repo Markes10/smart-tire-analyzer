@@ -14,12 +14,14 @@ export PYTHONPATH := $(REPO_ROOT):$(REPO_ROOT)/backend
 
 help:
 	@echo "Targets:"
-	@echo "  make install   - create venv and install backend deps + frontend deps"
-	@echo "  make backend   - start FastAPI backend on :8000"
-	@echo "  make frontend  - start Next.js dev server on :3000"
-	@echo "  make test      - run pytest"
-	@echo "  make lint      - run ruff"
-	@echo "  make clean     - remove caches"
+	@echo "  make install        - create venv + install deps"
+	@echo "  make backend        - start FastAPI backend on :8000"
+	@echo "  make frontend       - start Next.js dev server on :3000"
+	@echo "  make test           - run pytest"
+	@echo "  make lint           - run ruff"
+	@echo "  make certs          - generate dev TLS certificates"
+	@echo "  make certs-prod     - guide for production TLS setup"
+	@echo "  make clean          - remove caches"
 
 install:
 	@test -d .venv || python -m venv .venv
@@ -38,6 +40,16 @@ test:
 
 lint:
 	$(PY) -m ruff check backend/app utils tests --select E,F,W,I
+
+certs:
+	sh scripts/generate_dev_certs.sh
+
+certs-prod:
+	@echo "For production TLS, run:"
+	@echo "  bash scripts/setup_production_certs.sh your-domain.com"
+	@echo ""
+	@echo "See deployment/docker/nginx.conf and scripts/setup_production_certs.sh"
+	@echo "for detailed setup instructions."
 
 clean:
 	rm -rf .pytest_cache .mypy_cache frontend/.next frontend/tsconfig.tsbuildinfo

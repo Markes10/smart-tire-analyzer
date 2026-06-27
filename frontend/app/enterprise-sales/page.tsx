@@ -1,6 +1,8 @@
 "use client"
 
 import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
@@ -22,6 +24,7 @@ import {
     Globe,
     Server
 } from "lucide-react"
+import { enterpriseSalesSchema, type EnterpriseSalesInput } from "@/lib/validation"
 
 const enterpriseFeatures = [
     {
@@ -95,8 +98,17 @@ export default function EnterpriseSalesPage() {
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [isSubmitted, setIsSubmitted] = useState(false)
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        setValue,
+        reset,
+    } = useForm<EnterpriseSalesInput>({
+        resolver: zodResolver(enterpriseSalesSchema),
+    })
+
+    const onSubmit = async (data: EnterpriseSalesInput) => {
         setIsSubmitting(true)
         await new Promise(resolve => setTimeout(resolve, 1500))
         setIsSubmitting(false)
@@ -203,49 +215,61 @@ export default function EnterpriseSalesPage() {
                                             <Button
                                                 variant="outline"
                                                 className="mt-6"
-                                                onClick={() => setIsSubmitted(false)}
+                                                onClick={() => {
+                                                    reset()
+                                                    setIsSubmitted(false)
+                                                }}
                                             >
                                                 Submit Another Request
                                             </Button>
                                         </div>
                                     ) : (
-                                        <form onSubmit={handleSubmit} className="space-y-6">
+                                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                                             <div className="grid gap-4 sm:grid-cols-2">
                                                 <div className="space-y-2">
-                                                    <Label htmlFor="firstName">First Name</Label>
-                                                    <Input id="firstName" placeholder="John" required />
+                                                    <Label htmlFor="name">Name</Label>
+                                                    <Input id="name" placeholder="John Smith" {...register("name")} />
+                                                    {errors.name && (
+                                                        <p className="text-sm text-destructive">{errors.name.message}</p>
+                                                    )}
                                                 </div>
                                                 <div className="space-y-2">
-                                                    <Label htmlFor="lastName">Last Name</Label>
-                                                    <Input id="lastName" placeholder="Smith" required />
+                                                    <Label htmlFor="phone">Phone Number</Label>
+                                                    <Input id="phone" type="tel" placeholder="+1 (555) 000-0000" {...register("phone")} />
+                                                    {errors.phone && (
+                                                        <p className="text-sm text-destructive">{errors.phone.message}</p>
+                                                    )}
                                                 </div>
                                             </div>
 
                                             <div className="grid gap-4 sm:grid-cols-2">
                                                 <div className="space-y-2">
                                                     <Label htmlFor="email">Work Email</Label>
-                                                    <Input id="email" type="email" placeholder="john@company.com" required />
-                                                </div>
-                                                <div className="space-y-2">
-                                                    <Label htmlFor="phone">Phone Number</Label>
-                                                    <Input id="phone" type="tel" placeholder="+1 (555) 000-0000" />
-                                                </div>
-                                            </div>
-
-                                            <div className="grid gap-4 sm:grid-cols-2">
-                                                <div className="space-y-2">
-                                                    <Label htmlFor="company">Company Name</Label>
-                                                    <Input id="company" placeholder="Company Inc." required />
+                                                    <Input id="email" type="email" placeholder="john@company.com" {...register("email")} />
+                                                    {errors.email && (
+                                                        <p className="text-sm text-destructive">{errors.email.message}</p>
+                                                    )}
                                                 </div>
                                                 <div className="space-y-2">
                                                     <Label htmlFor="role">Your Role</Label>
-                                                    <Input id="role" placeholder="Fleet Manager" />
+                                                    <Input id="role" placeholder="Fleet Manager" {...register("role")} />
+                                                    {errors.role && (
+                                                        <p className="text-sm text-destructive">{errors.role.message}</p>
+                                                    )}
                                                 </div>
                                             </div>
 
                                             <div className="space-y-2">
+                                                <Label htmlFor="company">Company Name</Label>
+                                                <Input id="company" placeholder="Company Inc." {...register("company")} />
+                                                {errors.company && (
+                                                    <p className="text-sm text-destructive">{errors.company.message}</p>
+                                                )}
+                                            </div>
+
+                                            <div className="space-y-2">
                                                 <Label htmlFor="fleetSize">Fleet Size</Label>
-                                                <Select required>
+                                                <Select onValueChange={(value) => setValue("fleetSize", value)}>
                                                     <SelectTrigger>
                                                         <SelectValue placeholder="Select fleet size" />
                                                     </SelectTrigger>
@@ -257,6 +281,9 @@ export default function EnterpriseSalesPage() {
                                                         ))}
                                                     </SelectContent>
                                                 </Select>
+                                                {errors.fleetSize && (
+                                                    <p className="text-sm text-destructive">{errors.fleetSize.message}</p>
+                                                )}
                                             </div>
 
                                             <div className="space-y-2">
@@ -265,12 +292,16 @@ export default function EnterpriseSalesPage() {
                                                     id="needs"
                                                     placeholder="Describe your fleet operations, current challenges, and what you hope to achieve with Smart Tire Analyzer..."
                                                     rows={4}
+                                                    {...register("needs")}
                                                 />
+                                                {errors.needs && (
+                                                    <p className="text-sm text-destructive">{errors.needs.message}</p>
+                                                )}
                                             </div>
 
                                             <div className="space-y-2">
                                                 <Label htmlFor="timeline">Implementation Timeline</Label>
-                                                <Select>
+                                                <Select onValueChange={(value) => setValue("timeline", value)}>
                                                     <SelectTrigger>
                                                         <SelectValue placeholder="When are you looking to start?" />
                                                     </SelectTrigger>
@@ -282,6 +313,9 @@ export default function EnterpriseSalesPage() {
                                                         <SelectItem value="exploring">Just exploring options</SelectItem>
                                                     </SelectContent>
                                                 </Select>
+                                                {errors.timeline && (
+                                                    <p className="text-sm text-destructive">{errors.timeline.message}</p>
+                                                )}
                                             </div>
 
                                             <Button type="submit" className="w-full" disabled={isSubmitting}>

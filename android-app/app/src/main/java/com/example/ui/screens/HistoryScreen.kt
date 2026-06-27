@@ -37,6 +37,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.graphics.PathEffect
+import com.example.ui.theme.StatusCritical
+import com.example.ui.theme.StatusInfo
+import com.example.ui.theme.StatusSuccess
+import com.example.ui.theme.StatusWarning
 import com.example.data.TireScan
 import com.example.viewmodel.TireTwinViewModel
 import java.util.Calendar
@@ -572,7 +576,7 @@ fun TrendLineChart(scans: List<TireScan>) {
                     Box(
                         modifier = Modifier
                             .size(7.dp)
-                            .background(Color(0x28, 0xB4, 0x82), CircleShape)
+                            .background(StatusSuccess, CircleShape)
                     )
                     Text(
                         text = "PRESSURE (PSI)",
@@ -601,7 +605,7 @@ fun TrendLineChart(scans: List<TireScan>) {
                     Box(
                         modifier = Modifier
                             .size(7.dp)
-                            .background(Color(0xFF, 0x5E, 0x36), CircleShape)
+                            .background(StatusWarning, CircleShape)
                     )
                     Text(
                         text = "TEMPERATURE (°C)",
@@ -734,23 +738,23 @@ fun TrendLineChart(scans: List<TireScan>) {
 
                     drawPath(
                         path = pPath,
-                        color = Color(0x28, 0xB4, 0x82),
+                        color = StatusSuccess,
                         style = Stroke(width = 2.dp.toPx())
                     )
                     drawPath(
                         path = tPath,
-                        color = Color(0xFF, 0x5E, 0x36),
+                        color = StatusWarning,
                         style = Stroke(width = 2.dp.toPx())
                     )
                 }
 
                 // 3. Draw dot markers
                 pressurePoints.forEach { center ->
-                    drawCircle(color = Color(0x28, 0xB4, 0x82), radius = 3.5f.dp.toPx(), center = center)
+                    drawCircle(color = StatusSuccess, radius = 3.5f.dp.toPx(), center = center)
                     drawCircle(color = dotInnerColor, radius = 1.8f.dp.toPx(), center = center)
                 }
                 tempPoints.forEach { center ->
-                    drawCircle(color = Color(0xFF, 0x5E, 0x36), radius = 3.5f.dp.toPx(), center = center)
+                    drawCircle(color = StatusWarning, radius = 3.5f.dp.toPx(), center = center)
                     drawCircle(color = dotInnerColor, radius = 1.8f.dp.toPx(), center = center)
                 }
 
@@ -1489,9 +1493,9 @@ fun ThermalComparisonView(
     var selectedSeason by remember { mutableStateOf("Summer") }
 
     val seasonColor = when (selectedSeason) {
-        "Summer" -> Color(0xFF, 0xB8, 0x6C)
-        "Winter" -> Color(0xFF, 0x81, 0xD4, 0xFA) // Warmer light blue
-        else -> Color(0xFF, 0xBC, 0x00) // Warm amber instead of green
+        "Summer" -> Color(0xFFF97316)
+        "Winter" -> Color(0xFF60A5FA)
+        else -> StatusWarning
     }
 
     // Map month index (0-11) to season
@@ -1705,7 +1709,7 @@ fun ThermalComparisonView(
                 ) {
                     // Current Legend
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                        Box(modifier = Modifier.size(6.dp).background(Color(0xFF, 0x5E, 0x36), CircleShape))
+                        Box(modifier = Modifier.size(6.dp).background(StatusWarning, CircleShape))
                         Text("Current Profile", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 8.5.sp, fontFamily = FontFamily.Monospace)
                     }
                     // Historical Legend
@@ -1827,13 +1831,13 @@ fun ThermalComparisonView(
                     // Draw current solid line
                     drawPath(
                         path = currentPath,
-                        color = Color(0xFF, 0x5E, 0x36),
+                        color = StatusWarning,
                         style = Stroke(width = 2.5f.dp.toPx())
                     )
                     // Draw current glowing dots
                     currentOffsets.forEach { offset ->
-                        drawCircle(color = Color(0xFF, 0x5E, 0x36).copy(alpha = 0.3f), radius = 6.dp.toPx(), center = offset)
-                        drawCircle(color = Color(0xFF, 0x5E, 0x36), radius = 4f.dp.toPx(), center = offset)
+                        drawCircle(color = StatusWarning.copy(alpha = 0.3f), radius = 6.dp.toPx(), center = offset)
+                        drawCircle(color = StatusWarning, radius = 4f.dp.toPx(), center = offset)
                         drawCircle(color = Color.White, radius = 1.8f.dp.toPx(), center = offset)
                     }
                 }

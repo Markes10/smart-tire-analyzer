@@ -73,18 +73,15 @@ export async function analyzeImage(params: AnalyzeParams): Promise<AnalysisResul
   formData.append("image", fileToUpload, fileToUpload.name);
   const contextPayload: Record<string, any> = { ...(params.context ?? {}) };
 
-  // Include user's runtime API keys from localStorage
+  // SECURITY: API keys are NEVER stored in localStorage.
+  // User's API key preferences (boolean toggles) indicate which server-side
+  // keys to use. Actual key values are provided during signup/login and
+  // stored encrypted (AES-256-GCM) in the database.
   try {
-    const raw = typeof window !== "undefined" ? localStorage.getItem("smart_tire_api_keys") : null;
+    const raw = typeof window !== "undefined" ? localStorage.getItem("smart_tire_api_key_prefs") : null;
     if (raw) {
-      const runtimeKeys = JSON.parse(raw);
-      const configured: Record<string, string> = {};
-      for (const [key, value] of Object.entries(runtimeKeys)) {
-        if (value) configured[key] = value as string;
-      }
-      if (Object.keys(configured).length > 0) {
-        contextPayload.runtime_api_keys = configured;
-      }
+      const prefs = JSON.parse(raw);
+      contextPayload.api_key_preferences = prefs;
     }
   } catch {
     // localStorage unavailable or corrupt — skip
