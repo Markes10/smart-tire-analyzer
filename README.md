@@ -14,8 +14,7 @@
 
 ## Overview
 
-**Smart Tire Analyzer** analyzes tire condition from photographs using a hybrid deep learning model with **automatic architecture selection**. It supports 59 model variants (22 CNN, 12 Transformer, 9 RNN, 16 Fusion/ANN) and chooses the optimal combination based on dataset size. It predicts tread depth, health score, remaining life, condition (safe/moderate/replace), and wear pattern.<br><br>
-The project also includes a **Next.js frontend** with a Live Chat feature (Llama 3.3, tire-only questions) and a **Voice AI Support** agent (OmniDimension, Llama 3.3 70B) for tire and technical support calls.
+**Smart Tire Analyzer** analyzes tire condition from photographs using a hybrid deep learning model with **automatic architecture selection**. It supports 59 model variants (22 CNN, 12 Transformer, 9 RNN, 16 Fusion/ANN) and includes a Next.js frontend with Live Chat and a Voice AI Support agent.
 
 ### Current Test Performance (767-image dataset)
 
@@ -47,46 +46,100 @@ The project also includes a **Next.js frontend** with a Live Chat feature (Llama
 
 ## Architecture
 
+Below are three focused architecture views you can copy into design docs or use for onboarding: System Architecture (components and deployment), Workflow Architecture (runtime flows for major scenarios), and Data Flow Architecture (how data moves, storage, and model lifecycle).
+
+### 1) System Architecture
+
+High-level components and how they are deployed/connected:
+
 ```
-📷 Tire Image
-       ↓
-[24-Step Preprocessing Pipeline]
-  ├── Auto rotation correction (deskew via Hough lines)
-  ├── Shadow removal (LAB illumination estimation)
-  ├── Background removal (Hough circle + GrabCut refinement)
-  ├── Blur detection + deblurring
-  ├── CLAHE contrast enhancement
-  ├── Edge detection (4th channel)
-  ├── Resize (224x224) + ImageNet normalization
-  └── Augmentation (training only)
-       ↓
-[Auto-Selected Architecture — example for 767 samples]
-  ├── CNN: EfficientNetV2-B0 → 512-dim local tread features
-  ├── RNN: BiLSTM → 256-dim sequential tread features
-  └── Fusion: Deep Dense ANN → 512-dim fused features
-       ↓
-[Prediction Heads]
-  ├── Tread Depth (×4 regression)
-  ├── Health Score (regression)
-  ├── Remaining Life (regression)
-  ├── Wear Pattern (6-class classification)
-  └── Condition (3-class: safe/moderate/replace)
-       ↓
-[Gemini AI Reasoning + Maps + Weather]
-       ↓
-📊 Final Report
++----------------------+     +---------------------+     +--------------------------+
+|  Frontend (Next.js)  |<--->|  Backend API (FastAPI)|<--->|  Model Serving & Inference |
+|  (frontend/)         |     |  (backend/app/)      |     |  (ai_model/hybrid_torch/) |
++----------------------+     +---------------------+     +--------------------------+
+         |  ^                         |  ^                       |  ^
+         |  |                         |  |                       |  |
+         v  |                         v  |                       v  |
++----------------------+     +---------------------+     +--------------------------+
+| Live Chat (Llama)    |     |  External Services  |     |  Model Registry & ML-Ops  |
+| (llama3.3 via Ollama) |     |  - Gemini / Maps     |     |  (mlops/, deployment/)    |
++----------------------+     |  - OmniDimension     |     +--------------------------+
+                             |  - Weather API        |
+                             +---------------------+
+
+Optional on-device: Android app (android-app/) with TFLite models for offline inference.
 ```
 
-Model auto-selection tiers:
+Components (short):
+- Frontend: Next.js app serving UI, Live Chat page, Technical Support voice page. Connects to backend via REST/WebSockets.
+- Backend API: FastAPI app exposing /analyze, /feedback, /history, /health and swagger. Orchestrates inference, LLM reasoning, maps/weather lookups, and feedback ingestion.
+- Model Serving / Training: Training pipelines live in ai_model/hybrid_torch/, training orchestrated by scripts and mlops. Inference runs as part of backend using loaded PyTorch checkpoints; optionally served via a model server or batch worker.
+- External LLMs & Services: Gemini (for reasoning), Ollama-hosted Llama 3.3 for local live-chat, OmniDimension for voice, third-party Maps/Weather for contextualization.
+- On-device Android App: TFLite models in android-app/assets for fast offline scans.
+- Persistence & Observability: Postgres/Cloud storage for session/history, S3/DVC for datasets and model artifacts, Prometheus metrics endpoint.
 
-| Dataset Size | Tier | CNN | RNN | Fusion | Transformer |
-|---|---|---|---|---|---|
-| 0–200 | tiny | ResNet18 | GRU | Standard FC | None |
-| 200–500 | very_small | MobileNetV2 | BiGRU | MLP | None |
-| 500–2000 | small | EfficientNetV2-B0 | BiLSTM | Deep Dense Fusion | None |
-| 2000–5000 | small_plus | EfficientNetV2-B0 | Stacked LSTM | Self-Attention Fusion | None |
-| 5000–15000 | medium | ConvNeXt | Encoder-Decoder LSTM | Cross-Modal Attention | ViT (optional) |
-| 15000+ | large | ConvNeXt | TCN | Multimodal Transformer Fusion | ViT |
+Deployment notes:
+- Docker Compose for local stack (deployment/docker/docker-compose.yml).
+- Production can split components: frontend CDN + Vercel/Netlify, backend on Kubernetes, model training on GPU cluster, model registry in S3 + metadata DB.
+
+
+### 2) Workflow Architecture
+
+Three common runtime workflows show component interactions and primary steps.
+
+A) Inference (user uploads image via web or mobile):
+1. User uploads image (frontend → backend /analyze).
+2. Backend receives image, stores raw image (temp or object store).
+3. Preprocessing pipeline (backend or inference worker) runs the 24-step preprocessing (rotation, shadow removal, GrabCut, CLAHE, edge detection).
+4. Backend loads the active model (ai_model/saved_models) or calls model-serving endpoint and runs inference -> predictions (tread depths, wear, health, remaining life, condition).
+5. Backend calls Gemini/LLM to attach human-readable reasoning and map/weather enrichment.
+6. Compose analysis report and return to frontend; persist session and metrics to DB; emit Prometheus metrics.
+
+B) Continuous Learning (user feedback → model update):
+1. User submits correction via frontend -> POST /feedback.
+2. Backend validates and stores feedback as labelled example in `dataset/continuous/` or a feedback queue.
+3. MLOps orchestrator (mlops/) periodically pulls queued feedback; when collected N new samples (configurable, default 10), it triggers `train_new_models.py` or `scripts/train_smart.py` for incremental retraining.
+4. Training produces a new checkpoint and metadata in `ai_model/saved_models/`; ML-Ops updates model registry and promotes to staging/production after validation tests.
+5. Backend refreshes active model (hot-swap or restart) and old model archived.
+
+C) Live Chat / Voice Support:
+1. User opens Live Chat (frontend) -> connects to live-chat API route.
+2. Frontend forwards messages to local Ollama (llama3.3) or to hosted provider with a strict tire-only system prompt.
+3. The chat assistant can request context (session_id) from backend to fetch analysis results and offer reasoning; voice flows use OmniDimension integration.
+4. Chat/voice responses returned to frontend; optionally logged to improve prompts and analytics.
+
+
+### 3) Data Flow Architecture
+
+This describes data stores, movement, and retention for images, labels, models, and telemetry.
+
+```
+User Image --(upload)--> Backend Temp Storage ---> Object Store (S3/DVC) ---> Preprocessing --> Feature tensors
+                                                              |                               |
+                                                              v                               v
+                                                     Dataset (dataset/splits/)           Model Training Pipeline
+                                                              |                               |
+                                                  Labels & Feedback <---- Feedback Queue <-- User Corrections
+                                                              |
+                                                              v
+                                                    Model Artifacts (ai_model/saved_models/) --> Model Registry (mlops/)
+                                                              |
+                                                              v
+                                                Deployment (backend model loader, android-app TFLite)
+```
+
+Data stores and retention:
+- Raw images: uploaded images are stored in a short-term object store (e.g., S3) for reproducible preprocessing; retention configurable (e.g., 30–90 days) unless attached to labelled datasets.
+- Processed artifacts: cached preprocessing outputs and tensors may be stored in a dataset bucket or ephemeral cache to speed training and inference.
+- Labels & feedback: stored in Postgres or a labeling DB and mirrored to dataset/splits/ for training. Feedback includes session_id, corrected fields, user metadata (anonymized if required).
+- Models: checkpoints, metadata.json, metrics.json, history.json stored in ai_model/saved_models/ and synced to model registry (S3 + metadata DB). Each model has semantic tags: tier, dataset_size, timestamp, validation metrics.
+- Telemetry & metrics: Prometheus for runtime metrics, ELK/Cloud logging for traces, and periodic evaluation metrics stored with model artifacts.
+
+Security & privacy considerations:
+- Image PHI: treat images as personal data; redaction and retention policies applied.
+- API auth: JWT or API key (`AUTH_ENABLED` controls enforcement). Use HTTPS and rotate keys.
+- LLM access: restrict LLM prompts and do not send raw user identities to third-party LLM providers.
+
 
 ---
 
